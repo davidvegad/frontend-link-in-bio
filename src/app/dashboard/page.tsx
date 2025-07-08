@@ -283,54 +283,57 @@ export default function DashboardPage() {
             {profile && (
               <div className="relative flex flex-col items-center mb-4">
                 {/* Avatar Section */}
-                <div className="relative mb-4">
-                  {profile.avatar && (
-                    <Image
-                      src={profile.avatar}
-                      alt={profile.name}
-                      width={128}
-                      height={128}
-                      className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
-                    />
-                  )}
-                  <input
-                    type="file"
-                    id="profileAvatar"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
-                  />
-                  <label htmlFor="profileAvatar" className="absolute bottom-0 right-0 -mr-2 -mb-2 p-2 bg-indigo-600 rounded-full cursor-pointer shadow-md z-50 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
-                  </label>
+                <div className="flex flex-col items-center mb-4">
+                    <div className="relative mb-2">
+                        {profile.avatar && (
+                            <Image
+                                src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile.avatar}
+                                alt={profile.name}
+                                width={128}
+                                height={128}
+                                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+                            />
+                        )}
+                        <input
+                            type="file"
+                            id="profileAvatar"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
+                        />
+                    </div>
+                    <label htmlFor="profileAvatar" className="bg-indigo-600 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-indigo-700 text-sm">
+                        Cambiar Imagen
+                    </label>
                 </div>
+
 
                 {/* Name Section */}
                 <div className="flex items-center mb-2 w-full max-w-xs mx-auto">
                   <input
                     type="text"
                     id="profileName"
-                    className="flex-grow text-xl font-bold text-center border-b border-transparent focus:border-indigo-500 outline-none"
+                    className="flex-grow text-xl font-bold text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none bg-transparent"
                     value={profileName}
                     onChange={(e) => setProfileName(e.target.value)}
                   />
-                  <span onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 cursor-pointer text-gray-500 hover:text-indigo-600 flex-shrink-0 flex">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
-                  </span>
+                  <button onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">
+                    Editar
+                  </button>
                 </div>
 
                 {/* Bio Section */}
                 <div className="flex items-start mb-6 w-full max-w-md mx-auto">
                   <textarea
                     id="profileBio"
-                    className="flex-grow text-gray-600 text-center border-b border-transparent focus:border-indigo-500 outline-none resize-none"
+                    className="flex-grow text-gray-600 text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none resize-none bg-transparent"
                     value={profileBio}
                     onChange={(e) => setProfileBio(e.target.value)}
                     rows={3}
                   ></textarea>
-                  <span onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 cursor-pointer text-gray-500 hover:text-indigo-600 mt-2 flex-shrink-0 flex">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
-                  </span>
+                  <button onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm mt-1">
+                    Editar
+                  </button>
                 </div>
               </div>
             )}
