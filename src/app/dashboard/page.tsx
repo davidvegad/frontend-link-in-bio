@@ -1,0 +1,443 @@
+'use client';
+
+import { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import LivePreview from '@/app/components/LivePreview';
+import DesignCustomizer from '@/app/components/DesignCustomizer';
+import LinkManager from '@/app/components/LinkManager';
+import { debounce } from 'lodash';
+
+// Interfaces
+interface LinkData {
+  id: number;
+  title: string;
+  url: string;
+  type?: string;
+  order?: number;
+}
+
+interface ProfileData {
+  id: number;
+  user?: string;
+  name: string;
+  bio: string;
+  avatar: string;
+  slug?: string;
+  profile_type?: string;
+  purpose?: string;
+  template_style?: string;
+  theme?: string;
+  custom_gradient_start?: string;
+  custom_gradient_end?: string;
+  background_image?: string;
+  button_style?: string;
+  button_color?: string;
+  button_text_color?: string;
+  social_links: Record<string, string>;
+  custom_links: LinkData[];
+}
+
+// Main Component
+export default function DashboardPage() {
+  const router = useRouter();
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('profile');
+
+  // States for form fields
+  const [profileName, setProfileName] = useState('');
+  const [profileBio, setProfileBio] = useState('');
+  const [profileAvatar, setProfileAvatar] = useState<File | null>(null);
+  
+  // Design states
+  const [theme, setTheme] = useState('');
+  const [customGradientStart, setCustomGradientStart] = useState('');
+  const [customGradientEnd, setCustomGradientEnd] = useState('');
+  const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [buttonStyle, setButtonStyle] = useState('');
+  const [buttonColor, setButtonColor] = useState('');
+  const [buttonTextColor, setButtonTextColor] = useState('');
+
+  // Link states
+  const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
+  const [customLinks, setCustomLinks] = useState<LinkData[]>([]);
+  
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+  const refreshAccessToken = useCallback(async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) return false;
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/token/refresh/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
+      if (!response.ok) throw new Error('Failed to refresh token.');
+      const data = await response.json();
+      localStorage.setItem('accessToken', data.access);
+      return true;
+    } catch (err) {
+      console.error('Error refreshing token:', err);
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      router.push('/login');
+      return false;
+    }
+  }, [router, API_URL]);
+
+  const fetchProfile = useCallback(async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    if (!accessToken) {
+      router.push('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+
+      if (response.status === 401) {
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          await fetchProfile(); // Retry fetching
+        }
+        return;
+      }
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          router.push('/welcome/1-category');
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return;
+      }
+
+      const fetchedProfile: ProfileData = await response.json();
+      setProfile(fetchedProfile);
+
+      if (!fetchedProfile.profile_type || fetchedProfile.profile_type.trim() === '') {
+        router.push('/welcome/1-category');
+        return;
+      }
+      
+      // Initialize states
+      setProfileName(fetchedProfile.name || '');
+      setProfileBio(fetchedProfile.bio || '');
+      setTheme(fetchedProfile.theme || '');
+      setCustomGradientStart(fetchedProfile.custom_gradient_start || '');
+      setCustomGradientEnd(fetchedProfile.custom_gradient_end || '');
+      setButtonStyle(fetchedProfile.button_style || '');
+      setButtonColor(fetchedProfile.button_color || '');
+      setButtonTextColor(fetchedProfile.button_text_color || '');
+      setSocialLinks(fetchedProfile.social_links || {});
+      setCustomLinks(fetchedProfile.custom_links || []);
+
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch profile.');
+    } finally {
+      setLoading(false);
+    }
+  }, [router, API_URL, refreshAccessToken]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  const handleSaveChanges = async () => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+
+    const formData = new FormData();
+    
+    // Append profile data
+    formData.append('name', profileName);
+    formData.append('bio', profileBio);
+    if (profileAvatar) formData.append('avatar', profileAvatar);
+
+    // Append design data
+    formData.append('theme', theme);
+    formData.append('custom_gradient_start', customGradientStart);
+    formData.append('custom_gradient_end', customGradientEnd);
+    if (backgroundImage) formData.append('background_image', backgroundImage);
+    formData.append('button_style', buttonStyle);
+    formData.append('button_color', buttonColor);
+    formData.append('button_text_color', buttonTextColor);
+
+    // Append links data
+    formData.append('social_links', JSON.stringify(socialLinks));
+    
+    // The backend expects a list of objects with id, title, and url for updates.
+    const linksToSave = customLinks.map(({ id, title, url }) => ({ id, title, url }));
+    formData.append('custom_links', JSON.stringify(linksToSave));
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Save changes error:', errorData);
+        throw new Error(errorData.detail || 'Failed to save changes.');
+      }
+
+      const updatedProfile = await response.json();
+      setProfile(updatedProfile);
+      // Re-initialize states with potentially updated data from the server
+      setCustomLinks(updatedProfile.custom_links || []);
+      setSocialLinks(updatedProfile.social_links || {});
+      
+      setProfileAvatar(null);
+      setBackgroundImage(null);
+      alert('Cambios guardados exitosamente!');
+    } catch (err: any) {
+      setError(err.message || 'Failed to save changes.');
+    }
+  };
+
+  const handleLinkAdd = async () => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`${API_URL}/api/links/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          profile: profile.id,
+          title: 'Nuevo Enlace',
+          url: '',
+          type: 'generic'
+        }),
+      });
+      if (!response.ok) throw new Error('Failed to add link.');
+      const newLink = await response.json();
+      setCustomLinks(prev => [...prev, newLink]);
+    } catch (err: any) {
+      setError(err.message || 'Failed to add link.');
+    }
+  };
+
+  const handleLinkUpdate = async (linkId: number, title: string, url: string) => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`${API_URL}/api/links/${linkId}/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ title, url }),
+      });
+      if (!response.ok) throw new Error('Failed to update link.');
+      // Optionally refresh data or update state locally
+      setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, title, url } : l));
+    } catch (err: any) {
+      setError(err.message || 'Failed to update link.');
+    }
+  };
+  
+  const debouncedLinkUpdate = useCallback(debounce(handleLinkUpdate, 500), []);
+
+  const handleLinkDelete = async (linkId: number) => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`${API_URL}/api/links/${linkId}/`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!response.ok) throw new Error('Failed to delete link.');
+      setCustomLinks(prev => prev.filter(link => link.id !== linkId));
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete link.');
+    }
+  };
+
+  const handleCustomLinkChange = (id: number, field: 'title' | 'url', value: string) => {
+    const updatedLinks = customLinks.map(link => link.id === id ? { ...link, [field]: value } : link);
+    setCustomLinks(updatedLinks);
+    const linkToUpdate = updatedLinks.find(l => l.id === id);
+    if (linkToUpdate) {
+      debouncedLinkUpdate(id, linkToUpdate.title, linkToUpdate.url);
+    }
+  };
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
+  if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'profile':
+        return (
+          <section id="profile-section" className="mb-8 pb-6">
+            <h2 className="text-2xl font-semibold mb-4">Mi Perfil</h2>
+            {profile && (
+              <div className="relative flex flex-col items-center mb-4">
+                {/* Avatar Section */}
+                <div className="relative mb-4">
+                  {profile.avatar && (
+                    <Image
+                      src={profile.avatar}
+                      alt={profile.name}
+                      width={128}
+                      height={128}
+                      className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+                    />
+                  )}
+                  <input
+                    type="file"
+                    id="profileAvatar"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
+                  />
+                  <label htmlFor="profileAvatar" className="absolute bottom-0 right-0 -mr-2 -mb-2 p-2 bg-indigo-600 rounded-full cursor-pointer shadow-md z-50 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
+                  </label>
+                </div>
+
+                {/* Name Section */}
+                <div className="flex items-center mb-2 w-full max-w-xs mx-auto">
+                  <input
+                    type="text"
+                    id="profileName"
+                    className="flex-grow text-xl font-bold text-center border-b border-transparent focus:border-indigo-500 outline-none"
+                    value={profileName}
+                    onChange={(e) => setProfileName(e.target.value)}
+                  />
+                  <span onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 cursor-pointer text-gray-500 hover:text-indigo-600 flex-shrink-0 flex">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
+                  </span>
+                </div>
+
+                {/* Bio Section */}
+                <div className="flex items-start mb-6 w-full max-w-md mx-auto">
+                  <textarea
+                    id="profileBio"
+                    className="flex-grow text-gray-600 text-center border-b border-transparent focus:border-indigo-500 outline-none resize-none"
+                    value={profileBio}
+                    onChange={(e) => setProfileBio(e.target.value)}
+                    rows={3}
+                  ></textarea>
+                  <span onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 cursor-pointer text-gray-500 hover:text-indigo-600 mt-2 flex-shrink-0 flex">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"></path></svg>
+                  </span>
+                </div>
+              </div>
+            )}
+          </section>
+        );
+      case 'links':
+        return (
+          <LinkManager
+            socialLinks={socialLinks}
+            customLinks={customLinks}
+            handleSocialLinkChange={setSocialLinks}
+            handleCustomLinkChange={handleCustomLinkChange}
+            addCustomLink={handleLinkAdd}
+            removeCustomLink={handleLinkDelete}
+          />
+        );
+      case 'design':
+        return (
+          <DesignCustomizer
+            profileData={{
+              theme,
+              custom_gradient_start: customGradientStart,
+              custom_gradient_end: customGradientEnd,
+              background_image: backgroundImage,
+              button_style: buttonStyle,
+              button_color: buttonColor,
+              button_text_color: buttonTextColor,
+            }}
+            updateProfileData={(newData) => {
+              if (newData.theme !== undefined) setTheme(newData.theme);
+              if (newData.custom_gradient_start !== undefined) setCustomGradientStart(newData.custom_gradient_start);
+              if (newData.custom_gradient_end !== undefined) setCustomGradientEnd(newData.custom_gradient_end);
+              if (newData.button_style !== undefined) setButtonStyle(newData.button_style);
+              if (newData.button_color !== undefined) setButtonColor(newData.button_color);
+              if (newData.button_text_color !== undefined) setButtonTextColor(newData.button_text_color);
+            }}
+            setBackgroundImageFile={setBackgroundImage}
+          />
+        );
+      // Add cases for 'stats' and 'settings' when they are built
+      default:
+        return <p>Selecciona una sección</p>;
+    }
+  };
+
+  const NavLink = ({ tabId, children }: { tabId: string, children: React.ReactNode }) => (
+    <li className="mb-2">
+      <button
+        onClick={() => setActiveTab(tabId)}
+        className={`block w-full text-left py-2 px-4 rounded ${activeTab === tabId ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
+      >
+        {children}
+      </button>
+    </li>
+  );
+
+  return (
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+      <aside className="flex flex-col w-64 bg-gray-800 text-white p-4">
+        <div className="text-2xl font-bold mb-6">Mi Link</div>
+        <nav className="flex-1">
+          <ul>
+            <NavLink tabId="profile">Perfil</NavLink>
+            <NavLink tabId="links">Enlaces</NavLink>
+            <NavLink tabId="design">Diseño</NavLink>
+            <NavLink tabId="stats">Estadísticas</NavLink>
+            <NavLink tabId="settings">Ajustes</NavLink>
+          </ul>
+        </nav>
+        <button
+          onClick={handleSaveChanges}
+          className="w-full mt-4 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+        >
+          Guardar Cambios
+        </button>
+      </aside>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Bar (empty for web-only for now) */}
+        <header className="bg-white shadow p-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+        </header>
+
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4 flex gap-4">
+          <div className="w-2/3 bg-white p-6 rounded-lg shadow-md">
+            {renderContent()}
+          </div>
+          
+          {/* Live Preview Column */}
+          <div className="w-1/3">
+            <div className="sticky top-4">
+              <h2 className="text-xl font-semibold mb-4 text-center">Vista Previa</h2>
+              {profile?.slug && (
+            <LivePreview
+              profileSlug={profile.slug}
+              name={profileName}
+              bio={profileBio}
+              avatar={profileAvatar ? URL.createObjectURL(profileAvatar) : profile.avatar}
+            />
+          )}
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
