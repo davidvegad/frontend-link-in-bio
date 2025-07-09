@@ -169,7 +169,12 @@ export default function DashboardPage() {
     formData.append('button_text_color', buttonTextColor);
 
     // Append links data
-    formData.append('links', JSON.stringify(links));
+    // Append links data
+    // formData.append('links', JSON.stringify(links)); // Removed as links are saved immediately
+
+    // Filter out links with empty titles before saving profile
+    const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
+    formData.append('links', JSON.stringify(linksToSave));
 
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
@@ -187,8 +192,7 @@ export default function DashboardPage() {
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
       // Re-initialize states with potentially updated data from the server
-      setCustomLinks(updatedProfile.custom_links || []);
-      setSocialLinks(updatedProfile.social_links || {});
+      setLinks(updatedProfile.links || []);
       
       setProfileAvatar(null);
       setBackgroundImage(null);
@@ -201,8 +205,16 @@ export default function DashboardPage() {
   const handleLinkAdd = async () => {
     if (!profile) return;
     const accessToken = localStorage.getItem('accessToken');
+
+    // If title is empty, do not add the link
+    const newLinkTitle = 'Nuevo Enlace'; // Default title for new links
+    if (!newLinkTitle || newLinkTitle.trim() === '') {
+      console.warn("Cannot add link with empty title.");
+      return;
+    }
+
     try {
-      const response = await fetch(`${API_URL}/api/links/`, {
+      const response = await fetch(`${API_URL}/api/linkinbio/links/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -210,8 +222,8 @@ export default function DashboardPage() {
         },
         body: JSON.stringify({
           profile: profile.id,
-          title: 'Nuevo Enlace',
-          url: '',
+          title: newLinkTitle,
+          url: 'https://example.com', // Provide a default valid URL
           type: 'generic'
         }),
       });
@@ -226,6 +238,14 @@ export default function DashboardPage() {
   const handleLinkUpdate = async (linkId: number, title: string, url: string) => {
     const accessToken = localStorage.getItem('accessToken');
     console.log("Updating link:", { linkId, title, url, accessToken: accessToken ? "Exists" : "Missing" }); // DEBUG
+
+    // If title is empty, do not send update to backend, just update local state
+    if (!title || title.trim() === '') {
+      console.log("Title is empty, not persisting link update for link:", linkId);
+      setLinks(prev => prev.map(l => l.id === linkId ? { ...l, title, url } : l)); // Update local state
+      return;
+    }
+
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/links/${linkId}/`, {
         method: 'PATCH',
@@ -248,7 +268,7 @@ export default function DashboardPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Failed to update link:', errorData); // DEBUG
+        console.error('Failed to update link:', errorData);
         throw new Error(errorData.detail || 'Failed to update link.');
       }
       // Optionally refresh data or update state locally
@@ -256,7 +276,7 @@ export default function DashboardPage() {
       console.log("Link updated successfully."); // DEBUG
     } catch (err: any) {
       setError(err.message || 'Failed to update link.');
-      console.error("Error in handleLinkUpdate:", err); // DEBUG
+      console.error("Error in handleLinkUpdate:", err);
     }
   };
   
@@ -264,15 +284,33 @@ export default function DashboardPage() {
 
   const handleLinkDelete = async (linkId: number) => {
     const accessToken = localStorage.getItem('accessToken');
+    console.log("Attempting to delete link:", { linkId, accessToken: accessToken ? "Exists" : "Missing" }); // DEBUG
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/links/${linkId}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${accessToken}` },
       });
-      if (!response.ok) throw new Error('Failed to delete link.');
+
+      if (response.status === 401) {
+        console.warn("Token expired during delete, attempting refresh..."); // DEBUG
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          console.log("Token refreshed, retrying delete..."); // DEBUG
+          await handleLinkDelete(linkId); // Retry with new token
+        }
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to delete link:', errorData);
+        throw new Error(errorData.detail || 'Failed to delete link.');
+      }
       setLinks(prev => prev.filter(link => link.id !== linkId));
+      console.log("Link deleted successfully."); // DEBUG
     } catch (err: any) {
       setError(err.message || 'Failed to delete link.');
+      console.error("Error in handleLinkDelete:", err); // DEBUG
     }
   };
 

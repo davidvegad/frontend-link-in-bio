@@ -36,6 +36,57 @@ interface LinkManagerProps {
   onReorderLinks: (newOrder: LinkData[]) => void; // New prop for reordering
 }
 
+// Country codes for WhatsApp
+const countryCodes = [
+  { code: '+1', name: 'USA' },
+  { code: '+34', name: 'España' },
+  { code: '+52', name: 'México' },
+  { code: '+54', name: 'Argentina' },
+  { code: '+56', name: 'Chile' },
+  { code: '+57', name: 'Colombia' },
+  { code: '+51', name: 'Perú' },
+  { code: '+58', name: 'Venezuela' },
+  { code: '+591', name: 'Bolivia' },
+  { code: '+593', name: 'Ecuador' },
+  { code: '+595', name: 'Paraguay' },
+  { code: '+598', name: 'Uruguay' },
+  { code: '+502', name: 'Guatemala' },
+  { code: '+503', name: 'El Salvador' },
+  { code: '+504', name: 'Honduras' },
+  { code: '+505', name: 'Nicaragua' },
+  { code: '+506', name: 'Costa Rica' },
+  { code: '+507', name: 'Panamá' },
+  { code: '+509', name: 'Haití' },
+  { code: '+1-809', name: 'República Dominicana (809)' },
+  { code: '+1-829', name: 'República Dominicana (829)' },
+  { code: '+1-849', name: 'República Dominicana (849)' },
+  // Add more as needed
+];
+
+// Helper to parse WhatsApp URL into country code and number
+const parseWhatsAppUrl = (url: string) => {
+  const match = url.match(/wa\.me\/(\+?\d+)/);
+  if (match) {
+    const fullNumber = match[1];
+    // Try to find a matching country code
+    for (const country of countryCodes) {
+      if (fullNumber.startsWith(country.code.replace('+', ''))) {
+        return { countryCode: country.code, number: fullNumber.substring(country.code.replace('+', '').length) };
+      }
+    }
+    return { countryCode: '', number: fullNumber }; // Fallback if no country code matches
+  }
+  return { countryCode: '', number: '' };
+};
+
+// Helper to construct WhatsApp URL from country code and number
+const constructWhatsAppUrl = (countryCode: string, number: string) => {
+  if (!countryCode || !number) return '';
+  const cleanedNumber = number.replace(/[^\d]/g, ''); // Remove non-digits
+  const cleanedCountryCode = countryCode.replace('+', '');
+  return `https://wa.me/${cleanedCountryCode}${cleanedNumber}`;
+};
+
 interface SortableItemProps {
   link: LinkData;
   handleLinkChange: (id: number, field: 'title' | 'url', value: string) => void;
@@ -54,6 +105,21 @@ const SortableItem: React.FC<SortableItemProps> = ({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+  };
+
+  const isWhatsApp = link.type === 'whatsapp';
+  const { countryCode, number } = isWhatsApp ? parseWhatsAppUrl(link.url) : { countryCode: '', number: link.url };
+
+  const handleWhatsAppChange = (field: 'countryCode' | 'number', value: string) => {
+    let newCountryCode = countryCode;
+    let newNumber = number;
+
+    if (field === 'countryCode') {
+      newCountryCode = value;
+    } else {
+      newNumber = value;
+    }
+    handleLinkChange(link.id, 'url', constructWhatsAppUrl(newCountryCode, newNumber));
   };
 
   return (
@@ -77,13 +143,36 @@ const SortableItem: React.FC<SortableItemProps> = ({
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
           placeholder="Título del enlace"
         />
-        <input
-          type="url"
-          value={link.url}
-          onChange={(e) => handleLinkChange(link.id, 'url', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
-          placeholder="https://ejemplo.com"
-        />
+        {isWhatsApp ? (
+          <div className="flex gap-2">
+            <select
+              value={countryCode}
+              onChange={(e) => handleWhatsAppChange('countryCode', e.target.value)}
+              className="w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+            >
+              {countryCodes.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.code} ({c.name})
+                </option>
+              ))}
+            </select>
+            <input
+              type="tel"
+              value={number}
+              onChange={(e) => handleWhatsAppChange('number', e.target.value)}
+              className="w-2/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+              placeholder="Número de teléfono"
+            />
+          </div>
+        ) : (
+          <input
+            type="url"
+            value={link.url}
+            onChange={(e) => handleLinkChange(link.id, 'url', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+            placeholder={link.type !== 'whatsapp' && !link.url ? 'https://' : 'https://ejemplo.com'}
+          />
+        )}
       </div>
       <div className="flex items-center space-x-2">
         <button 

@@ -84,7 +84,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({
 
       {/* Links Section */}
       <div className="w-full max-w-xs mx-auto space-y-3">
-        {links.map(link => {
+        {links.filter(link => link.title && link.title.trim() !== '').map(link => {
           const { classes, inlineStyle } = getButtonClasses(button_style, button_color, button_text_color);
           return (
             <a 
