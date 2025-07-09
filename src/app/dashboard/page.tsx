@@ -34,8 +34,7 @@ interface ProfileData {
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
-  social_links: Record<string, string>;
-  custom_links: LinkData[];
+  links: LinkData[];
 }
 
 // Main Component
@@ -60,9 +59,8 @@ export default function DashboardPage() {
   const [buttonColor, setButtonColor] = useState('');
   const [buttonTextColor, setButtonTextColor] = useState('');
 
-  // Link states
-  const [socialLinks, setSocialLinks] = useState<Record<string, string>>({});
-  const [customLinks, setCustomLinks] = useState<LinkData[]>([]);
+  // Unified link state
+  const [links, setLinks] = useState<LinkData[]>([]);
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -118,7 +116,10 @@ export default function DashboardPage() {
       }
 
       const fetchedProfile: ProfileData = await response.json();
+      console.log("Fetched Profile Data:", fetchedProfile); // DEBUG: Check API response
       setProfile(fetchedProfile);
+
+      console.log("Checking profile_type:", fetchedProfile.profile_type); // DEBUG: Check profile_type value
 
       if (!fetchedProfile.profile_type || fetchedProfile.profile_type.trim() === '') {
         router.push('/welcome/1-category');
@@ -134,8 +135,7 @@ export default function DashboardPage() {
       setButtonStyle(fetchedProfile.button_style || '');
       setButtonColor(fetchedProfile.button_color || '');
       setButtonTextColor(fetchedProfile.button_text_color || '');
-      setSocialLinks(fetchedProfile.social_links || {});
-      setCustomLinks(fetchedProfile.custom_links || []);
+      setLinks(fetchedProfile.links || []);
 
     } catch (err: any) {
       setError(err.message || 'Failed to fetch profile.');
@@ -169,11 +169,7 @@ export default function DashboardPage() {
     formData.append('button_text_color', buttonTextColor);
 
     // Append links data
-    formData.append('social_links', JSON.stringify(socialLinks));
-    
-    // The backend expects a list of objects with id, title, and url for updates.
-    const linksToSave = customLinks.map(({ id, title, url }) => ({ id, title, url }));
-    formData.append('custom_links', JSON.stringify(linksToSave));
+    formData.append('links', JSON.stringify(links));
 
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
@@ -221,7 +217,7 @@ export default function DashboardPage() {
       });
       if (!response.ok) throw new Error('Failed to add link.');
       const newLink = await response.json();
-      setCustomLinks(prev => [...prev, newLink]);
+      setLinks(prev => [...prev, newLink]);
     } catch (err: any) {
       setError(err.message || 'Failed to add link.');
     }
@@ -229,8 +225,9 @@ export default function DashboardPage() {
 
   const handleLinkUpdate = async (linkId: number, title: string, url: string) => {
     const accessToken = localStorage.getItem('accessToken');
+    console.log("Updating link:", { linkId, title, url, accessToken: accessToken ? "Exists" : "Missing" }); // DEBUG
     try {
-      const response = await fetch(`${API_URL}/api/links/${linkId}/`, {
+      const response = await fetch(`${API_URL}/api/linkinbio/links/${linkId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -238,11 +235,28 @@ export default function DashboardPage() {
         },
         body: JSON.stringify({ title, url }),
       });
-      if (!response.ok) throw new Error('Failed to update link.');
+
+      if (response.status === 401) {
+        console.warn("Token expired, attempting refresh..."); // DEBUG
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          console.log("Token refreshed, retrying update..."); // DEBUG
+          await handleLinkUpdate(linkId, title, url); // Retry with new token
+        }
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to update link:', errorData); // DEBUG
+        throw new Error(errorData.detail || 'Failed to update link.');
+      }
       // Optionally refresh data or update state locally
-      setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, title, url } : l));
+      setLinks(prev => prev.map(l => l.id === linkId ? { ...l, title, url } : l));
+      console.log("Link updated successfully."); // DEBUG
     } catch (err: any) {
       setError(err.message || 'Failed to update link.');
+      console.error("Error in handleLinkUpdate:", err); // DEBUG
     }
   };
   
@@ -251,23 +265,57 @@ export default function DashboardPage() {
   const handleLinkDelete = async (linkId: number) => {
     const accessToken = localStorage.getItem('accessToken');
     try {
-      const response = await fetch(`${API_URL}/api/links/${linkId}/`, {
+      const response = await fetch(`${API_URL}/api/linkinbio/links/${linkId}/`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${accessToken}` },
       });
       if (!response.ok) throw new Error('Failed to delete link.');
-      setCustomLinks(prev => prev.filter(link => link.id !== linkId));
+      setLinks(prev => prev.filter(link => link.id !== linkId));
     } catch (err: any) {
       setError(err.message || 'Failed to delete link.');
     }
   };
 
-  const handleCustomLinkChange = (id: number, field: 'title' | 'url', value: string) => {
-    const updatedLinks = customLinks.map(link => link.id === id ? { ...link, [field]: value } : link);
-    setCustomLinks(updatedLinks);
+  const handleLinkChange = (id: number, field: 'title' | 'url', value: string) => {
+    const updatedLinks = links.map(link => link.id === id ? { ...link, [field]: value } : link);
+    setLinks(updatedLinks);
     const linkToUpdate = updatedLinks.find(l => l.id === id);
     if (linkToUpdate) {
       debouncedLinkUpdate(id, linkToUpdate.title, linkToUpdate.url);
+    }
+  };
+
+  const handleReorderLinks = async (newOrder: LinkData[]) => {
+    setLinks(newOrder);
+    const accessToken = localStorage.getItem('accessToken');
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/links/reorder/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(newOrder.map((link, index) => ({ id: link.id, order: index }))),
+      });
+
+      if (response.status === 401) {
+        const refreshed = await refreshAccessToken();
+        if (refreshed) {
+          await handleReorderLinks(newOrder); // Retry with new token
+        }
+        return;
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to reorder links:', errorData);
+        throw new Error(errorData.detail || 'Failed to reorder links.');
+      }
+      console.log('Links reordered successfully.');
+    } catch (err: any) {
+      setError(err.message || 'Failed to reorder links.');
+      console.error("Error in handleReorderLinks:", err);
     }
   };
 
@@ -278,77 +326,76 @@ export default function DashboardPage() {
     switch (activeTab) {
       case 'profile':
         return (
-          <section id="profile-section" className="mb-8 pb-6">
-            <h2 className="text-2xl font-semibold mb-4">Mi Perfil</h2>
-            {profile && (
-              <div className="relative flex flex-col items-center mb-4">
-                {/* Avatar Section */}
-                <div className="flex flex-col items-center mb-4">
-                    <div className="relative mb-2">
-                        {profile.avatar && (
-                            <Image
-                                src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile.avatar}
-                                alt={profile.name}
-                                width={128}
-                                height={128}
-                                className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
-                            />
-                        )}
-                        <input
-                            type="file"
-                            id="profileAvatar"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
-                        />
-                    </div>
-                    <label htmlFor="profileAvatar" className="bg-indigo-600 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-indigo-700 text-sm">
-                        Cambiar Imagen
-                    </label>
-                </div>
+          <>
+            <section id="profile-section" className="mb-8 pb-6">
+              <h2 className="text-2xl font-semibold mb-4">Mi Perfil</h2>
+              {profile && (
+                <div className="relative flex flex-col items-center mb-4">
+                  {/* Avatar Section */}
+                  <div className="flex flex-col items-center mb-4">
+                      <div className="relative mb-2">
+                          {profile.avatar && (
+                              <Image
+                                  src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile.avatar}
+                                  alt={profile.name}
+                                  width={128}
+                                  height={128}
+                                  className="w-32 h-32 rounded-full object-cover border-4 border-indigo-500 shadow-md"
+                              />
+                          )}
+                          <input
+                              type="file"
+                              id="profileAvatar"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
+                          />
+                      </div>
+                      <label htmlFor="profileAvatar" className="bg-indigo-600 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-indigo-700 text-sm">
+                          Cambiar Imagen
+                      </label>
+                  </div>
 
 
-                {/* Name Section */}
-                <div className="flex items-center mb-2 w-full max-w-xs mx-auto">
-                  <input
-                    type="text"
-                    id="profileName"
-                    className="flex-grow text-xl font-bold text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none bg-transparent"
-                    value={profileName}
-                    onChange={(e) => setProfileName(e.target.value)}
-                  />
-                  <button onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">
-                    Editar
-                  </button>
-                </div>
+                  {/* Name Section */}
+                  <div className="flex items-center mb-2 w-full max-w-xs mx-auto">
+                    <input
+                      type="text"
+                      id="profileName"
+                      className="flex-grow text-xl font-bold text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none bg-transparent"
+                      value={profileName}
+                      onChange={(e) => setProfileName(e.target.value)}
+                    />
+                    <button onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">
+                      Editar
+                    </button>
+                  </div>
 
-                {/* Bio Section */}
-                <div className="flex items-start mb-6 w-full max-w-md mx-auto">
-                  <textarea
-                    id="profileBio"
-                    className="flex-grow text-gray-600 text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none resize-none bg-transparent"
-                    value={profileBio}
-                    onChange={(e) => setProfileBio(e.target.value)}
-                    rows={3}
-                  ></textarea>
-                  <button onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm mt-1">
-                    Editar
-                  </button>
+                  {/* Bio Section */}
+                  <div className="flex items-start mb-6 w-full max-w-md mx-auto">
+                    <textarea
+                      id="profileBio"
+                      className="flex-grow text-gray-600 text-center border-b-2 border-gray-300 focus:border-indigo-500 outline-none resize-none bg-transparent"
+                      value={profileBio}
+                      onChange={(e) => setProfileBio(e.target.value)}
+                      rows={3}
+                    ></textarea>
+                    <button onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm mt-1">
+                      Editar
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
-          </section>
-        );
-      case 'links':
-        return (
-          <LinkManager
-            socialLinks={socialLinks}
-            customLinks={customLinks}
-            handleSocialLinkChange={setSocialLinks}
-            handleCustomLinkChange={handleCustomLinkChange}
-            addCustomLink={handleLinkAdd}
-            removeCustomLink={handleLinkDelete}
-          />
+              )}
+            </section>
+
+            <LinkManager
+              links={links}
+              handleLinkChange={handleLinkChange}
+              addLink={handleLinkAdd}
+              removeLink={handleLinkDelete}
+              onReorderLinks={handleReorderLinks}
+            />
+          </>
         );
       case 'design':
         return (
@@ -398,7 +445,6 @@ export default function DashboardPage() {
         <nav className="flex-1">
           <ul>
             <NavLink tabId="profile">Perfil</NavLink>
-            <NavLink tabId="links">Enlaces</NavLink>
             <NavLink tabId="design">Diseño</NavLink>
             <NavLink tabId="stats">Estadísticas</NavLink>
             <NavLink tabId="settings">Ajustes</NavLink>
@@ -435,6 +481,10 @@ export default function DashboardPage() {
               name={profileName}
               bio={profileBio}
               avatar={profileAvatar ? URL.createObjectURL(profileAvatar) : profile.avatar}
+              links={links}
+              button_style={buttonStyle}
+              button_color={buttonColor}
+              button_text_color={buttonTextColor}
             />
           )}
             </div>
