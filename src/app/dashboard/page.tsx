@@ -504,7 +504,7 @@ export default function DashboardPage() {
         </header>
 
         {/* Scrollable Content */}
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4 flex gap-4">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4 flex gap-8">
           <div className="w-2/3 bg-white p-6 rounded-lg shadow-md">
             {renderContent()}
           </div>
@@ -523,6 +523,10 @@ export default function DashboardPage() {
               button_style={buttonStyle}
               button_color={buttonColor}
               button_text_color={buttonTextColor}
+              theme={theme}
+              custom_gradient_start={customGradientStart}
+              custom_gradient_end={customGradientEnd}
+              background_image={backgroundImage}
             />
           )}
             </div>
