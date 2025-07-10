@@ -19,11 +19,15 @@ interface LivePreviewProps {
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
-  theme?: string;
-  custom_gradient_start?: string;
-  custom_gradient_end?: string;
-  background_image?: string | File | null;
+  button_text_opacity?: number; // Nuevo campo
+  button_background_opacity?: number; // Nuevo
+  button_border_color?: string; // Nuevo
+  button_border_opacity?: number; // Nuevo
+  button_shadow_color?: string; // Nuevo
+  button_shadow_opacity?: number; // Nuevo
 }
+
+
 
 const themeMap: { [key: string]: string } = {
   'sky': 'bg-gradient-to-r from-sky-400 to-blue-500',
@@ -41,6 +45,12 @@ const LivePreview: React.FC<LivePreviewProps> = ({
   button_style,
   button_color,
   button_text_color,
+  button_text_opacity, // Recibir el nuevo prop
+  button_background_opacity, // Nuevo
+  button_border_color, // Nuevo
+  button_border_opacity, // Nuevo
+  button_shadow_color, // Nuevo
+  button_shadow_opacity, // Nuevo
   theme,
   custom_gradient_start,
   custom_gradient_end,
@@ -66,27 +76,68 @@ const LivePreview: React.FC<LivePreviewProps> = ({
 
     // Apply background color
     if (bgColor) {
-      inlineStyle.backgroundColor = bgColor;
+      // Convertir el color a RGBA si se proporciona opacidad
+      if (button_background_opacity !== undefined && button_background_opacity < 1) {
+        const hex = bgColor.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        inlineStyle.backgroundColor = `rgba(${r}, ${g}, ${b}, ${button_background_opacity})`;
+      } else {
+        inlineStyle.backgroundColor = bgColor;
+      }
     } else {
-      classes += " bg-blue-600"; // More prominent default background
+      inlineStyle.backgroundColor = `rgba(37, 99, 235, ${button_background_opacity ?? 1})`; // Default blue-600 with opacity
     }
 
     // Apply text color
     if (textColor) {
-      inlineStyle.color = textColor;
+      // Convertir el color a RGBA si se proporciona opacidad
+      if (button_text_opacity !== undefined && button_text_opacity < 1) {
+        const hex = textColor.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        inlineStyle.color = `rgba(${r}, ${g}, ${b}, ${button_text_opacity})`;
+      } else {
+        inlineStyle.color = textColor;
+      }
     } else {
-      classes += " text-white"; // Default text color
+      // Si no hay color de texto, usar blanco con opacidad
+      inlineStyle.color = `rgba(255, 255, 255, ${button_text_opacity ?? 1})`;
     }
 
-    // Add default border
-    classes += " border border-transparent"; // Add a transparent border by default
+    // Apply border color and opacity
+    if (button_border_color) {
+      if (button_border_opacity !== undefined && button_border_opacity < 1) {
+        const hex = button_border_color.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        inlineStyle.borderColor = `rgba(${r}, ${g}, ${b}, ${button_border_opacity})`;
+      } else {
+        inlineStyle.borderColor = button_border_color;
+      }
+      classes += " border"; // Asegurarse de que el borde esté presente
+    } else {
+      classes += " border border-transparent"; // Default transparent border
+    }
 
-    // Añadir padding-top y padding-bottom directamente al inlineStyle
-    inlineStyle.paddingTop = '10px'; // Puedes ajustar este valor
-    inlineStyle.paddingBottom = '10px'; // Puedes ajustar este valor
+    // Apply shadow color and opacity
+    if (button_shadow_color) {
+      if (button_shadow_opacity !== undefined && button_shadow_opacity < 1) {
+        const hex = button_shadow_color.replace('#', '');
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        inlineStyle.boxShadow = `0 4px 6px -1px rgba(${r}, ${g}, ${b}, ${button_shadow_opacity}), 0 2px 4px -2px rgba(${r}, ${g}, ${b}, ${button_shadow_opacity})`; // Tailwind shadow-md
+      } else {
+        inlineStyle.boxShadow = `0 4px 6px -1px ${button_shadow_color}, 0 2px 4px -2px ${button_shadow_color}`; // Tailwind shadow-md
+      }
+    }
 
-    // Añadir margin-top directamente al inlineStyle para el espaciado
-    inlineStyle.marginTop = '10px'; // Puedes ajustar este valor para el espaciado
+    // Añadir margin-top directamente al inlineStyle
+    inlineStyle.marginTop = '16px'; // Puedes ajustar este valor para el espaciado
 
     return { classes, inlineStyle };
   };

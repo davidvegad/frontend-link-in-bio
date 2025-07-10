@@ -11,6 +11,12 @@ interface ProfileData {
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
+  button_text_opacity?: number; // Nuevo campo
+  button_background_opacity?: number; // Nuevo
+  button_border_color?: string; // Nuevo
+  button_border_opacity?: number; // Nuevo
+  button_shadow_color?: string; // Nuevo
+  button_shadow_opacity?: number; // Nuevo
 }
 
 interface DesignCustomizerProps {
@@ -103,36 +109,66 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
       {/* Degradado Personalizado */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-3">Degradado Personalizado</h3>
-        <div
-          className="flex items-center justify-center space-x-4"
-          onClick={() => updateProfileData({ theme: 'custom' })}
-        >
-          <div>
-            <label htmlFor="gradientStart" className="block text-sm font-medium text-gray-700">Inicio</label>
+        <div className="space-y-4"> {/* Contenedor para las dos filas */}
+          {/* Fila Color Superior */}
+          <div className="flex items-center space-x-2">
+            <label className="block text-sm font-medium text-gray-700 w-24">Color Superior</label>
+            <input
+              type="text"
+              value={profileData.custom_gradient_start || ''}
+              onChange={e => updateProfileData({ custom_gradient_start: e.target.value })}
+              onFocus={() => updateProfileData({ theme: 'custom' })} // Seleccionar tema 'custom' al editar
+              className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+              placeholder="#RRGGBB"
+            />
+            <div
+              className="w-8 h-8 rounded-md border border-gray-300"
+              style={{ backgroundColor: profileData.custom_gradient_start || '#FFFFFF' }}
+            ></div>
+            <button
+              onClick={() => navigator.clipboard.writeText(profileData.custom_gradient_start || '')}
+              className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
+              aria-label="Copiar color superior"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+            </button>
             <input
               type="color"
-              id="gradientStart"
               value={profileData.custom_gradient_start || '#FFFFFF'}
               onChange={e => updateProfileData({ custom_gradient_start: e.target.value })}
-              className="w-24 h-12 p-0 border-none cursor-pointer"
+              className="w-8 h-8 p-0 border-none cursor-pointer"
             />
           </div>
-          <div>
-            <label htmlFor="gradientEnd" className="block text-sm font-medium text-gray-700">Fin</label>
+
+          {/* Fila Color Inferior */}
+          <div className="flex items-center space-x-2">
+            <label className="block text-sm font-medium text-gray-700 w-24">Color Inferior</label>
+            <input
+              type="text"
+              value={profileData.custom_gradient_end || ''}
+              onChange={e => updateProfileData({ custom_gradient_end: e.target.value })}
+              onFocus={() => updateProfileData({ theme: 'custom' })} // Seleccionar tema 'custom' al editar
+              className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+              placeholder="#RRGGBB"
+            />
+            <div
+              className="w-8 h-8 rounded-md border border-gray-300"
+              style={{ backgroundColor: profileData.custom_gradient_end || '#000000' }}
+            ></div>
+            <button
+              onClick={() => navigator.clipboard.writeText(profileData.custom_gradient_end || '')}
+              className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
+              aria-label="Copiar color inferior"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+            </button>
             <input
               type="color"
-              id="gradientEnd"
               value={profileData.custom_gradient_end || '#000000'}
               onChange={e => updateProfileData({ custom_gradient_end: e.target.value })}
-              className="w-24 h-12 p-0 border-none cursor-pointer"
+              className="w-8 h-8 p-0 border-none cursor-pointer"
             />
           </div>
-          <div
-            className={`w-32 h-12 rounded-md ${profileData.theme === 'custom' ? 'ring-2 ring-offset-2 ring-indigo-500' : ''}`}
-            style={{
-              background: `linear-gradient(to right, ${profileData.custom_gradient_start || '#FFFFFF'}, ${profileData.custom_gradient_end || '#000000'})`,
-            }}
-          ></div>
         </div>
       </div>
 
@@ -170,25 +206,71 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
           {/* Controles de Color */}
           <div className="space-y-4">
             <h4 className="text-lg font-medium">Colores</h4>
-            <div className="flex items-center justify-between">
-              <label htmlFor="buttonColor" className="font-medium text-gray-700">Fondo</label>
+            <div className="flex items-center space-x-2"> {/* Usar space-x-2 para alinear */}
+              <label htmlFor="buttonColor" className="font-medium text-gray-700 w-16">Fondo</label> {/* Ancho fijo para la etiqueta */}
               <input
                 type="color"
                 id="buttonColor"
                 value={profileData.button_color || '#000000'}
                 onChange={e => updateProfileData({ button_color: e.target.value })}
-                className="w-16 h-10 p-0 border-none cursor-pointer"
+                className="w-8 h-8 p-0 border-none cursor-pointer" // Tamaño más pequeño para el selector de color
               />
-            </div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="buttonTextColor" className="font-medium text-gray-700">Texto</label>
               <input
-                type="color"
-                id="buttonTextColor"
-                value={profileData.button_text_color || '#FFFFFF'}
-                onChange={e => updateProfileData({ button_text_color: e.target.value })}
-                className="w-16 h-10 p-0 border-none cursor-pointer"
+                type="text"
+                value={profileData.button_color || ''}
+                onChange={e => updateProfileData({ button_color: e.target.value })}
+                className="w-24 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm" // Cuadro de texto para el código
+                placeholder="#RRGGBB"
               />
+              <button
+                onClick={() => navigator.clipboard.writeText(profileData.button_color || '')}
+                className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
+                aria-label="Copiar color de fondo del botón"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+              </button>
+            </div>
+            {/* Subsección Color de Fuente */}
+            <div className="space-y-2">
+              <h5 className="text-base font-medium text-gray-700">Color de Fuente</h5>
+              <div className="flex items-center space-x-2"> {/* Usar space-x-2 para alinear */}
+                <label htmlFor="buttonTextColor" className="font-medium text-gray-700 w-16">Color</label> {/* Ancho fijo para la etiqueta */}
+                <input
+                  type="color"
+                  id="buttonTextColor"
+                  value={profileData.button_text_color || '#FFFFFF'}
+                  onChange={e => updateProfileData({ button_text_color: e.target.value })}
+                  className="w-8 h-8 p-0 border-none cursor-pointer" // Tamaño más pequeño para el selector de color
+                />
+                <input
+                  type="text"
+                  value={profileData.button_text_color || ''}
+                  onChange={e => updateProfileData({ button_text_color: e.target.value })}
+                  className="w-24 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm" // Cuadro de texto para el código
+                  placeholder="#RRGGBB"
+                />
+                <button
+                  onClick={() => navigator.clipboard.writeText(profileData.button_text_color || '')}
+                  className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
+                  aria-label="Copiar color de texto del botón"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <label htmlFor="buttonTextOpacity" className="font-medium text-gray-700">Transparencia</label>
+                <input
+                  type="range"
+                  id="buttonTextOpacity"
+                  min="0"
+                  max="100" // Cambiado a 100
+                  step="1"   // Cambiado a 1
+                  value={(profileData.button_text_opacity ?? 1) * 100} // Multiplicar por 100 para mostrar en %
+                  onChange={e => updateProfileData({ button_text_opacity: parseFloat(e.target.value) / 100 })} // Dividir por 100 para guardar como decimal
+                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+                <span className="ml-2 text-sm text-gray-600">{(profileData.button_text_opacity ?? 1) * 100}%</span> {/* Mostrar en % */}
+              </div>
             </div>
           </div>
 

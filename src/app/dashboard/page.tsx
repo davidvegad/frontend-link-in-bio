@@ -35,6 +35,12 @@ interface ProfileData {
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
+  button_text_opacity?: number; // Nuevo campo
+  button_background_opacity?: number; // Nuevo
+  button_border_color?: string; // Nuevo
+  button_border_opacity?: number; // Nuevo
+  button_shadow_color?: string; // Nuevo
+  button_shadow_opacity?: number; // Nuevo
   links: LinkData[];
 }
 
@@ -59,6 +65,12 @@ export default function DashboardPage() {
   const [buttonStyle, setButtonStyle] = useState('');
   const [buttonColor, setButtonColor] = useState('');
   const [buttonTextColor, setButtonTextColor] = useState('');
+  const [buttonTextColorOpacity, setButtonTextColorOpacity] = useState(1); // Nuevo estado, valor por defecto 1 (100%)
+  const [buttonBackgroundOpacity, setButtonBackgroundOpacity] = useState(1); // Nuevo
+  const [buttonBorderColor, setButtonBorderColor] = useState(''); // Nuevo
+  const [buttonBorderOpacity, setButtonBorderOpacity] = useState(1); // Nuevo
+  const [buttonShadowColor, setButtonShadowColor] = useState(''); // Nuevo
+  const [buttonShadowOpacity, setButtonShadowOpacity] = useState(1); // Nuevo
 
   // Unified link state
   const [links, setLinks] = useState<LinkData[]>([]);
@@ -138,6 +150,12 @@ export default function DashboardPage() {
       setButtonStyle(fetchedProfile.button_style || '');
       setButtonColor(fetchedProfile.button_color || '');
       setButtonTextColor(fetchedProfile.button_text_color || '');
+      setButtonTextColorOpacity(fetchedProfile.button_text_opacity ?? 1); // Inicializar con el valor del perfil o 1 por defecto
+      setButtonBackgroundOpacity(fetchedProfile.button_background_opacity ?? 1); // Nuevo
+      setButtonBorderColor(fetchedProfile.button_border_color || ''); // Nuevo
+      setButtonBorderOpacity(fetchedProfile.button_border_opacity ?? 1); // Nuevo
+      setButtonShadowColor(fetchedProfile.button_shadow_color || ''); // Nuevo
+      setButtonShadowOpacity(fetchedProfile.button_shadow_opacity ?? 1); // Nuevo
       setLinks(fetchedProfile.links || []);
 
     } catch (err: any) {
@@ -170,6 +188,12 @@ export default function DashboardPage() {
     formData.append('button_style', buttonStyle);
     formData.append('button_color', buttonColor);
     formData.append('button_text_color', buttonTextColor);
+    formData.append('button_text_opacity', buttonTextColorOpacity.toString()); // Convertir a string para FormData
+    formData.append('button_background_opacity', buttonBackgroundOpacity.toString()); // Nuevo
+    formData.append('button_border_color', buttonBorderColor); // Nuevo
+    formData.append('button_border_opacity', buttonBorderOpacity.toString()); // Nuevo
+    formData.append('button_shadow_color', buttonShadowColor); // Nuevo
+    formData.append('button_shadow_opacity', buttonShadowOpacity.toString()); // Nuevo
 
     // Append links data
     // Append links data
@@ -449,6 +473,12 @@ export default function DashboardPage() {
               button_style: buttonStyle,
               button_color: buttonColor,
               button_text_color: buttonTextColor,
+              button_text_opacity: buttonTextColorOpacity, // Pasar el nuevo estado
+              button_background_opacity: buttonBackgroundOpacity, // Nuevo
+              button_border_color: buttonBorderColor, // Nuevo
+              button_border_opacity: buttonBorderOpacity, // Nuevo
+              button_shadow_color: buttonShadowColor, // Nuevo
+              button_shadow_opacity: buttonShadowOpacity, // Nuevo
             }}
             updateProfileData={(newData) => {
               if (newData.theme !== undefined) setTheme(newData.theme);
@@ -457,6 +487,12 @@ export default function DashboardPage() {
               if (newData.button_style !== undefined) setButtonStyle(newData.button_style);
               if (newData.button_color !== undefined) setButtonColor(newData.button_color);
               if (newData.button_text_color !== undefined) setButtonTextColor(newData.button_text_color);
+              if (newData.button_text_opacity !== undefined) setButtonTextColorOpacity(newData.button_text_opacity); // Actualizar el nuevo estado
+              if (newData.button_background_opacity !== undefined) setButtonBackgroundOpacity(newData.button_background_opacity); // Nuevo
+              if (newData.button_border_color !== undefined) setButtonBorderColor(newData.button_border_color); // Nuevo
+              if (newData.button_border_opacity !== undefined) setButtonBorderOpacity(newData.button_border_opacity); // Nuevo
+              if (newData.button_shadow_color !== undefined) setButtonShadowColor(newData.button_shadow_color); // Nuevo
+              if (newData.button_shadow_opacity !== undefined) setButtonShadowOpacity(newData.button_shadow_opacity); // Nuevo
             }}
             setBackgroundImageFile={setBackgroundImage}
           />
@@ -526,6 +562,12 @@ export default function DashboardPage() {
               button_style={buttonStyle}
               button_color={buttonColor}
               button_text_color={buttonTextColor}
+              button_text_opacity={buttonTextColorOpacity} // Pasar el nuevo estado
+              button_background_opacity={buttonBackgroundOpacity} // Nuevo
+              button_border_color={buttonBorderColor} // Nuevo
+              button_border_opacity={buttonBorderOpacity} // Nuevo
+              button_shadow_color={buttonShadowColor} // Nuevo
+              button_shadow_opacity={buttonShadowOpacity} // Nuevo
               theme={theme}
               custom_gradient_start={customGradientStart}
               custom_gradient_end={customGradientEnd}
