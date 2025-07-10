@@ -1,3 +1,143 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-inter {
+  font-family: var(--font-inter);
+}
+
+.font-roboto-mono {
+  font-family: var(--font-roboto-mono);
+}
+
+.font-lora {
+  font-family: var(--font-lora);
+}
+
+.font-playfair-display {
+  font-family: var(--font-playfair-display);
+}
+
+.font-montserrat {
+  font-family: var(--font-montserrat);
+}
+
+.font-poppins {
+  font-family: var(--font-poppins);
+}
+
+.font-saira {
+  font-family: var(--font-saira);
+}
+
+.font-mulish {
+  font-family: var(--font-mulish);
+}
+
+.font-roboto {
+  font-family: var(--font-roboto);
+}
+
+.font-jost {
+  font-family: var(--font-jost);
+}
+
+.font-quicksand {
+  font-family: var(--font-quicksand);
+}
+
+.font-karla {
+  font-family: var(--font-karla);
+}
+
+.font-solway {
+  font-family: var(--font-solway);
+}
+
+.font-arvo {
+  font-family: var(--font-arvo);
+}
+
+.font-berkshire-swash {
+  font-family: var(--font-berkshire-swash);
+}
+
+.font-itim {
+  font-family: var(--font-itim);
+}
+
+.font-bellota {
+  font-family: var(--font-bellota);
+}
+
+.font-aldrich {
+  font-family: var(--font-aldrich);
+}
+
+.font-palanquin-dark {
+  font-family: var(--font-palanquin-dark);
+}
+
+.font-comic-neue {
+  font-family: var(--font-comic-neue);
+}
+
+.font-source-sans-3 {
+  font-family: var(--font-source-sans-3);
+}
+
+.font-spectral {
+  font-family: var(--font-spectral);
+}
+
+.font-open-sans {
+  font-family: var(--font-open-sans);
+}
+
+.font-lato {
+  font-family: var(--font-lato);
+}
+
+.font-oswald {
+  font-family: var(--font-oswald);
+}
+
+.font-pt-sans {
+  font-family: var(--font-pt-sans);
+}
+
+.font-merriweather {
+  font-family: var(--font-merriweather);
+}
+
+.font-ubuntu {
+  font-family: var(--font-ubuntu);
+}
+
+.font-nunito {
+  font-family: var(--font-nunito);
+}
+
+.font-fira-sans {
+  font-family: var(--font-fira-sans);
+}
+
+.font-crimson-text {
+  font-family: var(--font-crimson-text);
+}
+
+.font-libre-baskerville {
+  font-family: var(--font-libre-baskerville);
+}
+
+.font-work-sans {
+  font-family: var(--font-work-sans);
+}
+
+.font-caveat {
+  font-family: var(--font-caveat);
+}
+
+.font-pacifico {
+  font-family: var(--font-pacifico);
+}

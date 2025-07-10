@@ -41,6 +41,7 @@ interface ProfileData {
   button_border_opacity?: number; // Nuevo
   button_shadow_color?: string; // Nuevo
   button_shadow_opacity?: number; // Nuevo
+  font_family?: string; // Nuevo
   links: LinkData[];
 }
 
@@ -65,12 +66,13 @@ export default function DashboardPage() {
   const [buttonStyle, setButtonStyle] = useState('');
   const [buttonColor, setButtonColor] = useState('');
   const [buttonTextColor, setButtonTextColor] = useState('');
-  const [buttonTextColorOpacity, setButtonTextColorOpacity] = useState(1); // Nuevo estado, valor por defecto 1 (100%)
-  const [buttonBackgroundOpacity, setButtonBackgroundOpacity] = useState(1); // Nuevo
-  const [buttonBorderColor, setButtonBorderColor] = useState(''); // Nuevo
-  const [buttonBorderOpacity, setButtonBorderOpacity] = useState(1); // Nuevo
-  const [buttonShadowColor, setButtonShadowColor] = useState(''); // Nuevo
-  const [buttonShadowOpacity, setButtonShadowOpacity] = useState(1); // Nuevo
+  const [buttonTextColorOpacity, setButtonTextColorOpacity] = useState(1);
+  const [buttonBackgroundOpacity, setButtonBackgroundOpacity] = useState(1);
+  const [buttonBorderColor, setButtonBorderColor] = useState('');
+  const [buttonBorderOpacity, setButtonBorderOpacity] = useState(1);
+  const [buttonShadowColor, setButtonShadowColor] = useState('');
+  const [buttonShadowOpacity, setButtonShadowOpacity] = useState(1);
+  const [fontFamily, setFontFamily] = useState(''); // Nuevo estado para la fuente
 
   // Unified link state
   const [links, setLinks] = useState<LinkData[]>([]);
@@ -156,6 +158,7 @@ export default function DashboardPage() {
       setButtonBorderOpacity(fetchedProfile.button_border_opacity ?? 1); // Nuevo
       setButtonShadowColor(fetchedProfile.button_shadow_color || ''); // Nuevo
       setButtonShadowOpacity(fetchedProfile.button_shadow_opacity ?? 1); // Nuevo
+      setFontFamily(fetchedProfile.font_family || 'font-inter'); // Inicializar fuente
       setLinks(fetchedProfile.links || []);
 
     } catch (err: any) {
@@ -194,6 +197,7 @@ export default function DashboardPage() {
     formData.append('button_border_opacity', buttonBorderOpacity.toString()); // Nuevo
     formData.append('button_shadow_color', buttonShadowColor); // Nuevo
     formData.append('button_shadow_opacity', buttonShadowOpacity.toString()); // Nuevo
+    formData.append('font_family', fontFamily); // Añadir font_family al FormData
 
     // Append links data
     // Append links data
@@ -479,6 +483,7 @@ export default function DashboardPage() {
               button_border_opacity: buttonBorderOpacity, // Nuevo
               button_shadow_color: buttonShadowColor, // Nuevo
               button_shadow_opacity: buttonShadowOpacity, // Nuevo
+              font_family: fontFamily, // Pasar estado de fuente
             }}
             updateProfileData={(newData) => {
               if (newData.theme !== undefined) setTheme(newData.theme);
@@ -487,12 +492,13 @@ export default function DashboardPage() {
               if (newData.button_style !== undefined) setButtonStyle(newData.button_style);
               if (newData.button_color !== undefined) setButtonColor(newData.button_color);
               if (newData.button_text_color !== undefined) setButtonTextColor(newData.button_text_color);
-              if (newData.button_text_opacity !== undefined) setButtonTextColorOpacity(newData.button_text_opacity); // Actualizar el nuevo estado
-              if (newData.button_background_opacity !== undefined) setButtonBackgroundOpacity(newData.button_background_opacity); // Nuevo
-              if (newData.button_border_color !== undefined) setButtonBorderColor(newData.button_border_color); // Nuevo
-              if (newData.button_border_opacity !== undefined) setButtonBorderOpacity(newData.button_border_opacity); // Nuevo
-              if (newData.button_shadow_color !== undefined) setButtonShadowColor(newData.button_shadow_color); // Nuevo
-              if (newData.button_shadow_opacity !== undefined) setButtonShadowOpacity(newData.button_shadow_opacity); // Nuevo
+              if (newData.button_text_opacity !== undefined) setButtonTextColorOpacity(newData.button_text_opacity);
+              if (newData.button_background_opacity !== undefined) setButtonBackgroundOpacity(newData.button_background_opacity);
+              if (newData.button_border_color !== undefined) setButtonBorderColor(newData.button_border_color);
+              if (newData.button_border_opacity !== undefined) setButtonBorderOpacity(newData.button_border_opacity);
+              if (newData.button_shadow_color !== undefined) setButtonShadowColor(newData.button_shadow_color);
+              if (newData.button_shadow_opacity !== undefined) setButtonShadowOpacity(newData.button_shadow_opacity);
+              if (newData.font_family !== undefined) setFontFamily(newData.font_family); // Actualizar estado de fuente
             }}
             setBackgroundImageFile={setBackgroundImage}
           />
@@ -572,6 +578,7 @@ export default function DashboardPage() {
               custom_gradient_start={customGradientStart}
               custom_gradient_end={customGradientEnd}
               background_image={backgroundImage}
+              font_family={fontFamily} // Pasar la fuente seleccionada
             />
           )}
             </div>
