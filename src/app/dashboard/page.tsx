@@ -6,6 +6,7 @@ import Image from 'next/image';
 import LivePreview from '@/app/components/LivePreview';
 import DesignCustomizer from '@/app/components/DesignCustomizer';
 import LinkManager from '@/app/components/LinkManager';
+import LinkTypeSelectionModal from '@/app/components/LinkTypeSelectionModal'; // Añadir esta importación
 import { debounce } from 'lodash';
 
 // Interfaces
@@ -63,6 +64,8 @@ export default function DashboardPage() {
   const [links, setLinks] = useState<LinkData[]>([]);
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+  const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false); // Nuevo estado para el modal
 
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -202,7 +205,7 @@ export default function DashboardPage() {
     }
   };
 
-  const handleLinkAdd = async () => {
+  const handleLinkAdd = async (linkType: string) => {
     if (!profile) return;
     const accessToken = localStorage.getItem('accessToken');
 
@@ -224,7 +227,7 @@ export default function DashboardPage() {
           profile: profile.id,
           title: newLinkTitle,
           url: 'https://example.com', // Provide a default valid URL
-          type: 'generic'
+          type: linkType // Usar el tipo de enlace seleccionado
         }),
       });
       if (!response.ok) throw new Error('Failed to add link.');
@@ -429,7 +432,7 @@ export default function DashboardPage() {
             <LinkManager
               links={links}
               handleLinkChange={handleLinkChange}
-              addLink={handleLinkAdd}
+              addLink={() => setIsLinkTypeModalOpen(true)} // Modificado para abrir el modal
               removeLink={handleLinkDelete}
               onReorderLinks={handleReorderLinks}
             />
@@ -533,6 +536,11 @@ export default function DashboardPage() {
           </div>
         </main>
       </div>
+    <LinkTypeSelectionModal
+        isOpen={isLinkTypeModalOpen}
+        onClose={() => setIsLinkTypeModalOpen(false)}
+        onSelectType={handleLinkAdd} // Pasar handleLinkAdd como callback
+      />
     </div>
   );
 }

@@ -20,10 +20,27 @@ interface DesignCustomizerProps {
 }
 
 const predefinedThemes = [
-  { id: 'sky', name: 'Cielo', gradient: 'bg-gradient-to-r from-sky-400 to-blue-500' },
-  { id: 'midnight', name: 'Medianoche', gradient: 'bg-gradient-to-r from-gray-800 to-black' },
-  { id: 'aurora', name: 'Aurora', gradient: 'bg-gradient-to-r from-purple-500 to-pink-500' },
-  { id: 'sunset', name: 'Atardecer', gradient: 'bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500' },
+  { id: 'sky', name: 'Cielo', start: '#60a5fa', end: '#3b82f6', textColor: 'text-white' },
+  
+  { id: 'aurora', name: 'Aurora', start: '#8b5cf6', end: '#ec4899', textColor: 'text-white' },
+  { id: 'sunset', name: 'Atardecer', start: '#facc15', end: '#f43f5e', textColor: 'text-white' },
+  { id: 'oasis', name: 'Oasis', start: '#6d28d9', end: '#10b981', textColor: 'text-white' },
+  { id: 'flower', name: 'Flor', start: '#ec4899', end: '#f472b6', textColor: 'text-white' },
+  { id: 'breeze', name: 'Brisa', start: '#a7f3d0', end: '#6ee7b7', textColor: 'text-black' }, // Claro
+  { id: 'nebula', name: 'Nébula', start: '#6366f1', end: '#a855f7', textColor: 'text-white' },
+  { id: 'obsidian', name: 'Obsidiana', start: '#6b7280', end: '#9ca3af', textColor: 'text-black' }, // Cambiado a colores más claros
+  { id: 'lightning', name: 'Rayo', start: '#facc15', end: '#f97316', textColor: 'text-white' },
+  { id: 'splash', name: 'Salpicón', start: '#ef4444', end: '#3b82f6', textColor: 'text-white' },
+  { id: 'flamingo', name: 'Flamenco', start: '#fb7185', end: '#f43f5e', textColor: 'text-white' },
+  { id: 'fog', name: 'Niebla', start: '#e5e7eb', end: '#9ca3af', textColor: 'text-black' }, // Claro
+  { id: 'ivory', name: 'Marfil', start: '#f5f5dc', end: '#f0f0c0', textColor: 'text-black' }, // Claro
+  { id: 'solstice', name: 'Solsticio', start: '#fde047', end: '#f97316', textColor: 'text-black' }, // Claro
+  { id: 'meadow', name: 'Pradera', start: '#84cc16', end: '#4ade80', textColor: 'text-black' }, // Claro
+  { id: 'brio', name: 'Brío', start: '#f97316', end: '#facc15', textColor: 'text-black' }, // Claro
+  { id: 'velvet', name: 'Terciopelo', start: '#7e22ce', end: '#9333ea', textColor: 'text-white' },
+  { id: 'laguna', name: 'Laguna', start: '#a855f7', end: '#d946ef', textColor: 'text-white' },
+  { id: 'stone', name: 'Piedra', start: '#78716c', end: '#57534e', textColor: 'text-white' },
+  { id: 'cloud', name: 'Nube', start: '#e0f2fe', end: '#bfdbfe', textColor: 'text-black' }, // Claro
 ];
 
 const buttonStylesOptions = [
@@ -56,26 +73,28 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
       {/* Temas Prediseñados */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-3">Temas Prediseñados</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="flex flex-wrap gap-4 overflow-x-auto pb-4">
           {predefinedThemes.map(themeOption => (
             <div
               key={themeOption.id}
               onClick={() =>
                 updateProfileData({
-                  theme: themeOption.id,
-                  custom_gradient_start: '',
-                  custom_gradient_end: '',
-                  background_image: null,
+                  theme: themeOption.id, // Mantener el ID del tema para referencia
+                  custom_gradient_start: themeOption.start, // Establecer el color de inicio
+                  custom_gradient_end: themeOption.end,   // Establecer el color de fin
+                  background_image: null, // Limpiar imagen de fondo
                 })
               }
-              className="cursor-pointer"
+              className="cursor-pointer flex-shrink-0 w-[112px]"
             >
               <div
-                className={`w-full h-16 rounded-md ${themeOption.gradient} ${
+                className={`w-full h-[96px] rounded-lg flex items-center justify-center font-semibold text-sm text-center ${themeOption.textColor} ${
                   profileData.theme === themeOption.id ? 'ring-2 ring-offset-2 ring-indigo-500' : ''
                 }`}
-              ></div>
-              <p className="text-center text-sm mt-2">{themeOption.name}</p>
+                style={{ background: `linear-gradient(to right, ${themeOption.start}, ${themeOption.end})` }} // Aplicar el gradiente aquí
+              >
+                {themeOption.name} {/* Mostrar el nombre del tema */}
+              </div>
             </div>
           ))}
         </div>

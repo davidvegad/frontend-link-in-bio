@@ -53,7 +53,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({
   console.log("LivePreview received custom_gradient_end:", custom_gradient_end); // DEBUG
 
   const getButtonClasses = (style?: string, bgColor?: string, textColor?: string) => {
-    let classes = "block text-center py-2 px-3 transition-colors duration-300 shadow-md";
+    let classes = "block text-center px-3 transition-colors duration-300 shadow-md no-underline"; // Eliminamos py-X de aquí
     let inlineStyle: React.CSSProperties = {};
 
     // Apply button style
@@ -81,6 +81,13 @@ const LivePreview: React.FC<LivePreviewProps> = ({
     // Add default border
     classes += " border border-transparent"; // Add a transparent border by default
 
+    // Añadir padding-top y padding-bottom directamente al inlineStyle
+    inlineStyle.paddingTop = '10px'; // Puedes ajustar este valor
+    inlineStyle.paddingBottom = '10px'; // Puedes ajustar este valor
+
+    // Añadir margin-top directamente al inlineStyle para el espaciado
+    inlineStyle.marginTop = '10px'; // Puedes ajustar este valor para el espaciado
+
     return { classes, inlineStyle };
   };
 
@@ -98,20 +105,17 @@ const LivePreview: React.FC<LivePreviewProps> = ({
     backgroundInlineStyle.backgroundSize = 'cover';
     backgroundInlineStyle.backgroundPosition = 'center';
     backgroundInlineStyle.backgroundRepeat = 'no-repeat';
-  } else if (custom_gradient_start && custom_gradient_end) {
+  } else if (custom_gradient_start && custom_gradient_start.trim() !== '' && custom_gradient_end && custom_gradient_end.trim() !== '') {
     backgroundInlineStyle.background = `linear-gradient(to bottom right, ${custom_gradient_start}, ${custom_gradient_end})`;
-  } else if (theme && themeMap[theme]) {
-    backgroundClasses = themeMap[theme];
-    backgroundInlineStyle = {}; // Reset inline style if a predefined theme is used
-  } else {
-    backgroundClasses = "bg-gray-100"; // Default background if no theme or gradient
+  } else { // Si no hay imagen de fondo ni degradado personalizado, usar el fondo por defecto
+    backgroundClasses = "bg-gray-100"; // Default background if no image or gradient
   }
 
   console.log("Final backgroundClasses:", backgroundClasses); // DEBUG
   console.log("Final backgroundInlineStyle:", backgroundInlineStyle); // DEBUG
 
   return (
-    <div className={`w-[320px] h-[400px] border border-gray-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6 ${backgroundClasses}`} style={backgroundInlineStyle}>
+    <div className={`w-[320px] h-[600px] border border-gray-300 rounded-2xl overflow-hidden shadow-md flex flex-col items-center p-6 ${backgroundClasses}`} style={backgroundInlineStyle}>
       <div className="relative mb-4">
         {avatar ? (
           <Image
