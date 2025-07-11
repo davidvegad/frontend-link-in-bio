@@ -80,7 +80,8 @@ export default function ProfileClient({ params }: ProfileClientProps) {
       {profile.background_preference === 'image' && profile.background_image && overlayClass && (
         <div className={`absolute inset-0 w-full h-full ${overlayClass} z-[1]`}></div>
       )}
-      <div className="relative z-10 bg-white bg-opacity-90 p-8 rounded-lg shadow-xl max-w-md w-full text-center">
+      {/* Mobile-like container */}
+      <div className="relative z-10 w-[320px] h-[600px] rounded-2xl shadow-lg flex flex-col items-center p-6 overflow-y-auto bg-white bg-opacity-90">
         {profile.avatar && (
           <Image
             src={profile.avatar}
@@ -93,7 +94,7 @@ export default function ProfileClient({ params }: ProfileClientProps) {
         <h1 className={`text-3xl font-bold mb-2 ${nameColorClass} ${textShadowClass}`}>{profile.name}</h1>
         <p className={`mb-6 ${bioColorClass} ${textShadowClass}`}>{profile.bio}</p>
 
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           {profile.links.map(link => (
             link.url && (
               <a

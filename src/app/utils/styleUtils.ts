@@ -109,7 +109,7 @@ export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgrou
   } else if (profile.theme) {
     const selectedTheme = predefinedThemes.find(t => t.id === profile.theme);
     if (selectedTheme) {
-      backgroundStyle = { background: selectedTheme.gradient };
+      backgroundStyle = { background: `linear-gradient(to bottom right, ${selectedTheme.start}, ${selectedTheme.end})` };
     }
   } else {
     backgroundStyle = { backgroundColor: '#F3F4F6' }; // Default gray
