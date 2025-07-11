@@ -3,11 +3,14 @@
 import React from 'react';
 import Image from 'next/image';
 
+// Updated interface to include new fields
 interface ProfileData {
   theme?: string;
   custom_gradient_start?: string;
   custom_gradient_end?: string;
   background_image?: string | File | null;
+  background_preference?: 'image' | 'color';
+  image_overlay?: 'none' | 'dark' | 'light';
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
@@ -17,7 +20,7 @@ interface ProfileData {
   button_border_opacity?: number;
   button_shadow_color?: string;
   button_shadow_opacity?: number;
-  font_family?: string; // Nuevo campo para la fuente
+  font_family?: string;
 }
 
 interface DesignCustomizerProps {
@@ -98,138 +101,204 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
   updateProfileData,
   setBackgroundImageFile,
 }) => {
+  const [activeBackgroundTab, setActiveBackgroundTab] = React.useState<'colors' | 'upload' | 'gallery'>(
+    profileData.background_preference === 'image' ? 'upload' : 'colors'
+  );
+
+  React.useEffect(() => {
+    setActiveBackgroundTab(profileData.background_preference === 'image' ? 'upload' : 'colors');
+  }, [profileData.background_preference]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setBackgroundImageFile(e.target.files[0]);
-      updateProfileData({ background_image: e.target.files[0] });
+      updateProfileData({
+        background_image: e.target.files[0],
+        background_preference: 'image',
+        theme: undefined,
+        custom_gradient_start: undefined,
+        custom_gradient_end: undefined,
+      });
     }
   };
 
   const handleClearBackgroundImage = () => {
     setBackgroundImageFile(null);
-    updateProfileData({ background_image: null });
+    updateProfileData({ background_image: null, background_preference: 'color' });
   };
 
-  return (
-    <section id="design-section" className="mb-8 border-b pb-6">
-      <h2 className="text-2xl font-semibold mb-4">Diseño de tu Página</h2>
+  const handleBackgroundTabChange = (option: 'colors' | 'upload' | 'gallery') => {
+    setActiveBackgroundTab(option);
+    if (option === 'colors') {
+      updateProfileData({ background_preference: 'color' });
+    } else if (option === 'upload') {
+      updateProfileData({ background_preference: 'image' });
+    }
+  };
 
-      {/* Temas Prediseñados */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-3">Temas Prediseñados</h3>
-        <div className="flex flex-wrap gap-4 overflow-x-auto pb-4">
-          {predefinedThemes.map(themeOption => (
-            <div
-              key={themeOption.id}
-              onClick={() =>
-                updateProfileData({
-                  theme: themeOption.id,
-                  custom_gradient_start: themeOption.start,
-                  custom_gradient_end: themeOption.end,
-                  background_image: null,
-                })
-              }
-              className="cursor-pointer flex-shrink-0 w-[112px]"
+  const imagePreviewUrl = React.useMemo(() => {
+    if (profileData.background_image instanceof File) {
+      return URL.createObjectURL(profileData.background_image);
+    }
+    return profileData.background_image;
+  }, [profileData.background_image]);
+
+  return (
+    <section id="design-section" className="space-y-8">
+      <h2 className="text-2xl font-semibold">Diseño de tu Página</h2>
+
+      {/* Background Section */}
+      <div>
+        <h3 className="text-xl font-semibold mb-4">Fondo</h3>
+        <div className="grid grid-cols-3 gap-2 p-1 bg-gray-200 rounded-lg mb-4">
+          {[
+            { id: 'upload', label: 'Subir' },
+            { id: 'gallery', label: 'Galería' },
+            { id: 'colors', label: 'Colores' },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => handleBackgroundTabChange(tab.id as any)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                activeBackgroundTab === tab.id
+                  ? 'bg-white text-indigo-700 shadow-sm'
+                  : 'bg-transparent text-gray-600 hover:bg-white/50'
+              }`}
+              disabled={tab.id === 'gallery'} // Disable gallery for now
             >
-              <div
-                className={`w-full h-[96px] rounded-lg flex items-center justify-center font-semibold text-sm text-center ${themeOption.textColor} ${
-                  profileData.theme === themeOption.id ? 'ring-2 ring-offset-2 ring-indigo-500' : ''
-                }`}
-                style={{ background: `linear-gradient(to right, ${themeOption.start}, ${themeOption.end})` }}
-              >
-                {themeOption.name}
-              </div>
-            </div>
+              {tab.id === 'gallery' ? 'Galería (próx.)' : tab.label}
+            </button>
           ))}
         </div>
-      </div>
 
-      {/* Degradado Personalizado */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-3">Degradado Personalizado</h3>
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <label className="block text-sm font-medium text-gray-700 w-24">Color Superior</label>
-            <input
-              type="text"
-              value={profileData.custom_gradient_start || ''}
-              onChange={e => updateProfileData({ custom_gradient_start: e.target.value })}
-              onFocus={() => updateProfileData({ theme: 'custom' })}
-              className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
-              placeholder="#RRGGBB"
-            />
-            <div
-              className="w-8 h-8 rounded-md border border-gray-300"
-              style={{ backgroundColor: profileData.custom_gradient_start || '#FFFFFF' }}
-            ></div>
-            <button
-              onClick={() => navigator.clipboard.writeText(profileData.custom_gradient_start || '')}
-              className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
-              aria-label="Copiar color superior"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
-            </button>
-            <input
-              type="color"
-              value={profileData.custom_gradient_start || '#FFFFFF'}
-              onChange={e => updateProfileData({ custom_gradient_start: e.target.value })}
-              className="w-8 h-8 p-0 border-none cursor-pointer"
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <label className="block text-sm font-medium text-gray-700 w-24">Color Inferior</label>
-            <input
-              type="text"
-              value={profileData.custom_gradient_end || ''}
-              onChange={e => updateProfileData({ custom_gradient_end: e.target.value })}
-              onFocus={() => updateProfileData({ theme: 'custom' })}
-              className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
-              placeholder="#RRGGBB"
-            />
-            <div
-              className="w-8 h-8 rounded-md border border-gray-300"
-              style={{ backgroundColor: profileData.custom_gradient_end || '#000000' }}
-            ></div>
-            <button
-              onClick={() => navigator.clipboard.writeText(profileData.custom_gradient_end || '')}
-              className="p-1 text-gray-500 hover:text-gray-800 rounded-full"
-              aria-label="Copiar color inferior"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path></svg>
-            </button>
-            <input
-              type="color"
-              value={profileData.custom_gradient_end || '#000000'}
-              onChange={e => updateProfileData({ custom_gradient_end: e.target.value })}
-              className="w-8 h-8 p-0 border-none cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
+        {activeBackgroundTab === 'colors' && (
+          <div className="space-y-6">
+            {/* Predefined Themes */}
+            <div>
+              <h4 className="text-lg font-semibold mb-3">Temas Prediseñados</h4>
+              <div className="flex flex-wrap gap-4">
+                {predefinedThemes.map(themeOption => (
+                  <div
+                    key={themeOption.id}
+                    onClick={() =>
+                      updateProfileData({
+                        theme: themeOption.id,
+                        custom_gradient_start: themeOption.start,
+                        custom_gradient_end: themeOption.end,
+                        background_preference: 'color',
+                      })
+                    }
+                    className="cursor-pointer flex-shrink-0 w-28"
+                  >
+                    <div
+                      className={`w-full h-24 rounded-lg flex items-center justify-center font-semibold text-sm text-center p-2 transition-all duration-200 ${
+                        profileData.theme === themeOption.id
+                          ? 'ring-2 ring-offset-2 ring-indigo-500'
+                          : 'ring-1 ring-gray-300 hover:ring-indigo-400'
+                      } ${themeOption.textColor}`}
+                      style={{ background: `linear-gradient(to right, ${themeOption.start}, ${themeOption.end})` }}
+                    >
+                      {themeOption.name}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-      {/* Imagen de Fondo */}
-      <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-3">Imagen de Fondo</h3>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
-        />
-        {profileData.background_image && (
-          <div className="mt-2 flex items-center space-x-2">
-            {typeof profileData.background_image === 'string' ? (
-              <Image src={profileData.background_image} alt="Background Preview" width={100} height={100} className="rounded-md object-cover" />
-            ) : (
-              <p className="text-sm text-gray-500">Archivo seleccionado: {profileData.background_image.name}</p>
+            {/* Custom Gradient */}
+            <div>
+              <h4 className="text-lg font-semibold mb-3">Degradado Personalizado</h4>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <label className="block text-sm font-medium text-gray-700 w-24">Inicio</label>
+                  <input
+                    type="color"
+                    value={profileData.custom_gradient_start || '#FFFFFF'}
+                    onChange={e => updateProfileData({ custom_gradient_start: e.target.value, theme: 'custom', background_preference: 'color' })}
+                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={profileData.custom_gradient_start || ''}
+                    onChange={e => updateProfileData({ custom_gradient_start: e.target.value, theme: 'custom', background_preference: 'color' })}
+                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                    placeholder="#RRGGBB"
+                  />
+                </div>
+                <div className="flex items-center space-x-2">
+                  <label className="block text-sm font-medium text-gray-700 w-24">Fin</label>
+                  <input
+                    type="color"
+                    value={profileData.custom_gradient_end || '#000000'}
+                    onChange={e => updateProfileData({ custom_gradient_end: e.target.value, theme: 'custom', background_preference: 'color' })}
+                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  />
+                  <input
+                    type="text"
+                    value={profileData.custom_gradient_end || ''}
+                    onChange={e => updateProfileData({ custom_gradient_end: e.target.value, theme: 'custom', background_preference: 'color' })}
+                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                    placeholder="#RRGGBB"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeBackgroundTab === 'upload' && (
+          <div className="space-y-4">
+            <h4 className="text-lg font-semibold">Subir Imagen de Fondo</h4>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
+            />
+            {imagePreviewUrl && (
+              <div className="p-4 border rounded-lg space-y-4">
+                <div className="flex items-center space-x-4">
+                  <Image src={imagePreviewUrl} alt="Background Preview" width={100} height={100} className="rounded-md object-cover" />
+                  <button
+                    type="button"
+                    onClick={handleClearBackgroundImage}
+                    className="bg-red-100 text-red-700 hover:bg-red-200 px-3 py-1 rounded-md text-sm font-medium"
+                  >
+                    Eliminar Imagen
+                  </button>
+                </div>
+                {/* Image Overlay Section */}
+                <div>
+                  <h5 className="text-md font-semibold mb-2">Superposición de color</h5>
+                  <div className="flex space-x-2">
+                    {[
+                      { id: 'none', label: 'Ninguno' },
+                      { id: 'dark', label: 'Oscuro' },
+                      { id: 'light', label: 'Claro' },
+                    ].map(overlay => (
+                      <button
+                        key={overlay.id}
+                        onClick={() => updateProfileData({ image_overlay: overlay.id as any })}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                          profileData.image_overlay === overlay.id
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                        }`}
+                      >
+                        {overlay.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             )}
-            <button
-              type="button"
-              onClick={handleClearBackgroundImage}
-              className="text-red-500 hover:text-red-700 text-sm"
-            >
-              Eliminar
-            </button>
+          </div>
+        )}
+
+        {activeBackgroundTab === 'gallery' && (
+          <div>
+            <h4 className="text-lg font-semibold">Galería de Imágenes</h4>
+            <p className="text-gray-600 text-sm">Esta sección estará disponible pronto.</p>
           </div>
         )}
       </div>

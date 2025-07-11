@@ -15,5 +15,8 @@ module.exports = {
   safelist: [
     'text-white',
     'text-black',
+    'bg-black',
+    'bg-white',
+    'bg-opacity-50',
   ],
 };

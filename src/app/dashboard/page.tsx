@@ -6,6 +6,8 @@ import Image from 'next/image';
 import LivePreview from '@/app/components/LivePreview';
 import DesignCustomizer from '@/app/components/DesignCustomizer';
 import LinkManager from '@/app/components/LinkManager';
+import Settings from '@/app/components/Settings';
+import Analytics from '@/app/components/Analytics';
 import LinkTypeSelectionModal from '@/app/components/LinkTypeSelectionModal'; // Añadir esta importación
 import { debounce } from 'lodash';
 
@@ -32,16 +34,18 @@ interface ProfileData {
   custom_gradient_start?: string;
   custom_gradient_end?: string;
   background_image?: string;
+  background_preference?: 'image' | 'color';
+  image_overlay?: 'none' | 'dark' | 'light';
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
-  button_text_opacity?: number; // Nuevo campo
-  button_background_opacity?: number; // Nuevo
-  button_border_color?: string; // Nuevo
-  button_border_opacity?: number; // Nuevo
-  button_shadow_color?: string; // Nuevo
-  button_shadow_opacity?: number; // Nuevo
-  font_family?: string; // Nuevo
+  button_text_opacity?: number;
+  button_background_opacity?: number;
+  button_border_color?: string;
+  button_border_opacity?: number;
+  button_shadow_color?: string;
+  button_shadow_opacity?: number;
+  font_family?: string;
   links: LinkData[];
 }
 
@@ -63,6 +67,8 @@ export default function DashboardPage() {
   const [customGradientStart, setCustomGradientStart] = useState('');
   const [customGradientEnd, setCustomGradientEnd] = useState('');
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [backgroundPreference, setBackgroundPreference] = useState<'image' | 'color'>('color');
+  const [imageOverlay, setImageOverlay] = useState<'none' | 'dark' | 'light'>('none');
   const [buttonStyle, setButtonStyle] = useState('');
   const [buttonColor, setButtonColor] = useState('');
   const [buttonTextColor, setButtonTextColor] = useState('');
@@ -72,14 +78,105 @@ export default function DashboardPage() {
   const [buttonBorderOpacity, setButtonBorderOpacity] = useState(1);
   const [buttonShadowColor, setButtonShadowColor] = useState('');
   const [buttonShadowOpacity, setButtonShadowOpacity] = useState(1);
-  const [fontFamily, setFontFamily] = useState(''); // Nuevo estado para la fuente
+  const [fontFamily, setFontFamily] = useState('');
 
   // Unified link state
   const [links, setLinks] = useState<LinkData[]>([]);
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-  const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false); // Nuevo estado para el modal
+  const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false);
+
+  const saveDesignChanges = useCallback(async (currentDesignStates: any) => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+
+    const formData = new FormData();
+    formData.append('theme', currentDesignStates.theme);
+    formData.append('custom_gradient_start', currentDesignStates.customGradientStart);
+    formData.append('custom_gradient_end', currentDesignStates.customGradientEnd);
+    
+    if (currentDesignStates.backgroundPreference === 'color') {
+      formData.append('background_image', ''); 
+    } else if (currentDesignStates.backgroundImage) {
+      formData.append('background_image', currentDesignStates.backgroundImage);
+    }
+
+    formData.append('background_preference', currentDesignStates.backgroundPreference);
+    formData.append('image_overlay', currentDesignStates.imageOverlay);
+    formData.append('button_style', currentDesignStates.buttonStyle);
+    formData.append('button_color', currentDesignStates.buttonColor);
+    formData.append('button_text_color', currentDesignStates.buttonTextColor);
+    formData.append('button_text_opacity', currentDesignStates.buttonTextColorOpacity.toString());
+    formData.append('button_background_opacity', currentDesignStates.buttonBackgroundOpacity.toString());
+    formData.append('button_border_color', currentDesignStates.buttonBorderColor);
+    formData.append('button_border_opacity', currentDesignStates.buttonBorderOpacity.toString());
+    formData.append('button_shadow_color', currentDesignStates.buttonShadowColor);
+    formData.append('button_shadow_opacity', currentDesignStates.buttonShadowOpacity.toString());
+    formData.append('font_family', currentDesignStates.fontFamily);
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Auto-save design changes error:', errorData);
+        throw new Error(errorData.detail || 'Failed to auto-save design changes.');
+      }
+      console.log('Design changes auto-saved successfully!');
+    } catch (err: any) {
+      console.error('Error during auto-save:', err.message);
+    }
+  }, [profile, API_URL]);
+
+  const debouncedSaveDesignChanges = useCallback(debounce(saveDesignChanges, 1000), [saveDesignChanges]);
+
+  useEffect(() => {
+    if (!loading && profile) { // Only auto-save after initial load and if profile exists
+      debouncedSaveDesignChanges({
+        theme,
+        customGradientStart,
+        customGradientEnd,
+        backgroundImage,
+        backgroundPreference,
+        imageOverlay,
+        buttonStyle,
+        buttonColor,
+        buttonTextColor,
+        buttonTextColorOpacity,
+        buttonBackgroundOpacity,
+        buttonBorderColor,
+        buttonBorderOpacity,
+        buttonShadowColor,
+        buttonShadowOpacity,
+        fontFamily,
+      });
+    }
+  }, [
+    theme,
+    customGradientStart,
+    customGradientEnd,
+    backgroundImage,
+    backgroundPreference,
+    imageOverlay,
+    buttonStyle,
+    buttonColor,
+    buttonTextColor,
+    buttonTextColorOpacity,
+    buttonBackgroundOpacity,
+    buttonBorderColor,
+    buttonBorderOpacity,
+    buttonShadowColor,
+    buttonShadowOpacity,
+    fontFamily,
+    loading, // Include loading to prevent saving before profile is fetched
+    profile, // Include profile to ensure it's available
+    debouncedSaveDesignChanges,
+  ]);
 
   const refreshAccessToken = useCallback(async () => {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -133,10 +230,7 @@ export default function DashboardPage() {
       }
 
       const fetchedProfile: ProfileData = await response.json();
-      console.log("Fetched Profile Data:", fetchedProfile); // DEBUG: Check API response
       setProfile(fetchedProfile);
-
-      console.log("Checking profile_type:", fetchedProfile.profile_type); // DEBUG: Check profile_type value
 
       if (!fetchedProfile.profile_type || fetchedProfile.profile_type.trim() === '') {
         router.push('/welcome/1-category');
@@ -149,16 +243,18 @@ export default function DashboardPage() {
       setTheme(fetchedProfile.theme || '');
       setCustomGradientStart(fetchedProfile.custom_gradient_start || '');
       setCustomGradientEnd(fetchedProfile.custom_gradient_end || '');
+      setBackgroundPreference(fetchedProfile.background_preference || (fetchedProfile.background_image ? 'image' : 'color'));
+      setImageOverlay(fetchedProfile.image_overlay || 'none');
       setButtonStyle(fetchedProfile.button_style || '');
       setButtonColor(fetchedProfile.button_color || '');
       setButtonTextColor(fetchedProfile.button_text_color || '');
-      setButtonTextColorOpacity(fetchedProfile.button_text_opacity ?? 1); // Inicializar con el valor del perfil o 1 por defecto
-      setButtonBackgroundOpacity(fetchedProfile.button_background_opacity ?? 1); // Nuevo
-      setButtonBorderColor(fetchedProfile.button_border_color || ''); // Nuevo
-      setButtonBorderOpacity(fetchedProfile.button_border_opacity ?? 1); // Nuevo
-      setButtonShadowColor(fetchedProfile.button_shadow_color || ''); // Nuevo
-      setButtonShadowOpacity(fetchedProfile.button_shadow_opacity ?? 1); // Nuevo
-      setFontFamily(fetchedProfile.font_family || 'font-inter'); // Inicializar fuente
+      setButtonTextColorOpacity(fetchedProfile.button_text_opacity ?? 1);
+      setButtonBackgroundOpacity(fetchedProfile.button_background_opacity ?? 1);
+      setButtonBorderColor(fetchedProfile.button_border_color || '');
+      setButtonBorderOpacity(fetchedProfile.button_border_opacity ?? 1);
+      setButtonShadowColor(fetchedProfile.button_shadow_color || '');
+      setButtonShadowOpacity(fetchedProfile.button_shadow_opacity ?? 1);
+      setFontFamily(fetchedProfile.font_family || 'font-inter');
       setLinks(fetchedProfile.links || []);
 
     } catch (err: any) {
@@ -183,26 +279,6 @@ export default function DashboardPage() {
     formData.append('bio', profileBio);
     if (profileAvatar) formData.append('avatar', profileAvatar);
 
-    // Append design data
-    formData.append('theme', theme);
-    formData.append('custom_gradient_start', customGradientStart);
-    formData.append('custom_gradient_end', customGradientEnd);
-    if (backgroundImage) formData.append('background_image', backgroundImage);
-    formData.append('button_style', buttonStyle);
-    formData.append('button_color', buttonColor);
-    formData.append('button_text_color', buttonTextColor);
-    formData.append('button_text_opacity', buttonTextColorOpacity.toString()); // Convertir a string para FormData
-    formData.append('button_background_opacity', buttonBackgroundOpacity.toString()); // Nuevo
-    formData.append('button_border_color', buttonBorderColor); // Nuevo
-    formData.append('button_border_opacity', buttonBorderOpacity.toString()); // Nuevo
-    formData.append('button_shadow_color', buttonShadowColor); // Nuevo
-    formData.append('button_shadow_opacity', buttonShadowOpacity.toString()); // Nuevo
-    formData.append('font_family', fontFamily); // Añadir font_family al FormData
-
-    // Append links data
-    // Append links data
-    // formData.append('links', JSON.stringify(links)); // Removed as links are saved immediately
-
     // Filter out links with empty titles before saving profile
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
@@ -226,7 +302,6 @@ export default function DashboardPage() {
       setLinks(updatedProfile.links || []);
       
       setProfileAvatar(null);
-      setBackgroundImage(null);
       alert('Cambios guardados exitosamente!');
     } catch (err: any) {
       setError(err.message || 'Failed to save changes.');
@@ -388,6 +463,50 @@ export default function DashboardPage() {
     }
   };
 
+  const handleUpdateSlug = async (newSlug: string) => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ slug: newSlug }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.slug || 'Failed to update slug.');
+      }
+      const updatedProfile = await response.json();
+      setProfile(updatedProfile);
+      alert('URL actualizada exitosamente!');
+    } catch (err: any) {
+      setError(err.message);
+      alert(`Error al actualizar la URL: ${err.message}`);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const accessToken = localStorage.getItem('accessToken');
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete account.');
+      }
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      alert('Cuenta eliminada exitosamente.');
+      router.push('/login');
+    } catch (err: any) {
+      setError(err.message);
+      alert(`Error al eliminar la cuenta: ${err.message}`);
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
   if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
 
@@ -435,8 +554,8 @@ export default function DashboardPage() {
                       value={profileName}
                       onChange={(e) => setProfileName(e.target.value)}
                     />
-                    <button onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm">
-                      Editar
+                    <button onClick={() => document.getElementById('profileName')?.focus()} className="ml-2 text-gray-500 hover:text-indigo-600 p-2 rounded-full transition-colors duration-200">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                     </button>
                   </div>
 
@@ -449,8 +568,8 @@ export default function DashboardPage() {
                       onChange={(e) => setProfileBio(e.target.value)}
                       rows={3}
                     ></textarea>
-                    <button onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1 rounded-md text-sm mt-1">
-                      Editar
+                    <button onClick={() => document.getElementById('profileBio')?.focus()} className="ml-2 text-gray-500 hover:text-indigo-600 p-2 rounded-full transition-colors duration-200 self-start mt-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-edit-2"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
                     </button>
                   </div>
                 </div>
@@ -473,22 +592,26 @@ export default function DashboardPage() {
               theme,
               custom_gradient_start: customGradientStart,
               custom_gradient_end: customGradientEnd,
-              background_image: backgroundImage,
+              background_image: backgroundImage || profile?.background_image, // Use local File if present, else use URL from fetched profile
+              background_preference: backgroundPreference,
+              image_overlay: imageOverlay,
               button_style: buttonStyle,
               button_color: buttonColor,
               button_text_color: buttonTextColor,
-              button_text_opacity: buttonTextColorOpacity, // Pasar el nuevo estado
-              button_background_opacity: buttonBackgroundOpacity, // Nuevo
-              button_border_color: buttonBorderColor, // Nuevo
-              button_border_opacity: buttonBorderOpacity, // Nuevo
-              button_shadow_color: buttonShadowColor, // Nuevo
-              button_shadow_opacity: buttonShadowOpacity, // Nuevo
-              font_family: fontFamily, // Pasar estado de fuente
+              button_text_opacity: buttonTextColorOpacity,
+              button_background_opacity: buttonBackgroundOpacity,
+              button_border_color: buttonBorderColor,
+              button_border_opacity: buttonBorderOpacity,
+              button_shadow_color: buttonShadowColor,
+              button_shadow_opacity: buttonShadowOpacity,
+              font_family: fontFamily,
             }}
             updateProfileData={(newData) => {
               if (newData.theme !== undefined) setTheme(newData.theme);
               if (newData.custom_gradient_start !== undefined) setCustomGradientStart(newData.custom_gradient_start);
               if (newData.custom_gradient_end !== undefined) setCustomGradientEnd(newData.custom_gradient_end);
+              if (newData.background_preference !== undefined) setBackgroundPreference(newData.background_preference);
+              if (newData.image_overlay !== undefined) setImageOverlay(newData.image_overlay);
               if (newData.button_style !== undefined) setButtonStyle(newData.button_style);
               if (newData.button_color !== undefined) setButtonColor(newData.button_color);
               if (newData.button_text_color !== undefined) setButtonTextColor(newData.button_text_color);
@@ -498,11 +621,21 @@ export default function DashboardPage() {
               if (newData.button_border_opacity !== undefined) setButtonBorderOpacity(newData.button_border_opacity);
               if (newData.button_shadow_color !== undefined) setButtonShadowColor(newData.button_shadow_color);
               if (newData.button_shadow_opacity !== undefined) setButtonShadowOpacity(newData.button_shadow_opacity);
-              if (newData.font_family !== undefined) setFontFamily(newData.font_family); // Actualizar estado de fuente
+              if (newData.font_family !== undefined) setFontFamily(newData.font_family);
             }}
             setBackgroundImageFile={setBackgroundImage}
           />
         );
+      case 'settings':
+        return (
+          <Settings
+            currentSlug={profile?.slug || ''}
+            onUpdateSlug={handleUpdateSlug}
+            onDeleteAccount={handleDeleteAccount}
+          />
+        );
+      case 'stats':
+        return <Analytics />;
       // Add cases for 'stats' and 'settings' when they are built
       default:
         return <p>Selecciona una sección</p>;
@@ -568,17 +701,18 @@ export default function DashboardPage() {
               button_style={buttonStyle}
               button_color={buttonColor}
               button_text_color={buttonTextColor}
-              button_text_opacity={buttonTextColorOpacity} // Pasar el nuevo estado
-              button_background_opacity={buttonBackgroundOpacity} // Nuevo
-              button_border_color={buttonBorderColor} // Nuevo
-              button_border_opacity={buttonBorderOpacity} // Nuevo
-              button_shadow_color={buttonShadowColor} // Nuevo
-              button_shadow_opacity={buttonShadowOpacity} // Nuevo
+              button_text_opacity={buttonTextColorOpacity}
+              button_background_opacity={buttonBackgroundOpacity}
+              button_border_color={buttonBorderColor}
+              button_border_opacity={buttonBorderOpacity}
+              button_shadow_color={buttonShadowColor}
+              button_shadow_opacity={buttonShadowOpacity}
               theme={theme}
               custom_gradient_start={customGradientStart}
               custom_gradient_end={customGradientEnd}
-              background_image={backgroundImage}
-              font_family={fontFamily} // Pasar la fuente seleccionada
+              background_image={backgroundPreference === 'image' ? (backgroundImage ? URL.createObjectURL(backgroundImage) : profile.background_image) : null}
+              image_overlay={imageOverlay}
+              font_family={fontFamily}
             />
           )}
             </div>

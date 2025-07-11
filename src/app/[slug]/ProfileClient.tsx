@@ -66,7 +66,21 @@ export default function ProfileClient({ params }: ProfileClientProps) {
       }
     };
 
+    const trackProfileView = async () => {
+      try {
+        await fetch(`${API_URL}/api/linkinbio/profile-views/${slug}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+      } catch (err) {
+        console.error("Error tracking profile view:", err);
+      }
+    };
+
     fetchProfile();
+    trackProfileView();
   }, [slug]);
 
   if (loading) {
@@ -133,7 +147,7 @@ export default function ProfileClient({ params }: ProfileClientProps) {
             url && (
               <a
                 key={platform}
-                href={url}
+                href={`${API_URL}/api/linkinbio/link-clicks/${profile.links.find(link => link.type === platform)?.id}/`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${buttonBaseClasses} ${buttonShapeClass}`}
@@ -149,7 +163,7 @@ export default function ProfileClient({ params }: ProfileClientProps) {
             link.url && (
               <a
                 key={link.id}
-                href={link.url}
+                href={`${API_URL}/api/linkinbio/link-clicks/${link.id}/`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${buttonBaseClasses} ${buttonShapeClass}`}
@@ -159,7 +173,6 @@ export default function ProfileClient({ params }: ProfileClientProps) {
               </a>
             )
           ))}
-        </div>
       </div>
     </div>
   );
