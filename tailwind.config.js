@@ -9,9 +9,13 @@ module.exports = {
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'custom-purple': '#750a97',
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   safelist: [
     'text-white',
     'text-black',

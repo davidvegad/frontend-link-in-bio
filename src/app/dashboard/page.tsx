@@ -510,6 +510,12 @@ export default function DashboardPage() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    router.push('/');
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
   if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
 
@@ -643,6 +649,7 @@ export default function DashboardPage() {
             currentSlug={profile?.slug || ''}
             onUpdateSlug={handleUpdateSlug}
             onDeleteAccount={handleDeleteAccount}
+            onLogout={handleLogout}
           />
         );
       case 'stats':

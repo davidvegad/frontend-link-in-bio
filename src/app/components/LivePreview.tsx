@@ -70,13 +70,13 @@ const LivePreview: React.FC<LivePreviewProps> = ({
 
   return (
     <div 
-      className={`relative w-[320px] h-[600px] border border-gray-300 rounded-2xl shadow-lg flex flex-col items-center p-6 overflow-y-scroll scrollbar-hide ${fontClass}`}
-      style={backgroundStyle}
+      className={`relative w-[320px] h-[600px] border border-gray-300 shadow-lg flex flex-col items-center ${fontClass} overflow-hidden`}
+      style={{ ...backgroundStyle, borderRadius: '1rem' }} // Forced border-radius
     >
       {profileDataForStyles.background_preference === 'image' && profileDataForStyles.background_image && overlayClass && (
         <div className={`absolute inset-0 w-full h-full ${overlayClass} rounded-2xl z-[1]`}></div>
       )}
-      <div className="relative z-10 flex flex-col items-center w-full">
+      <div className="relative z-10 flex flex-col items-center w-full h-full overflow-y-auto hide-scrollbar p-6">
         <div className="relative mb-4">
           {avatar ? (
             <Image

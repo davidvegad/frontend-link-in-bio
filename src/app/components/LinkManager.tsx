@@ -112,7 +112,9 @@ const SortableItem: React.FC<SortableItemProps> = ({
   const [localCountryCode, setLocalCountryCode] = useState(initialCountryCode || (isWhatsApp && countryCodes.length > 0 ? countryCodes[0].code : ''));
   const [localWhatsAppNumber, setLocalWhatsAppNumber] = useState(initialNumber);
 
-  // Update local states when link.url prop changes (e.g., on initial load or reorder)
+  const [localTitle, setLocalTitle] = useState(link.title);
+
+  // Update local states when link.url/link.title prop changes (e.g., on initial load or reorder)
   React.useEffect(() => {
     if (isWhatsApp) {
       const { countryCode: newCountryCode, number: newNumber } = parseWhatsAppUrl(link.url);
@@ -121,9 +123,10 @@ const SortableItem: React.FC<SortableItemProps> = ({
     } else {
       setLocalUrl(link.url);
     }
+    setLocalTitle(link.title);
     // Clear error when link prop changes
     setUrlError(null);
-  }, [link.url, isWhatsApp]);
+  }, [link.url, link.title, isWhatsApp]);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -170,12 +173,18 @@ const SortableItem: React.FC<SortableItemProps> = ({
         } else {
           setUrlError(error);
         }
-      } else {
+      } else if (field === 'title') {
         handleLinkChange(id, field, value);
       }
     }, 500), // 500ms debounce time
     [handleLinkChange, link.type]
   );
+
+  const handleLocalTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalTitle(value); // Update local state immediately for smooth typing
+    debouncedLinkUpdate(link.id, 'title', value); // Debounce the API call
+  };
 
   const handleLocalUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -237,8 +246,8 @@ const SortableItem: React.FC<SortableItemProps> = ({
         )}
         <input
           type="text"
-          value={link.title}
-          onChange={(e) => debouncedLinkUpdate(link.id, 'title', e.target.value)}
+          value={localTitle}
+          onChange={handleLocalTitleChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
           placeholder="Título del enlace"
         />

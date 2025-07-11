@@ -6,9 +6,10 @@ interface SettingsProps {
   currentSlug: string;
   onUpdateSlug: (newSlug: string) => Promise<void>;
   onDeleteAccount: () => Promise<void>;
+  onLogout: () => void;
 }
 
-const Settings: React.FC<SettingsProps> = ({ currentSlug, onUpdateSlug, onDeleteAccount }) => {
+const Settings: React.FC<SettingsProps> = ({ currentSlug, onUpdateSlug, onDeleteAccount, onLogout }) => {
   const [slug, setSlug] = useState(currentSlug);
   const [confirmDelete, setConfirmDelete] = useState('');
 
@@ -91,6 +92,18 @@ const Settings: React.FC<SettingsProps> = ({ currentSlug, onUpdateSlug, onDelete
                 Eliminar mi cuenta permanentemente
             </button>
         </form>
+      </div>
+
+      {/* Logout Button */}
+      <div className="p-6 border rounded-lg bg-gray-50 text-center">
+        <h3 className="text-xl font-semibold mb-4">Cerrar Sesión</h3>
+        <p className="text-gray-700 mb-4">Haz clic para cerrar tu sesión actual.</p>
+        <button 
+          onClick={onLogout}
+          className="px-6 py-2 bg-gray-700 text-white rounded-md shadow-sm hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+        >
+          Cerrar Sesión
+        </button>
       </div>
     </section>
   );
