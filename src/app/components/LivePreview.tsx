@@ -70,7 +70,7 @@ const LivePreview: React.FC<LivePreviewProps> = ({
 
   return (
     <div 
-      className={`relative w-[320px] h-[600px] border border-gray-300 rounded-2xl shadow-lg flex flex-col items-center p-6 ${fontClass}`}
+      className={`relative w-[320px] h-[600px] border border-gray-300 rounded-2xl shadow-lg flex flex-col items-center p-6 overflow-y-scroll scrollbar-hide ${fontClass}`}
       style={backgroundStyle}
     >
       {profileDataForStyles.background_preference === 'image' && profileDataForStyles.background_image && overlayClass && (

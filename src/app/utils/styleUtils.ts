@@ -69,7 +69,7 @@ export const toRgba = (hex: string, opacity: number = 1) => {
 };
 
 export const getButtonClasses = (style?: string) => {
-  let classes = "block w-full text-center py-3 px-4 mb-4 transition-all duration-300 shadow-md no-underline";
+  let classes = "block w-[70%] mx-auto text-center transition-all duration-300 shadow-md no-underline";
   if (style === 'rounded-full') return classes + " rounded-full";
   if (style === 'rounded-md') return classes + " rounded-md";
   if (style === 'rounded-none') return classes + " rounded-none";
@@ -82,6 +82,9 @@ export const getButtonStyles = (profile: ProfileData) => {
     color: toRgba(profile.button_text_color || '#FFFFFF', profile.button_text_opacity),
     border: `2px solid ${toRgba(profile.button_border_color || '#000000', profile.button_border_opacity)}`,
     boxShadow: `0 4px 14px 0 ${toRgba(profile.button_shadow_color || '#000000', profile.button_shadow_opacity)}`,
+    paddingTop: '0.5rem', // py-5 (20px)
+    paddingBottom: '0.5rem', // py-5 (20px)
+    marginBottom: '0.5rem', // mb-6 (24px)
   };
 };
 

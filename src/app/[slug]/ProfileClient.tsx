@@ -81,7 +81,7 @@ export default function ProfileClient({ params }: ProfileClientProps) {
         <div className={`absolute inset-0 w-full h-full ${overlayClass} z-[1]`}></div>
       )}
       {/* Mobile-like container */}
-      <div className="relative z-10 w-[320px] h-[600px] rounded-2xl shadow-lg flex flex-col items-center p-6 overflow-y-auto bg-white bg-opacity-90">
+      <div className="relative z-10 w-[320px] h-[600px] rounded-2xl shadow-lg flex flex-col items-center p-6 bg-white bg-opacity-90">
         {profile.avatar && (
           <Image
             src={profile.avatar}
