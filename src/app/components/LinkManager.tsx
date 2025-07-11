@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   DndContext, 
   closestCenter, 
@@ -18,6 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { arrayMove } from '@dnd-kit/sortable';
+import { debounce } from 'lodash';
 
 // Interfaces
 interface LinkData {
@@ -102,24 +103,122 @@ const SortableItem: React.FC<SortableItemProps> = ({
     id: link.id,
   });
 
+  const [localUrl, setLocalUrl] = useState(link.url);
+  const [urlError, setUrlError] = useState<string | null>(null);
+
+  const isWhatsApp = link.type === 'whatsapp';
+  const { countryCode: initialCountryCode, number: initialNumber } = isWhatsApp ? parseWhatsAppUrl(link.url) : { countryCode: '', number: link.url };
+
+  const [localCountryCode, setLocalCountryCode] = useState(initialCountryCode || (isWhatsApp && countryCodes.length > 0 ? countryCodes[0].code : ''));
+  const [localWhatsAppNumber, setLocalWhatsAppNumber] = useState(initialNumber);
+
+  // Update local states when link.url prop changes (e.g., on initial load or reorder)
+  React.useEffect(() => {
+    if (isWhatsApp) {
+      const { countryCode: newCountryCode, number: newNumber } = parseWhatsAppUrl(link.url);
+      setLocalCountryCode(newCountryCode || (countryCodes.length > 0 ? countryCodes[0].code : ''));
+      setLocalWhatsAppNumber(newNumber);
+    } else {
+      setLocalUrl(link.url);
+    }
+    // Clear error when link prop changes
+    setUrlError(null);
+  }, [link.url, isWhatsApp]);
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
-  const isWhatsApp = link.type === 'whatsapp';
-  const { countryCode, number } = isWhatsApp ? parseWhatsAppUrl(link.url) : { countryCode: '', number: link.url };
+  // Basic URL validation regex (more robust than just checking for http/https)
+  const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+  const whatsappRegex = /^\+?\d{10,15}$/; // Simple regex for phone numbers
 
-  const handleWhatsAppChange = (field: 'countryCode' | 'number', value: string) => {
-    let newCountryCode = countryCode;
-    let newNumber = number;
-
-    if (field === 'countryCode') {
-      newCountryCode = value;
-    } else {
-      newNumber = value;
+  const validateAndFormatUrl = (url: string, type: string): { formattedUrl: string, error: string | null } => {
+    if (!url.trim()) {
+      return { formattedUrl: '', error: 'La URL no puede estar vacía.' };
     }
-    handleLinkChange(link.id, 'url', constructWhatsAppUrl(newCountryCode, newNumber));
+
+    if (type === 'whatsapp') {
+      // For WhatsApp, validate the number part
+      const cleanedNumber = url.replace(/[^\d+]/g, ''); // Allow + for country code
+      if (!whatsappRegex.test(cleanedNumber)) {
+        return { formattedUrl: url, error: 'Introduce un número de WhatsApp válido (ej: +54911...).' };
+      }
+      // WhatsApp URLs are constructed, so no need to add https:// here
+      return { formattedUrl: url, error: null };
+    } else {
+      // For generic URLs, validate and add protocol
+      let formattedUrl = url;
+      if (!formattedUrl.startsWith('http://') && !formattedUrl.startsWith('https://')) {
+        formattedUrl = 'https://' + formattedUrl;
+      }
+      if (!urlRegex.test(formattedUrl)) {
+        return { formattedUrl: url, error: 'Introduce una URL válida (ej: https://ejemplo.com).' };
+      }
+      return { formattedUrl, error: null };
+    }
+  };
+
+  const debouncedLinkUpdate = useCallback(
+    debounce((id: number, field: 'title' | 'url', value: string) => {
+      console.log("debouncedLinkUpdate called with:", { id, field, value }); // DEBUG
+      if (field === 'url') {
+        const { formattedUrl, error } = validateAndFormatUrl(value, link.type || 'generic');
+        if (!error) {
+          handleLinkChange(id, field, formattedUrl);
+        } else {
+          setUrlError(error);
+        }
+      } else {
+        handleLinkChange(id, field, value);
+      }
+    }, 500), // 500ms debounce time
+    [handleLinkChange, link.type]
+  );
+
+  const handleLocalUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalUrl(value); // Update local state immediately for smooth typing
+    
+    // Immediate validation feedback
+    const { error } = validateAndFormatUrl(value, link.type || 'generic');
+    setUrlError(error);
+
+    // Debounce the API call only if there's no immediate error
+    if (!error) {
+      debouncedLinkUpdate(link.id, 'url', value);
+    }
+  };
+
+  const handleWhatsAppNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalWhatsAppNumber(value);
+    const fullWhatsAppUrl = constructWhatsAppUrl(localCountryCode, value);
+
+    const { error } = validateAndFormatUrl(fullWhatsAppUrl, 'whatsapp');
+    setUrlError(error);
+
+    console.log("handleWhatsAppNumberChange - fullWhatsAppUrl:", fullWhatsAppUrl, "error:", error); // DEBUG
+
+    if (!error) {
+      debouncedLinkUpdate(link.id, 'url', fullWhatsAppUrl);
+    }
+  };
+
+  const handleWhatsAppCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setLocalCountryCode(value);
+    const fullWhatsAppUrl = constructWhatsAppUrl(value, localWhatsAppNumber);
+
+    const { error } = validateAndFormatUrl(fullWhatsAppUrl, 'whatsapp');
+    setUrlError(error);
+
+    console.log("handleWhatsAppCountryCodeChange - fullWhatsAppUrl:", fullWhatsAppUrl, "error:", error); // DEBUG
+
+    if (!error) {
+      debouncedLinkUpdate(link.id, 'url', fullWhatsAppUrl);
+    }
   };
 
   return (
@@ -139,16 +238,16 @@ const SortableItem: React.FC<SortableItemProps> = ({
         <input
           type="text"
           value={link.title}
-          onChange={(e) => handleLinkChange(link.id, 'title', e.target.value)}
+          onChange={(e) => debouncedLinkUpdate(link.id, 'title', e.target.value)}
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
           placeholder="Título del enlace"
         />
         {isWhatsApp ? (
-          <div className="flex gap-2">
+          <div className="flex gap-2 w-full">
             <select
-              value={countryCode}
-              onChange={(e) => handleWhatsAppChange('countryCode', e.target.value)}
-              className="w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+              value={localCountryCode}
+              onChange={handleWhatsAppCountryCodeChange}
+              className={`w-1/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
             >
               {countryCodes.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -158,20 +257,23 @@ const SortableItem: React.FC<SortableItemProps> = ({
             </select>
             <input
               type="tel"
-              value={number}
-              onChange={(e) => handleWhatsAppChange('number', e.target.value)}
-              className="w-2/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+              value={localWhatsAppNumber}
+              onChange={handleWhatsAppNumberChange}
+              className={`w-2/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
               placeholder="Número de teléfono"
             />
           </div>
         ) : (
-          <input
-            type="url"
-            value={link.url}
-            onChange={(e) => handleLinkChange(link.id, 'url', e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
-            placeholder={link.type === 'generic' ? 'https://ejemplo.com' : 'https://'} // Modificado el placeholder
-          />
+          <div className="w-full">
+            <input
+              type="url"
+              value={localUrl} // Use local state for immediate feedback
+              onChange={handleLocalUrlChange} // Use the new debounced handler
+              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
+              placeholder={link.type === 'generic' ? 'https://ejemplo.com' : 'https://'}
+            />
+            {urlError && <p className="text-red-500 text-xs mt-1">{urlError}</p>}
+          </div>
         )}
       </div>
       <div className="flex items-center space-x-2">

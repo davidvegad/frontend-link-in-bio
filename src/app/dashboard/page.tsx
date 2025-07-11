@@ -313,7 +313,7 @@ export default function DashboardPage() {
     const accessToken = localStorage.getItem('accessToken');
 
     // If title is empty, do not add the link
-    const newLinkTitle = 'Nuevo Enlace'; // Default title for new links
+    const newLinkTitle = linkType === 'whatsapp' ? 'Whatsapp' : 'Nuevo Enlace';
     if (!newLinkTitle || newLinkTitle.trim() === '') {
       console.warn("Cannot add link with empty title.");
       return;
@@ -342,6 +342,7 @@ export default function DashboardPage() {
   };
 
   const handleLinkUpdate = async (linkId: number, title: string, url: string) => {
+    console.log("handleLinkUpdate in DashboardPage called with:", { linkId, title, url }); // DEBUG
     const accessToken = localStorage.getItem('accessToken');
     console.log("Updating link:", { linkId, title, url, accessToken: accessToken ? "Exists" : "Missing" }); // DEBUG
 
