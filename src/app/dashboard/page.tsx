@@ -9,6 +9,7 @@ import LinkManager from '@/app/components/LinkManager';
 import Settings from '@/app/components/Settings';
 import Analytics from '@/app/components/Analytics';
 import LinkTypeSelectionModal from '@/app/components/LinkTypeSelectionModal'; // Añadir esta importación
+import ShareLinkModal from '@/app/components/ShareLinkModal';
 import { debounce } from 'lodash';
 
 // Interfaces
@@ -86,6 +87,7 @@ export default function DashboardPage() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const saveDesignChanges = useCallback(async (currentDesignStates: any) => {
     if (!profile) return;
@@ -329,7 +331,7 @@ export default function DashboardPage() {
         body: JSON.stringify({
           profile: profile.id,
           title: newLinkTitle,
-          url: 'https://example.com', // Provide a default valid URL
+          url: linkType === 'whatsapp' ? 'https://wa.me/' : 'https://example.com', // Provide a default valid URL
           type: linkType // Usar el tipo de enlace seleccionado
         }),
       });
@@ -560,6 +562,14 @@ export default function DashboardPage() {
                     </button>
                   </div>
 
+                  {/* Share Link Button */}
+                  <button
+                    onClick={() => setIsShareModalOpen(true)}
+                    className="mt-4 px-6 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  >
+                    Compartir mi enlace
+                  </button>
+
                   {/* Bio Section */}
                   <div className="flex items-start mb-6 w-full max-w-md mx-auto">
                     <textarea
@@ -725,6 +735,15 @@ export default function DashboardPage() {
         onClose={() => setIsLinkTypeModalOpen(false)}
         onSelectType={handleLinkAdd} // Pasar handleLinkAdd como callback
       />
+
+      {profile?.slug && (
+        <ShareLinkModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          currentSlug={profile.slug}
+          onUpdateSlug={handleUpdateSlug}
+        />
+      )}
     </div>
   );
 }
