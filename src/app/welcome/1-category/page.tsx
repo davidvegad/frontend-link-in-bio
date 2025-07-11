@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
-import { Paintbrush, Briefcase, User, Mic } from 'lucide-react';
+import { Paintbrush, Briefcase, User, Mic, Share, Users, DollarSign, Image, ShoppingCart, Heart, Target, Headphones, Sparkles, Link } from 'lucide-react';
 import React, { useState } from 'react';
 
 const profileTypes = [
@@ -12,26 +12,26 @@ const profileTypes = [
   { id: 'individual', name: 'Individual', icon: <User className="w-5 h-5 mr-2" /> },
 ];
 
-const purposeOptions: Record<string, { id: string; name: string }[]> = {
+const purposeOptions: Record<string, { id: string; name: string; icon?: React.ReactNode }[]> = {
   creator: [
-    { id: 'promote_content', name: 'Promocionar mi contenido' },
-    { id: 'grow_audience', name: 'Hacer crecer mi audiencia' },
-    { id: 'monetize', name: 'Monetizar mis creaciones' },
+    { id: 'promote_content', name: 'Promocionar mi contenido', icon: <Share className="w-5 h-5 mr-2" /> },
+    { id: 'grow_audience', name: 'Hacer crecer mi audiencia', icon: <Users className="w-5 h-5 mr-2" /> },
+    { id: 'monetize', name: 'Monetizar mis creaciones', icon: <DollarSign className="w-5 h-5 mr-2" /> },
   ],
   artist: [
-    { id: 'showcase_portfolio', name: 'Mostrar mi portafolio' },
-    { id: 'sell_art', name: 'Vender mi arte' },
-    { id: 'connect_fans', name: 'Conectar con mis fans' },
+    { id: 'showcase_portfolio', name: 'Mostrar mi portafolio', icon: <Image className="w-5 h-5 mr-2" /> },
+    { id: 'sell_art', name: 'Vender mi arte', icon: <ShoppingCart className="w-5 h-5 mr-2" /> },
+    { id: 'connect_fans', name: 'Conectar con mis fans', icon: <Heart className="w-5 h-5 mr-2" /> },
   ],
   business: [
-    { id: 'generate_leads', name: 'Generar leads' },
-    { id: 'drive_sales', name: 'Impulsar ventas' },
-    { id: 'customer_support', name: 'Ofrecer soporte' },
+    { id: 'generate_leads', name: 'Generar leads', icon: <Target className="w-5 h-5 mr-2" /> },
+    { id: 'drive_sales', name: 'Impulsar ventas', icon: <DollarSign className="w-5 h-5 mr-2" /> },
+    { id: 'customer_support', name: 'Ofrecer soporte', icon: <Headphones className="w-5 h-5 mr-2" /> },
   ],
   individual: [
-    { id: 'professional_profile', name: 'Perfil profesional' },
-    { id: 'personal_hobbies', name: 'Hobbies y proyectos' },
-    { id: 'social_links', name: 'Consolidar mis redes' },
+    { id: 'professional_profile', name: 'Perfil profesional', icon: <User className="w-5 h-5 mr-2" /> },
+    { id: 'personal_hobbies', name: 'Hobbies y proyectos', icon: <Sparkles className="w-5 h-5 mr-2" /> },
+    { id: 'social_links', name: 'Consolidar mis redes', icon: <Link className="w-5 h-5 mr-2" /> },
   ],
 };
 
@@ -168,6 +168,7 @@ export default function CategoryPage() {
                   <Bubble 
                     key={p.id} 
                     text={p.name} 
+                    icon={p.icon}
                     onClick={() => handlePurposeSelect(p.id)} 
                     isSelected={profileData.purpose === p.id} 
                     groupHasSelection={!!profileData.purpose}
