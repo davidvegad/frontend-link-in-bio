@@ -37,7 +37,7 @@ const purposeOptions: Record<string, { id: string; name: string }[]> = {
 
 const Bubble = ({ text, icon, onClick, isSelected, groupHasSelection }: { text: string; icon?: React.ReactNode; onClick: () => void; isSelected: boolean; groupHasSelection: boolean; }) => {
   const baseStyle: React.CSSProperties = {
-    padding: '0.2rem 1.5rem',
+    padding: '0.4rem 0.3rem',
   };
 
   const conditionalStyle: React.CSSProperties = isSelected ? { color: 'white' } : {};
@@ -129,6 +129,11 @@ export default function CategoryPage() {
           color: #b013a3 !important;
           border-color: #b013a3 !important;
         }
+
+        /* Estilo para el botón Continuar cuando está habilitado y no en hover */
+        button[type="submit"]:not([disabled]) {
+          color: white !important;
+        }
       `}</style>
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-5xl transform transition-all duration-500 hover:shadow-2xl">
         <div className="text-center mb-8">
@@ -178,12 +183,12 @@ export default function CategoryPage() {
           <div className="flex justify-center">
             <button
               type="submit"
-              style={{ marginTop: '3rem', borderRadius: '9999px', width: '50%' }}
+              style={{ marginTop: '3rem', borderRadius: '9999px' }}
               className={`
-                py-3 px-4 text-lg font-semibold transition-all duration-300 shadow-md border-2 cursor-pointer
+                py-[0.75rem] px-4 text-lg font-semibold transition-all duration-300 shadow-md border-2 cursor-pointer w-[50%] md:w-[40%]
                 ${!profileData.profile_type || !profileData.purpose
                   ? 'bg-gray-400 text-gray-700 border-transparent hover:bg-white hover:text-[#b013a3] hover:border-[#b013a3]'
-                  : 'bg-[#b013a3] text-white border-transparent hover:text-[#b013a3] hover:border-[#b013a3]'
+                  : 'bg-[#b013a3] !text-white border-transparent hover:text-[#b013a3] hover:border-[#b013a3]'
                 }
               `}
             >
