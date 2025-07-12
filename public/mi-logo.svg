@@ -1,0 +1,15 @@
+<svg width="780" height="200" viewBox="0 0 780 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .title { font-family: 'Georgia', serif; font-size: 80px; font-weight: bold; }
+    .maya { fill: #01526a; }
+    .munoz { fill: #0b9a6f; }
+    .curved { font-family: 'Arial', sans-serif; font-size: 28px; fill: #23325D; }
+  </style>
+  <!-- Frase superior -->
+  <!--text x="490" y="60" text-anchor="middle" class="curved">Si tienes miedo,</text-->
+  <!-- Nombre -->
+  <text x="150" y="130" class="title maya">Mi Link</text>
+  <text x="480" y="130" class="title munoz">in Bio</text>
+  <!-- Frase inferior -->
+  <!--text x="490" y="170" text-anchor="middle" class="curved">hazlo con miedo</text-->
+</svg>
