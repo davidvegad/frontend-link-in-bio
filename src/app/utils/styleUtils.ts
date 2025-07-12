@@ -158,3 +158,28 @@ export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgrou
     fontClass,
   };
 };
+
+// Helper function to convert hex to RGB
+const hexToRgb = (hex: string) => {
+  const r = parseInt(hex.substring(1, 3), 16);
+  const g = parseInt(hex.substring(3, 5), 16);
+  const b = parseInt(hex.substring(5, 7), 16);
+  return [r, g, b];
+};
+
+// Helper function to convert RGB to hex
+const rgbToHex = (r: number, g: number, b: number) => {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+};
+
+// Function to interpolate colors
+export const interpolateColor = (color1: string, color2: string, factor: number) => {
+  const rgb1 = hexToRgb(color1);
+  const rgb2 = hexToRgb(color2);
+
+  const r = Math.round(rgb1[0] + factor * (rgb2[0] - rgb1[0]));
+  const g = Math.round(rgb1[1] + factor * (rgb2[1] - rgb1[1]));
+  const b = Math.round(rgb1[2] + factor * (rgb2[2] - rgb1[2]));
+
+  return rgbToHex(r, g, b);
+};
