@@ -19,6 +19,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { arrayMove } from '@dnd-kit/sortable';
 import { debounce } from 'lodash';
+import { Phone, Link as LinkIcon } from 'lucide-react';
 
 // Interfaces
 interface LinkData {
@@ -237,18 +238,20 @@ const SortableItem: React.FC<SortableItemProps> = ({
       {...attributes} 
       className="flex flex-col sm:flex-row items-center gap-3 p-3 border rounded-lg bg-white shadow-sm"
     >
-      <div className="flex-grow grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Link Type (non-editable) */}
-        {link.type && (
-          <div className="col-span-full text-sm text-gray-500 font-medium">
-            Tipo: <span className="capitalize">{link.type}</span>
-          </div>
-        )}
+      <div className="flex-grow grid grid-cols-1 gap-3">
+        <div className="col-span-full flex items-center gap-2 text-sm text-gray-500 font-medium mb-2">
+          {isWhatsApp ? (
+            <Phone size={16} className="text-green-500" />
+          ) : (
+            <LinkIcon size={16} className="text-blue-500" />
+          )}
+          <span>{isWhatsApp ? 'WhatsApp' : 'Enlace'}</span>
+        </div>
         <input
           type="text"
           value={localTitle}
           onChange={handleLocalTitleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 bg-white text-gray-900"
           placeholder="Título del enlace"
         />
         {isWhatsApp ? (
@@ -256,7 +259,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
             <select
               value={localCountryCode}
               onChange={handleWhatsAppCountryCodeChange}
-              className={`w-1/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
+              className={`w-1/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-white text-gray-900 ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
             >
               {countryCodes.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -268,7 +271,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
               type="tel"
               value={localWhatsAppNumber}
               onChange={handleWhatsAppNumberChange}
-              className={`w-2/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
+              className={`w-2/3 px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-white text-gray-900 ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
               placeholder="Número de teléfono"
             />
           </div>
@@ -276,9 +279,9 @@ const SortableItem: React.FC<SortableItemProps> = ({
           <div className="w-full">
             <input
               type="url"
-              value={localUrl} // Use local state for immediate feedback
-              onChange={handleLocalUrlChange} // Use the new debounced handler
-              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
+              value={localUrl}
+              onChange={handleLocalUrlChange}
+              className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none bg-white text-gray-900 ${urlError ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-indigo-500'}`}
               placeholder={link.type === 'generic' ? 'https://ejemplo.com' : 'https://'}
             />
             {urlError && <p className="text-red-500 text-xs mt-1">{urlError}</p>}

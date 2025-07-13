@@ -35,7 +35,7 @@ const EditableField: React.FC<EditableFieldProps> = ({
     value,
     onChange,
     placeholder,
-    className: `flex-grow bg-transparent border-b-2 border-gray-300 focus:border-indigo-500 outline-none ${className}`,
+    className: `flex-grow bg-white text-gray-900 border-b-2 border-gray-300 focus:border-indigo-500 outline-none ${className}`,
   };
 
   return (

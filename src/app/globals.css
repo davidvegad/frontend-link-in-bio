@@ -36,16 +36,4 @@ textarea::placeholder {
   color: #9ca3af; /* Equivalent to Tailwind's gray-400 */
 }
 
-/* Dark mode styles for forms */
-@media (prefers-color-scheme: dark) {
-  input,
-  textarea {
-    color: #f9fafb; /* Light gray (gray-50) for dark backgrounds */
-    background-color: #1f2937; /* Darker background (gray-800) for inputs */
-  }
 
-  input::placeholder,
-  textarea::placeholder {
-    color: #6b7280; /* Lighter placeholder (gray-500) for dark mode */
-  }
-}

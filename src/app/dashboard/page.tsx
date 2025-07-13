@@ -513,7 +513,7 @@ export default function DashboardPage() {
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
                   placeholder="Tu Nombre"
-                  className="text-2xl font-bold text-center"
+                  className="text-2xl font-bold text-center text-gray-900"
                   label="nombre"
                 />
                 <EditableField
@@ -522,7 +522,7 @@ export default function DashboardPage() {
                   onChange={(e) => setProfileBio(e.target.value)}
                   placeholder="Tu biografía increíble aquí."
                   isTextarea
-                  className="text-center text-gray-600 mt-2"
+                  className="text-center text-gray-900 mt-2"
                   label="biografía"
                 />
 
@@ -655,7 +655,7 @@ export default function DashboardPage() {
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8">
           <div className="flex flex-col lg:flex-row gap-8">
-            <div className="w-full lg:w-2/3 bg-white p-6 rounded-xl shadow-md">
+            <div className="w-full lg:w-2/3 bg-white p-6 rounded-xl shadow-md text-gray-900">
               {renderContent()}
             </div>
             

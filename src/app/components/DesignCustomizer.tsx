@@ -210,34 +210,34 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
               <h4 className="text-lg font-semibold mb-3">Degradado Personalizado</h4>
               <div className="space-y-4">
                 <div className="flex items-center space-x-2">
-                  <label className="block text-sm font-medium text-gray-700 w-24">Inicio</label>
+                  <label className="block text-sm font-medium text-gray-900 w-24">Inicio</label>
                   <input
                     type="color"
                     value={profileData.custom_gradient_start || '#FFFFFF'}
                     onChange={e => updateProfileData({ custom_gradient_start: e.target.value, theme: 'custom', background_preference: 'color' })}
-                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                   />
                   <input
                     type="text"
                     value={profileData.custom_gradient_start || ''}
                     onChange={e => updateProfileData({ custom_gradient_start: e.target.value, theme: 'custom', background_preference: 'color' })}
-                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                     placeholder="#RRGGBB"
                   />
                 </div>
                 <div className="flex items-center space-x-2">
-                  <label className="block text-sm font-medium text-gray-700 w-24">Fin</label>
+                  <label className="block text-sm font-medium text-gray-900 w-24">Fin</label>
                   <input
                     type="color"
                     value={profileData.custom_gradient_end || '#000000'}
                     onChange={e => updateProfileData({ custom_gradient_end: e.target.value, theme: 'custom', background_preference: 'color' })}
-                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                    className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                   />
                   <input
                     type="text"
                     value={profileData.custom_gradient_end || ''}
                     onChange={e => updateProfileData({ custom_gradient_end: e.target.value, theme: 'custom', background_preference: 'color' })}
-                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                    className="w-32 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                     placeholder="#RRGGBB"
                   />
                 </div>
@@ -312,19 +312,19 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
             <div className="space-y-2 border-b pb-4">
               <h5 className="text-base font-medium text-gray-800">Fondo</h5>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_color" className="text-sm font-medium text-gray-600 w-20">Color</label>
+                <label htmlFor="button_color" className="text-sm font-medium text-gray-900 w-20">Color</label>
                 <input
                   type="color"
                   id="button_color"
                   value={profileData.button_color || '#000000'}
                   onChange={e => updateProfileData({ button_color: e.target.value })}
-                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                 />
                 <input
                   type="text"
                   value={profileData.button_color || ''}
                   onChange={e => updateProfileData({ button_color: e.target.value })}
-                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                   placeholder="#000000"
                 />
               </div>
@@ -344,19 +344,19 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
             <div className="space-y-2 border-b pb-4">
               <h5 className="text-base font-medium text-gray-800">Texto</h5>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_text_color" className="text-sm font-medium text-gray-600 w-20">Color</label>
+                <label htmlFor="button_text_color" className="text-sm font-medium text-gray-900 w-20">Color</label>
                 <input
                   type="color"
                   id="button_text_color"
                   value={profileData.button_text_color || '#FFFFFF'}
                   onChange={e => updateProfileData({ button_text_color: e.target.value })}
-                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                 />
                 <input
                   type="text"
                   value={profileData.button_text_color || ''}
                   onChange={e => updateProfileData({ button_text_color: e.target.value })}
-                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                   placeholder="#FFFFFF"
                 />
               </div>
@@ -376,19 +376,19 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
             <div className="space-y-2 border-b pb-4">
               <h5 className="text-base font-medium text-gray-800">Borde</h5>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_border_color" className="text-sm font-medium text-gray-600 w-20">Color</label>
+                <label htmlFor="button_border_color" className="text-sm font-medium text-gray-900 w-20">Color</label>
                 <input
                   type="color"
                   id="button_border_color"
                   value={profileData.button_border_color || '#000000'}
                   onChange={e => updateProfileData({ button_border_color: e.target.value })}
-                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                 />
                 <input
                   type="text"
                   value={profileData.button_border_color || ''}
                   onChange={e => updateProfileData({ button_border_color: e.target.value })}
-                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                   placeholder="#000000"
                 />
               </div>
@@ -408,19 +408,19 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
             <div className="space-y-2">
               <h5 className="text-base font-medium text-gray-800">Sombra</h5>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_shadow_color" className="text-sm font-medium text-gray-600 w-20">Color</label>
+                <label htmlFor="button_shadow_color" className="text-sm font-medium text-gray-900 w-20">Color</label>
                 <input
                   type="color"
                   id="button_shadow_color"
                   value={profileData.button_shadow_color || '#000000'}
                   onChange={e => updateProfileData({ button_shadow_color: e.target.value })}
-                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
+                  className="w-10 h-10 p-0 border-none rounded-md cursor-pointer bg-white"
                 />
                 <input
                   type="text"
                   value={profileData.button_shadow_color || ''}
                   onChange={e => updateProfileData({ button_shadow_color: e.target.value })}
-                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
+                  className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm bg-white text-gray-900"
                   placeholder="#000000"
                 />
               </div>
