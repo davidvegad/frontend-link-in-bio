@@ -5,14 +5,21 @@ import Image from 'next/image';
 import { UserCircle } from 'lucide-react';
 import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '@/app/utils/styleUtils';
 
-interface LinkData {
-  id?: number;
+interface Link {
+  id?: number | string;
   title: string;
   url: string;
-  type?: string;
+  type: string;
 }
 
-const LivePreview: React.FC<{ profileData: ProfileData }> = ({ profileData }) => {
+const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileData }) => {
+  if (!profileData) {
+    return (
+      <div className="w-[300px] h-[600px] rounded-[40px] shadow-lg overflow-hidden border-8 border-gray-800 bg-gray-200 flex items-center justify-center">
+        <p className="text-gray-500">Cargando vista previa...</p>
+      </div>
+    );
+  }
   const getImageUrl = (image: any) => {
     if (image instanceof File) {
       return URL.createObjectURL(image);
@@ -33,18 +40,8 @@ const LivePreview: React.FC<{ profileData: ProfileData }> = ({ profileData }) =>
 
   const buttonStyles = getButtonStyles(profileData);
 
-  // Combine social and custom links for rendering
-  const allLinks: LinkData[] = [];
-  if (profileData.social_links) {
-    for (const platformId in profileData.social_links) {
-      if (profileData.social_links.hasOwnProperty(platformId) && profileData.social_links[platformId]) {
-        allLinks.push({ id: platformId.hashCode(), title: platformId, url: profileData.social_links[platformId], type: platformId });
-      }
-    }
-  }
-  if (profileData.custom_links) {
-    allLinks.push(...profileData.custom_links);
-  }
+  // Use the unified links array from profileData
+  const allLinks: Link[] = profileData.links || [];
 
   return (
     <div className={`w-[300px] h-[600px] rounded-[40px] shadow-lg overflow-hidden border-8 border-gray-800 bg-white flex flex-col ${fontClass}`}>

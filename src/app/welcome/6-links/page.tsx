@@ -3,66 +3,137 @@
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
 import LivePreview from '@/app/components/LivePreview';
+import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
+
+// Definición de la interfaz para un enlace unificado
+interface Link {
+  id: number | string; // Puede ser un número del backend o un string temporal del frontend
+  title: string;
+  url: string;
+  type: string; // 'generic', 'instagram', 'whatsapp', etc.
+}
 
 const socialPlatforms = [
-  { id: 'instagram', name: 'Instagram', placeholder: 'Tu usuario de Instagram' },
-  { id: 'tiktok', name: 'TikTok', placeholder: 'Tu usuario de TikTok' },
+  { id: 'instagram', name: 'Instagram', placeholder: 'Tu usuario de Instagram', baseUrl: 'https://www.instagram.com/' },
+  { id: 'tiktok', name: 'TikTok', placeholder: 'Tu usuario de TikTok', baseUrl: 'https://www.tiktok.com/@' },
   { id: 'whatsapp', name: 'WhatsApp', placeholder: 'Tu número de WhatsApp' },
   { id: 'youtube', name: 'YouTube', placeholder: 'URL de tu canal de YouTube' },
-  { id: 'x', name: 'X (Twitter)', placeholder: 'Tu usuario de X' },
+  { id: 'x', name: 'X (Twitter)', placeholder: 'Tu usuario de X', baseUrl: 'https://twitter.com/' },
   { id: 'facebook', name: 'Facebook', placeholder: 'URL de tu perfil de Facebook' },
 ];
 
-interface CustomLink {
-  id: number;
-  title: string;
-  url: string;
-}
+const countryCodes = [
+    { code: 'US', dial_code: '+1', name: 'United States' },
+    { code: 'ES', dial_code: '+34', name: 'España' },
+    { code: 'MX', dial_code: '+52', name: 'México' },
+    { code: 'AR', dial_code: '+54', name: 'Argentina' },
+    { code: 'CO', dial_code: '+57', name: 'Colombia' },
+    { code: 'PE', dial_code: '+51', name: 'Perú' },
+    { code: 'CL', dial_code: '+56', name: 'Chile' },
+    { code: 'EC', dial_code: '+593', name: 'Ecuador' },
+    { code: 'GT', dial_code: '+502', name: 'Guatemala' },
+    { code: 'SV', dial_code: '+503', name: 'El Salvador' },
+    { code: 'HN', dial_code: '+504', name: 'Honduras' },
+    { code: 'NI', dial_code: '+505', name: 'Nicaragua' },
+    { code: 'CR', dial_code: '+506', name: 'Costa Rica' },
+    { code: 'PA', dial_code: '+507', name: 'Panamá' },
+    { code: 'DO', dial_code: '+1-809', name: 'República Dominicana' },
+    { code: 'VE', dial_code: '+58', name: 'Venezuela' },
+    { code: 'BO', dial_code: '+591', name: 'Bolivia' },
+    { code: 'PY', dial_code: '+595', name: 'Paraguay' },
+    { code: 'UY', dial_code: '+598', name: 'Uruguay' },
+  ];
 
 export default function LinksPage() {
   const { profileData, updateProfileData } = useProfile();
   const router = useRouter();
+  const [links, setLinks] = useState<Link[]>(profileData.links || []);
+  const [whatsappCountryCode, setWhatsappCountryCode] = useState('+1');
 
-  const handleSocialLinkChange = (platform: string, value: string) => {
-    const social_links = { ...profileData.social_links, [platform]: value };
-    updateProfileData({ social_links });
+  // Sincronizar el estado local de enlaces con el contexto del perfil
+  useEffect(() => {
+    updateProfileData({ links });
+  }, [links]);
+
+  const handleSocialLinkChange = (platformId: string, value: string) => {
+    const platform = socialPlatforms.find(p => p.id === platformId);
+    if (!platform) return;
+
+    let finalUrl = value;
+    if (platform.baseUrl && value && !value.startsWith('http')) {
+      finalUrl = `${platform.baseUrl}${value}`;
+    } else if (platformId === 'whatsapp' && value) {
+      const phoneNumber = value.replace(/[^0-9]/g, '');
+      finalUrl = `https://wa.me/${whatsappCountryCode.replace('+', '')}${phoneNumber}`;
+    }
+
+    setLinks(prevLinks => {
+      const existingLink = prevLinks.find(l => l.type === platformId);
+      if (existingLink) {
+        // Actualizar enlace social existente
+        return prevLinks.map(l => l.type === platformId ? { ...l, url: finalUrl } : l);
+      } else {
+        // Añadir nuevo enlace social
+        return [...prevLinks, { id: `social-${platformId}`, title: platform.name, url: finalUrl, type: platformId }];
+      }
+    });
+  };
+
+  const handleWhatsappCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCountryCode = e.target.value;
+    setWhatsappCountryCode(newCountryCode);
+
+    const whatsappLink = links.find(l => l.type === 'whatsapp');
+    if (whatsappLink) {
+        const currentUrl = whatsappLink.url;
+        const numberMatch = currentUrl.match(/\d+$/);
+        if (numberMatch) {
+            const phoneNumber = numberMatch[0];
+            const newWhatsappUrl = `https://wa.me/${newCountryCode.replace('+', '')}${phoneNumber}`;
+            setLinks(prevLinks => prevLinks.map(l => l.type === 'whatsapp' ? { ...l, url: newWhatsappUrl } : l));
+        }
+    }
   };
 
   const addCustomLink = () => {
-    const custom_links = [...(profileData.custom_links || []), { id: Date.now(), title: '', url: '' }];
-    updateProfileData({ custom_links });
+    setLinks(prevLinks => [...prevLinks, { id: `custom-${Date.now()}`, title: '', url: '', type: 'generic' }]);
   };
 
-  const handleCustomLinkChange = (id: number, field: 'title' | 'url', value: string) => {
-    const custom_links = (profileData.custom_links || []).map(link => link.id === id ? { ...link, [field]: value } : link);
-    updateProfileData({ custom_links });
+  const handleCustomLinkChange = (id: number | string, field: 'title' | 'url', value: string) => {
+    setLinks(prevLinks => prevLinks.map(link => link.id === id ? { ...link, [field]: value } : link));
   };
 
-  const removeCustomLink = (id: number) => {
-    const custom_links = (profileData.custom_links || []).filter(link => link.id !== id);
-    updateProfileData({ custom_links });
+  const removeLink = (id: number | string) => {
+    setLinks(prevLinks => prevLinks.filter(link => link.id !== id));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Filtrar enlaces sin título o URL para no enviarlos al backend
+    const validLinks = links.filter(link => link.title.trim() !== '' && link.url.trim() !== '');
+    updateProfileData({ links: validLinks });
     router.push('/welcome/7-publish');
   };
 
-  const allLinks = [
-    ...(profileData.social_links ? Object.entries(profileData.social_links).map(([id, url]) => ({ id, title: id, url })) : []),
-    ...(profileData.custom_links || []),
-  ];
+  // Función para obtener el valor a mostrar en el input (sin baseUrl)
+  const getDisplayValue = (link: Link | undefined, platform: any) => {
+    if (!link || !link.url) return '';
+    if (platform.id === 'whatsapp') {
+        const match = link.url.match(/\d+$/);
+        return match ? match[0] : '';
+    }
+    return link.url.replace(platform.baseUrl || '', '');
+  };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-6xl mx-auto transform transition-all duration-500 hover:shadow-2xl flex flex-col lg:flex-row gap-12">
         
-        {/* Columna de Vista Previa */}
         <div className="lg:w-1/3 flex justify-center items-start">
-          <LivePreview profileData={{ ...profileData, custom_links: allLinks }} />
+          <LivePreview profileData={profileData} />
         </div>
 
-        {/* Columna de Controles */}
         <div className="lg:w-2/3">
           <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">Añade tus Enlaces</h1>
           <p className="text-gray-600 mb-8 text-center">Conecta tus redes sociales y otros sitios importantes.</p>
@@ -71,19 +142,46 @@ export default function LinksPage() {
             <div className="border-b pb-8">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">Redes Sociales</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {socialPlatforms.map(platform => (
-                  <div key={platform.id}>
-                    <label htmlFor={platform.id} className="block text-sm font-medium text-gray-700 mb-1">{platform.name}</label>
-                    <input
-                      type="text"
-                      id={platform.id}
-                      value={profileData.social_links?.[platform.id] || ''}
-                      onChange={(e) => handleSocialLinkChange(platform.id, e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder={platform.placeholder}
-                    />
-                  </div>
-                ))}
+                {socialPlatforms.map(platform => {
+                  const currentLink = links.find(l => l.type === platform.id);
+                  return (
+                    <div key={platform.id}>
+                      <label htmlFor={platform.id} className="block text-sm font-medium text-gray-700 mb-1">{platform.name}</label>
+                      {platform.id === 'whatsapp' ? (
+                        <div className="flex">
+                          <select
+                            value={whatsappCountryCode}
+                            onChange={handleWhatsappCountryCodeChange}
+                            className="px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          >
+                            {countryCodes.map(country => (
+                              <option key={country.code} value={country.dial_code}>
+                                {country.dial_code} ({country.code})
+                              </option>
+                            ))}
+                          </select>
+                          <input
+                            type="tel"
+                            id={platform.id}
+                            value={getDisplayValue(currentLink, platform)}
+                            onChange={(e) => handleSocialLinkChange(platform.id, e.target.value)}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder={platform.placeholder}
+                          />
+                        </div>
+                      ) : (
+                        <input
+                          type="text"
+                          id={platform.id}
+                          value={getDisplayValue(currentLink, platform)}
+                          onChange={(e) => handleSocialLinkChange(platform.id, e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                          placeholder={platform.placeholder}
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -93,7 +191,7 @@ export default function LinksPage() {
                 <button type="button" onClick={addCustomLink} className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-semibold text-sm">+ Añadir Enlace</button>
               </div>
               <div className="space-y-4">
-                {(profileData.custom_links || []).map(link => (
+                {links.filter(l => l.type === 'generic').map(link => (
                   <div key={link.id} className="flex flex-col sm:flex-row items-center gap-2 p-3 border border-gray-200 rounded-lg bg-white shadow-sm">
                     <input
                       type="text"
@@ -109,8 +207,8 @@ export default function LinksPage() {
                       className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="https://ejemplo.com"
                     />
-                    <button type="button" onClick={() => removeCustomLink(link.id)} className="flex-shrink-0 p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition-colors duration-200">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd"></path></svg>
+                    <button type="button" onClick={() => removeLink(link.id)} className="flex-shrink-0 p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition-colors duration-200">
+                      <Trash2 size={20} />
                     </button>
                   </div>
                 ))}
