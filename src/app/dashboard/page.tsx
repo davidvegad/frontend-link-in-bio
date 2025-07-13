@@ -66,6 +66,7 @@ export default function DashboardPage() {
   const [profileName, setProfileName] = useState('');
   const [profileBio, setProfileBio] = useState('');
   const [profileAvatar, setProfileAvatar] = useState<File | null>(null);
+  const [originalProfileSlug, setOriginalProfileSlug] = useState('');
   
   // Design states
   const [theme, setTheme] = useState('');
@@ -246,6 +247,7 @@ export default function DashboardPage() {
       // Initialize states
       setProfileName(fetchedProfile.name || '');
       setProfileBio(fetchedProfile.bio || '');
+      setOriginalProfileSlug(fetchedProfile.slug || '');
       setTheme(fetchedProfile.theme || '');
       setCustomGradientStart(fetchedProfile.custom_gradient_start || '');
       setCustomGradientEnd(fetchedProfile.custom_gradient_end || '');
@@ -274,18 +276,28 @@ export default function DashboardPage() {
     fetchProfile();
   }, [fetchProfile]);
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = useCallback(async (name?: string, bio?: string) => {
+    console.log('handleSaveChanges called with name:', name, 'bio:', bio);
     if (!profile) return;
     const accessToken = localStorage.getItem('accessToken');
 
     const formData = new FormData();
     
-    formData.append('name', profileName);
-    formData.append('bio', profileBio);
+    const currentName = name !== undefined ? name : profileName;
+    const currentBio = bio !== undefined ? bio : profileBio;
+
+    formData.append('name', currentName);
+    formData.append('bio', currentBio);
     if (profileAvatar) formData.append('avatar', profileAvatar);
+    if (originalProfileSlug) formData.append('slug', originalProfileSlug); // Always send the original slug
 
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
+
+    console.log('FormData before sending:');
+    for (let pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
 
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
@@ -305,11 +317,11 @@ export default function DashboardPage() {
       setLinks(updatedProfile.links || []);
       
       setProfileAvatar(null);
-      alert('Cambios guardados exitosamente!');
+      
     } catch (err: any) {
       setError(err.message || 'Failed to save changes.');
     }
-  };
+  }, [profile, profileName, profileBio, profileAvatar, links, API_URL]);
 
   const handleLinkAdd = async (linkType: string) => {
     if (!profile) return;
@@ -447,7 +459,6 @@ export default function DashboardPage() {
       }
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
-      alert('URL actualizada exitosamente!');
     } catch (err: any) {
       setError(err.message);
       alert(`Error al actualizar la URL: ${err.message}`);
@@ -476,6 +487,18 @@ export default function DashboardPage() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     router.push('/');
+  };
+
+  const handleSaveProfileName = async (newValue: string) => {
+    console.log('handleSaveProfileName called with:', newValue);
+    setProfileName(newValue);
+    await handleSaveChanges();
+  };
+
+  const handleSaveProfileBio = async (newValue: string) => {
+    console.log('handleSaveProfileBio called with:', newValue);
+    setProfileBio(newValue);
+    await handleSaveChanges();
   };
 
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
@@ -512,6 +535,7 @@ export default function DashboardPage() {
                   id="profileName"
                   value={profileName}
                   onChange={(e) => setProfileName(e.target.value)}
+                  onSave={handleSaveProfileName}
                   placeholder="Tu Nombre"
                   className="text-2xl font-bold text-center text-gray-900"
                   label="nombre"
@@ -520,6 +544,7 @@ export default function DashboardPage() {
                   id="profileBio"
                   value={profileBio}
                   onChange={(e) => setProfileBio(e.target.value)}
+                  onSave={handleSaveProfileBio}
                   placeholder="Tu biografía increíble aquí."
                   isTextarea
                   className="text-center text-gray-900 mt-2"
@@ -698,4 +723,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-''

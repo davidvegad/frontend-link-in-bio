@@ -19,6 +19,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [copySuccess, setCopySuccess] = useState('');
   const [slugError, setSlugError] = useState<string | null>(null);
+  const [initialSlug, setInitialSlug] = useState(currentSlug); // To store the slug before editing
 
   const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const fullLink = `${PUBLIC_BASE_URL}/${editableSlug}`;
@@ -26,6 +27,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setEditableSlug(currentSlug);
+      setInitialSlug(currentSlug);
       setIsEditing(false);
       setCopySuccess('');
       setSlugError(null);
@@ -37,35 +39,37 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
     setEditableSlug(value);
     if (value.length < 3) {
       setSlugError('El slug debe tener al menos 3 caracteres.');
-    } else if (value === currentSlug) {
-      setSlugError(null);
     } else {
       setSlugError(null); // Clear error for now, real validation on save
     }
   };
 
-  const handleEditToggle = async () => {
+  const handleEditToggle = () => {
     if (isEditing) {
-      // If was editing, now save changes
-      if (editableSlug === currentSlug) {
-        setIsEditing(false);
-        setSlugError(null);
-        return;
-      }
+      // If was editing, now save changes on blur
+      // This button now acts as a visual cue for editing mode
+    } else {
+      // If was not editing, now enable editing
+      setIsEditing(true);
+    }
+  };
+
+  const handleBlur = async () => {
+    setIsEditing(false);
+    if (editableSlug !== initialSlug) {
       if (!editableSlug || editableSlug.length < 3) {
         setSlugError('El slug debe tener al menos 3 caracteres.');
+        setEditableSlug(initialSlug); // Revert to initial slug if invalid
         return;
       }
       try {
         await onUpdateSlug(editableSlug);
-        setIsEditing(false);
+        setInitialSlug(editableSlug); // Update initial slug after successful save
         setSlugError(null);
       } catch (error: any) {
         setSlugError(error.message || 'Error al guardar el slug.');
+        setEditableSlug(initialSlug); // Revert to initial slug on error
       }
-    } else {
-      // If was not editing, now enable editing
-      setIsEditing(true);
     }
   };
 
@@ -81,7 +85,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
       <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Comparte tu página</h2>
@@ -92,25 +96,22 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
         <div className="mb-4">
           <label htmlFor="publicLink" className="sr-only">Enlace Público</label>
           <div className="flex items-center border border-gray-300 rounded-md shadow-sm focus-within:ring-indigo-500 focus-within:border-indigo-500">
-            <span className="px-3 py-2 bg-gray-100 text-gray-600 rounded-l-md">{PUBLIC_BASE_URL}/</span>
+            {isEditing ? null : <span className="px-1 py-2 bg-gray-100 text-gray-600 rounded-l-md text-sm">{PUBLIC_BASE_URL}/</span>}
             <input
               id="publicLink"
               type="text"
               value={editableSlug}
               onChange={handleSlugChange}
+              onBlur={handleBlur}
               readOnly={!isEditing}
-              className={`flex-grow px-3 py-2 outline-none ${isEditing ? 'bg-white' : 'bg-gray-50 cursor-default'}`}
+              className={`px-3 py-2 outline-none ${isEditing ? 'bg-white rounded-l-md' : 'bg-gray-50 cursor-default'}`}
             />
             <button 
               onClick={handleEditToggle} 
-              className="p-2 text-gray-500 hover:text-indigo-600 transition-colors duration-200"
+              className={`p-2 transition-colors duration-200 ${isEditing ? 'bg-[#B013A3] text-white' : 'text-gray-500 hover:text-indigo-600'}`}
               aria-label={isEditing ? "Guardar enlace" : "Editar enlace"}
             >
-              {isEditing ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
-              )}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
             </button>
             <button 
               onClick={handleCopyLink} 
@@ -123,6 +124,9 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
           {slugError && <p className="text-red-500 text-sm mt-2">{slugError}</p>}
           {copySuccess && <p className="text-green-500 text-sm mt-2">{copySuccess}</p>}
         </div>
+          {slugError && <p className="text-red-500 text-sm mt-2">{slugError}</p>}
+          {copySuccess && <p className="text-green-500 text-sm mt-2">{copySuccess}</p>}
+        
       </div>
     </div>
   );
