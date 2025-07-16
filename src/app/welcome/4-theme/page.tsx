@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
 import { Clipboard } from 'lucide-react';
@@ -98,7 +100,7 @@ export default function ThemePage() {
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-6xl mx-auto transform transition-all duration-500 hover:shadow-2xl flex flex-col lg:flex-row gap-12">
         
         <div className="lg:w-1/3 flex justify-center items-start">
-          <LivePreview profileData={profileData} />
+          <LivePreview profileData={{...profileData, slug: 'preview'} as unknown as import('@/app/utils/styleUtils').ProfileData} />
         </div>
 
         <div className="lg:w-2/3">

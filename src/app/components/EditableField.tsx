@@ -25,7 +25,8 @@ const EditableField: React.FC<EditableFieldProps> = ({
   className = '',
   label = '',
 }) => {
-  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [localValue, setLocalValue] = useState(value);
 
@@ -36,7 +37,11 @@ const EditableField: React.FC<EditableFieldProps> = ({
   const handleEditClick = () => {
     setIsEditing(true);
     setTimeout(() => {
-      inputRef.current?.focus();
+      if (isTextarea) {
+        textareaRef.current?.focus();
+      } else {
+        inputRef.current?.focus();
+      }
     }, 0);
   };
 
@@ -50,23 +55,34 @@ const EditableField: React.FC<EditableFieldProps> = ({
     onChange(e); // Pass the event up to the parent for immediate state update
   };
 
-  const commonProps = {
-    id,
-    ref: inputRef,
-    value: localValue,
-    onChange: handleChange,
-    onBlur: handleBlur,
-    placeholder,
-    readOnly: !isEditing,
-    className: `flex-grow bg-white text-gray-900 border-b-2 border-gray-300 focus:border-indigo-500 outline-none ${className} ${isEditing ? 'cursor-text' : 'cursor-pointer'}`,
-  };
+  const baseClassName = `flex-grow bg-white text-gray-900 border-b-2 border-gray-300 focus:border-indigo-500 outline-none ${className} ${isEditing ? 'cursor-text' : 'cursor-pointer'}`;
 
   return (
     <div className="relative flex items-center w-full group">
       {isTextarea ? (
-        <textarea {...commonProps} rows={3} />
+        <textarea
+          id={id}
+          ref={textareaRef}
+          value={localValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          readOnly={!isEditing}
+          className={baseClassName}
+          rows={3}
+        />
       ) : (
-        <input type="text" {...commonProps} />
+        <input
+          type="text"
+          id={id}
+          ref={inputRef}
+          value={localValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder={placeholder}
+          readOnly={!isEditing}
+          className={baseClassName}
+        />
       )}
       <button
         type="button"

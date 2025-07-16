@@ -9,7 +9,7 @@ interface Link {
   id?: number | string;
   title: string;
   url: string;
-  type: string;
+  type?: string;
 }
 
 const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileData }) => {
@@ -21,7 +21,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
     );
   }
   const getImageUrl = (image: any) => {
-    if (image instanceof File) {
+    if (typeof window !== 'undefined' && image instanceof File) {
       return URL.createObjectURL(image);
     }
     if (typeof image === 'string') {
@@ -35,7 +35,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
 
   const { backgroundStyle, overlayClass, nameColorClass, bioColorClass, textShadowClass, fontClass } = getBackgroundAndOverlayStyles({
     ...profileData,
-    background_image: backgroundSrc, // Pass the resolved image URL/blob
+    background_image: backgroundSrc || undefined, // Pass the resolved image URL/blob
   });
 
   const buttonStyles = getButtonStyles(profileData);

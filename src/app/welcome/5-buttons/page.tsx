@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
 import LivePreview from '@/app/components/LivePreview'; // Importa el componente LivePreview centralizado
@@ -38,7 +40,7 @@ export default function ButtonsPage() {
 
   const isButtonDisabled = !profileData.button_style || !profileData.button_color || !profileData.button_text_color;
 
-  const exampleButtonStyles = getButtonStyles(profileData);
+  const exampleButtonStyles = getButtonStyles(profileData as unknown as import('@/app/utils/styleUtils').ProfileData);
 
   // Paleta de blanco a negro
   const grayscalePalette = [
@@ -76,7 +78,7 @@ export default function ButtonsPage() {
         
         {/* Columna de Vista Previa */}
         <div className="lg:w-1/3 flex justify-center items-start">
-          <LivePreview profileData={profileData} />
+          <LivePreview profileData={{...profileData, slug: 'preview'} as unknown as import('@/app/utils/styleUtils').ProfileData} />
         </div>
 
         {/* Columna de Controles */}
@@ -147,11 +149,11 @@ export default function ButtonsPage() {
                       type="range"
                       id="button_background_opacity"
                       min="0" max="100" step="1"
-                      value={(profileData.button_background_opacity ?? 1) * 100}
-                      onChange={e => updateProfileData({ button_background_opacity: parseFloat(e.target.value) / 100 })}
+                      value={((profileData as any).button_background_opacity ?? 1) * 100}
+                      onChange={e => updateProfileData({ button_background_opacity: parseFloat(e.target.value) / 100 } as any)}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_background_opacity ?? 1) * 100).toFixed(0)}%</span>
+                    <span className="text-sm text-gray-600 w-12 text-right">{(((profileData as any).button_background_opacity ?? 1) * 100).toFixed(0)}%</span>
                   </div>
                 </div>
                 <div className="space-y-2 border-b pb-4">
@@ -179,11 +181,11 @@ export default function ButtonsPage() {
                       type="range"
                       id="button_text_opacity"
                       min="0" max="100" step="1"
-                      value={(profileData.button_text_opacity ?? 1) * 100}
-                      onChange={e => updateProfileData({ button_text_opacity: parseFloat(e.target.value) / 100 })}
+                      value={((profileData as any).button_text_opacity ?? 1) * 100}
+                      onChange={e => updateProfileData({ button_text_opacity: parseFloat(e.target.value) / 100 } as any)}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_text_opacity ?? 1) * 100).toFixed(0)}%</span>
+                    <span className="text-sm text-gray-600 w-12 text-right">{(((profileData as any).button_text_opacity ?? 1) * 100).toFixed(0)}%</span>
                   </div>
                 </div>
                 <div className="space-y-2 border-b pb-4">
@@ -193,14 +195,14 @@ export default function ButtonsPage() {
                     <input
                       type="color"
                       id="button_border_color"
-                      value={profileData.button_border_color || '#000000'}
-                      onChange={e => updateProfileData({ button_border_color: e.target.value })}
+                      value={(profileData as any).button_border_color || '#000000'}
+                      onChange={e => updateProfileData({ button_border_color: e.target.value } as any)}
                       className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
                     />
                     <input
                       type="text"
-                      value={profileData.button_border_color || ''}
-                      onChange={e => updateProfileData({ button_border_color: e.target.value })}
+                      value={(profileData as any).button_border_color || ''}
+                      onChange={e => updateProfileData({ button_border_color: e.target.value } as any)}
                       className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
                       placeholder="#000000"
                     />
@@ -211,11 +213,11 @@ export default function ButtonsPage() {
                       type="range"
                       id="button_border_opacity"
                       min="0" max="100" step="1"
-                      value={(profileData.button_border_opacity ?? 1) * 100}
-                      onChange={e => updateProfileData({ button_border_opacity: parseFloat(e.target.value) / 100 })}
+                      value={((profileData as any).button_border_opacity ?? 1) * 100}
+                      onChange={e => updateProfileData({ button_border_opacity: parseFloat(e.target.value) / 100 } as any)}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_border_opacity ?? 1) * 100).toFixed(0)}%</span>
+                    <span className="text-sm text-gray-600 w-12 text-right">{(((profileData as any).button_border_opacity ?? 1) * 100).toFixed(0)}%</span>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -225,14 +227,14 @@ export default function ButtonsPage() {
                     <input
                       type="color"
                       id="button_shadow_color"
-                      value={profileData.button_shadow_color || '#000000'}
-                      onChange={e => updateProfileData({ button_shadow_color: e.target.value })}
+                      value={(profileData as any).button_shadow_color || '#000000'}
+                      onChange={e => updateProfileData({ button_shadow_color: e.target.value } as any)}
                       className="w-10 h-10 p-0 border-none rounded-md cursor-pointer"
                     />
                     <input
                       type="text"
-                      value={profileData.button_shadow_color || ''}
-                      onChange={e => updateProfileData({ button_shadow_color: e.target.value })}
+                      value={(profileData as any).button_shadow_color || ''}
+                      onChange={e => updateProfileData({ button_shadow_color: e.target.value } as any)}
                       className="w-28 px-2 py-1 border border-gray-300 rounded-md shadow-sm text-sm"
                       placeholder="#000000"
                     />
@@ -243,11 +245,11 @@ export default function ButtonsPage() {
                       type="range"
                       id="button_shadow_opacity"
                       min="0" max="100" step="1"
-                      value={(profileData.button_shadow_opacity ?? 1) * 100}
-                      onChange={e => updateProfileData({ button_shadow_opacity: parseFloat(e.target.value) / 100 })}
+                      value={((profileData as any).button_shadow_opacity ?? 1) * 100}
+                      onChange={e => updateProfileData({ button_shadow_opacity: parseFloat(e.target.value) / 100 } as any)}
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                     />
-                    <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_shadow_opacity ?? 1) * 100).toFixed(0)}%</span>
+                    <span className="text-sm text-gray-600 w-12 text-right">{(((profileData as any).button_shadow_opacity ?? 1) * 100).toFixed(0)}%</span>
                   </div>
                 </div>
               </div>

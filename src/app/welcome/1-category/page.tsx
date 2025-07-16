@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
 import { Paintbrush, Briefcase, User, Mic, Share, Users, DollarSign, Image, ShoppingCart, Heart, Target, Headphones, Sparkles, Link } from 'lucide-react';

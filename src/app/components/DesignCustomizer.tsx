@@ -137,7 +137,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
   };
 
   const imagePreviewUrl = React.useMemo(() => {
-    if (profileData.background_image instanceof File) {
+    if (typeof window !== 'undefined' && profileData.background_image instanceof File) {
       return URL.createObjectURL(profileData.background_image);
     }
     return profileData.background_image;
@@ -255,7 +255,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
               onChange={handleImageChange}
               className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100"
             />
-            {imagePreviewUrl && (
+            {imagePreviewUrl && typeof imagePreviewUrl === 'string' && (
               <div className="p-4 border rounded-lg space-y-4">
                 <div className="flex items-center space-x-4">
                   <Image src={imagePreviewUrl} alt="Background Preview" width={100} height={100} className="rounded-md object-cover" />

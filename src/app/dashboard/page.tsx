@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -661,7 +663,7 @@ export default function DashboardPage() {
           </ul>
         </nav>
         <button
-          onClick={handleSaveChanges}
+          onClick={() => handleSaveChanges()}
           className="w-full mt-4 inline-flex items-center justify-center bg-green-600 text-white py-2.5 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 transition-all"
         >
           <Save size={18} className="mr-2" />
@@ -689,10 +691,10 @@ export default function DashboardPage() {
                 <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Vista Previa</h2>
                 <LivePreview
                   profileData={{
-                    ...profile,
                     name: profileName,
                     bio: profileBio,
-                    avatar: profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar,
+                    avatar: profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '',
+                    slug: profile?.slug || 'preview',
                     links: links,
                     theme: theme,
                     custom_gradient_start: customGradientStart,
@@ -710,7 +712,7 @@ export default function DashboardPage() {
                     button_shadow_color: buttonShadowColor,
                     button_shadow_opacity: buttonShadowOpacity,
                     font_family: fontFamily,
-                  } as ProfileData}
+                  } as import('@/app/utils/styleUtils').ProfileData}
                 />
               </div>
             </div>

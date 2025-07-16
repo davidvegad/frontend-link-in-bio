@@ -2,6 +2,12 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
+// Type para File que funciona en servidor y cliente  
+type FileOrNull = any;
+
+// Verificar si estamos en el navegador
+const isBrowser = typeof window !== 'undefined';
+
 // Define la estructura para un enlace individual
 interface Link {
   id?: number | string;
@@ -17,11 +23,11 @@ interface ProfileData {
   template_style?: string;
   name?: string;
   bio?: string;
-  avatar?: File | null;
+  avatar?: FileOrNull;
   theme?: string;
   custom_gradient_start?: string;
   custom_gradient_end?: string;
-  background_image?: File | null;
+  background_image?: FileOrNull;
   background_preference?: 'image' | 'color';
   button_style?: string;
   button_color?: string;
@@ -76,7 +82,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
         const value = profileData[key as keyof ProfileData];
         
         // Excluir archivos y el array de enlaces, que se manejan por separado
-        if (value !== undefined && value !== null && !(value instanceof File) && key !== 'links') {
+        if (value !== undefined && value !== null && !(isBrowser && value instanceof File) && key !== 'links') {
           formData.append(key, String(value));
         }
       }

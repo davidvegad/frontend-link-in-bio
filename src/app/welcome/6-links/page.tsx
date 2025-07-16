@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useRouter } from 'next/navigation';
 import { useProfile } from '@/context/ProfileContext';
 import LivePreview from '@/app/components/LivePreview';
@@ -8,7 +10,7 @@ import { Trash2 } from 'lucide-react';
 
 // Definición de la interfaz para un enlace unificado
 interface Link {
-  id: number | string; // Puede ser un número del backend o un string temporal del frontend
+  id?: number | string; // Puede ser un número del backend o un string temporal del frontend
   title: string;
   url: string;
   type: string; // 'generic', 'instagram', 'whatsapp', etc.
@@ -131,7 +133,7 @@ export default function LinksPage() {
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-6xl mx-auto transform transition-all duration-500 hover:shadow-2xl flex flex-col lg:flex-row gap-12">
         
         <div className="lg:w-1/3 flex justify-center items-start">
-          <LivePreview profileData={profileData} />
+          <LivePreview profileData={{...profileData, slug: 'preview'} as unknown as import('@/app/utils/styleUtils').ProfileData} />
         </div>
 
         <div className="lg:w-2/3">
@@ -196,18 +198,18 @@ export default function LinksPage() {
                     <input
                       type="text"
                       value={link.title}
-                      onChange={(e) => handleCustomLinkChange(link.id, 'title', e.target.value)}
+                      onChange={(e) => handleCustomLinkChange(link.id!, 'title', e.target.value)}
                       className="w-full sm:w-1/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="Título"
                     />
                     <input
                       type="url"
                       value={link.url}
-                      onChange={(e) => handleCustomLinkChange(link.id, 'url', e.target.value)}
+                      onChange={(e) => handleCustomLinkChange(link.id!, 'url', e.target.value)}
                       className="w-full sm:w-2/3 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="https://ejemplo.com"
                     />
-                    <button type="button" onClick={() => removeLink(link.id)} className="flex-shrink-0 p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition-colors duration-200">
+                    <button type="button" onClick={() => removeLink(link.id!)} className="flex-shrink-0 p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition-colors duration-200">
                       <Trash2 size={20} />
                     </button>
                   </div>
