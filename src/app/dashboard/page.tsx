@@ -8,14 +8,14 @@ import Image from 'next/image';
 import { debounce } from 'lodash';
 import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2 } from 'lucide-react';
 
-import LivePreview from '@/app/components/LivePreview';
-import DesignCustomizer from '@/app/components/DesignCustomizer';
-import LinkManager from '@/app/components/LinkManager';
-import Settings from '@/app/components/Settings';
-import Analytics from '@/app/components/Analytics';
-import LinkTypeSelectionModal from '@/app/components/LinkTypeSelectionModal';
-import ShareLinkModal from '@/app/components/ShareLinkModal';
-import EditableField from '@/app/components/EditableField';
+import LivePreview from '../components/LivePreview';
+import DesignCustomizer from '../components/DesignCustomizer';
+import LinkManager from '../components/LinkManager';
+import Settings from '../components/Settings';
+import Analytics from '../components/Analytics';
+import LinkTypeSelectionModal from '../components/LinkTypeSelectionModal';
+import ShareLinkModal from '../components/ShareLinkModal';
+import EditableField from '../components/EditableField';
 
 // Interfaces
 interface LinkData {

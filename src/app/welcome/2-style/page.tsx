@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@/context/ProfileContext';
+import { useProfile } from '../../../context/ProfileContext';
 import { useState } from 'react';
 
 const styleOptions = [

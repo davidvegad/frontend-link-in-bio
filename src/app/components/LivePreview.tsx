@@ -3,7 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { UserCircle } from 'lucide-react';
-import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '@/app/utils/styleUtils';
+import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '../utils/styleUtils';
 
 interface Link {
   id?: number | string;

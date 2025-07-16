@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '@/app/utils/styleUtils';
+import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '../utils/styleUtils';
 
 interface LinkData {
   id?: number;
