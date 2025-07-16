@@ -3,9 +3,9 @@
 export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@/context/ProfileContext';
-import LivePreview from '@/app/components/LivePreview'; // Importa el componente LivePreview centralizado
-import { getButtonClasses, getButtonStyles, interpolateColor, predefinedThemes } from '@/app/utils/styleUtils';
+import { useProfile } from '../../../context/ProfileContext';
+import LivePreview from '../../components/LivePreview'; // Importa el componente LivePreview centralizado
+import { getButtonClasses, getButtonStyles, interpolateColor, predefinedThemes } from '../../utils/styleUtils';
 import { useState, useEffect } from 'react';
 
 const buttonStylesOptions = [

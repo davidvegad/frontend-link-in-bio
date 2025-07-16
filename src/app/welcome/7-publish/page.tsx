@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@/context/ProfileContext';
+import { useProfile } from '../../../context/ProfileContext';
 
 export default function PublishPage() {
   const { profileData, submitProfile } = useProfile();

@@ -3,8 +3,8 @@
 export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@/context/ProfileContext';
-import LivePreview from '@/app/components/LivePreview';
+import { useProfile } from '../../../context/ProfileContext';
+import LivePreview from '../../components/LivePreview';
 import { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 

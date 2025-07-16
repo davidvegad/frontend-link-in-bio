@@ -3,10 +3,10 @@
 export const dynamic = 'force-dynamic';
 
 import { useRouter } from 'next/navigation';
-import { useProfile } from '@/context/ProfileContext';
+import { useProfile } from '../../../context/ProfileContext';
 import { Clipboard } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
-import LivePreview from '@/app/components/LivePreview';
+import LivePreview from '../../components/LivePreview';
 
 const predefinedThemes = [
   { id: 'sky', name: 'Cielo', start: '#60a5fa', end: '#3b82f6' },
