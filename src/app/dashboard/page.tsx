@@ -68,6 +68,8 @@ export default function DashboardPage() {
   const [profileName, setProfileName] = useState('');
   const [profileBio, setProfileBio] = useState('');
   const [profileAvatar, setProfileAvatar] = useState<File | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarChanged, setAvatarChanged] = useState(false);
   const [originalProfileSlug, setOriginalProfileSlug] = useState('');
   
   // Design states
@@ -290,7 +292,7 @@ export default function DashboardPage() {
 
     formData.append('name', currentName);
     formData.append('bio', currentBio);
-    if (profileAvatar) formData.append('avatar', profileAvatar);
+    // Avatar se maneja por separado en uploadAvatarDirectly()
     if (originalProfileSlug) formData.append('slug', originalProfileSlug); // Always send the original slug
 
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
@@ -318,12 +320,12 @@ export default function DashboardPage() {
       setProfile(updatedProfile);
       setLinks(updatedProfile.links || []);
       
-      setProfileAvatar(null);
+      // Avatar se maneja por separado
       
     } catch (err: any) {
       setError(err.message || 'Failed to save changes.');
     }
-  }, [profile, profileName, profileBio, profileAvatar, links, API_URL]);
+  }, [profile, profileName, profileBio, profileAvatar, avatarChanged, links, API_URL]);
 
   const handleLinkAdd = async (linkType: string) => {
     if (!profile) return;
@@ -503,6 +505,63 @@ export default function DashboardPage() {
     await handleSaveChanges();
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    console.log('handleAvatarChange called with file:', file);
+    
+    if (file) {
+      try {
+        setAvatarUploading(true);
+        setProfileAvatar(file);
+        
+        // Enviar inmediatamente sin depender del estado del useCallback
+        await uploadAvatarDirectly(file);
+        console.log('Avatar uploaded successfully');
+      } catch (error) {
+        console.error('Error uploading avatar:', error);
+        setError('Error al subir la imagen. Por favor, intenta de nuevo.');
+      } finally {
+        setAvatarUploading(false);
+      }
+    }
+  };
+
+  const uploadAvatarDirectly = async (avatarFile: File) => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+    
+    const formData = new FormData();
+    formData.append('name', profileName);
+    formData.append('bio', profileBio);
+    formData.append('avatar', avatarFile); // Usar directamente el archivo
+    if (originalProfileSlug) formData.append('slug', originalProfileSlug);
+    
+    const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
+    formData.append('links', JSON.stringify(linksToSave));
+
+    console.log('Avatar FormData before sending:');
+    for (let pair of formData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+    }
+
+    const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Avatar upload error:', errorData);
+      throw new Error(errorData.detail || 'Failed to upload avatar.');
+    }
+
+    const updatedProfile = await response.json();
+    setProfile(updatedProfile);
+    setLinks(updatedProfile.links || []);
+    setProfileAvatar(null); // Limpiar después del éxito
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
   if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
 
@@ -521,14 +580,19 @@ export default function DashboardPage() {
                     height={128}
                     className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                   />
-                  <label htmlFor="profileAvatar" className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-2 rounded-full cursor-pointer hover:bg-indigo-700 transition-transform duration-200 hover:scale-110">
-                    <User size={18} />
+                  <label htmlFor="profileAvatar" className={`absolute -bottom-2 -right-2 ${avatarUploading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} text-white p-2 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 ${avatarUploading ? 'animate-pulse' : ''}`}>
+                    {avatarUploading ? (
+                      <div className="w-[18px] h-[18px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                      <User size={18} />
+                    )}
                     <input
                       type="file"
                       id="profileAvatar"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => setProfileAvatar(e.target.files ? e.target.files[0] : null)}
+                      disabled={avatarUploading}
+                      onChange={handleAvatarChange}
                     />
                   </label>
                 </div>
