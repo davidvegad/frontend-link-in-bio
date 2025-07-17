@@ -548,18 +548,18 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
       {/* Sección de Fuentes */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-3">Fuente</h3>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {fontOptions.map(font => (
             <div
               key={font.id}
               onClick={() => updateProfileData({ font_family: font.class })}
-              className={`p-4 border rounded-md cursor-pointer text-center transition-all ${
+              className={`p-2 sm:p-4 border rounded-md cursor-pointer text-center transition-all ${
                 profileData.font_family === font.class
                   ? 'bg-indigo-100 border-indigo-500 ring-2 ring-indigo-500'
                   : 'border-gray-300 hover:bg-gray-50'
               }`}
             >
-              <span className={`${font.class} text-lg`}>{font.name}</span>
+              <span className={`${font.class} text-sm sm:text-base truncate block`}>{font.name}</span>
             </div>
           ))}
         </div>

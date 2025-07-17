@@ -662,13 +662,6 @@ export default function DashboardPage() {
             <NavLink tabId="settings" icon={SettingsIcon}>Ajustes</NavLink>
           </ul>
         </nav>
-        <button
-          onClick={() => handleSaveChanges()}
-          className="w-full mt-4 inline-flex items-center justify-center bg-green-600 text-white py-2.5 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-green-500 transition-all"
-        >
-          <Save size={18} className="mr-2" />
-          Guardar Cambios
-        </button>
       </aside>
 
       {/* Main Content */}
@@ -686,7 +679,7 @@ export default function DashboardPage() {
               {renderContent()}
             </div>
             
-            <div className="w-full lg:w-1/3">
+            <div className="hidden lg:block w-full lg:w-1/3">
               <div className="sticky top-8">
                 <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Vista Previa</h2>
                 <LivePreview
