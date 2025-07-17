@@ -16,6 +16,7 @@ import Analytics from '../components/Analytics';
 import LinkTypeSelectionModal from '../components/LinkTypeSelectionModal';
 import ShareLinkModal from '../components/ShareLinkModal';
 import EditableField from '../components/EditableField';
+import InlineEditableField from '../components/InlineEditableField';
 
 // Interfaces
 interface LinkData {
@@ -290,8 +291,12 @@ export default function DashboardPage() {
     const currentName = name !== undefined ? name : profileName;
     const currentBio = bio !== undefined ? bio : profileBio;
 
-    formData.append('name', currentName);
-    formData.append('bio', currentBio);
+    // Asegurar que name y bio nunca estén vacíos
+    const safeName = currentName?.trim() || 'Mi Perfil';
+    const safeBio = currentBio?.trim() || 'Mi biografía';
+
+    formData.append('name', safeName);
+    formData.append('bio', safeBio);
     // Avatar se maneja por separado en uploadAvatarDirectly()
     if (originalProfileSlug) formData.append('slug', originalProfileSlug); // Always send the original slug
 
@@ -320,6 +325,7 @@ export default function DashboardPage() {
       setProfile(updatedProfile);
       setLinks(updatedProfile.links || []);
       
+      // Los estados locales se actualizan en las funciones específicas
       // Avatar se maneja por separado
       
     } catch (err: any) {
@@ -495,14 +501,38 @@ export default function DashboardPage() {
 
   const handleSaveProfileName = async (newValue: string) => {
     console.log('handleSaveProfileName called with:', newValue);
-    setProfileName(newValue);
-    await handleSaveChanges();
+    // Si el nombre está vacío, usar un valor por defecto
+    const finalName = newValue.trim() || 'Mi Perfil';
+    console.log('Final name to save:', finalName);
+    
+    // Actualizar inmediatamente el estado local
+    setProfileName(finalName);
+    
+    try {
+      await handleSaveChanges(finalName, undefined);
+    } catch (error) {
+      console.error('Error saving name:', error);
+      // En caso de error, revertir al valor original
+      setProfileName(profile?.name || 'Mi Perfil');
+    }
   };
 
   const handleSaveProfileBio = async (newValue: string) => {
     console.log('handleSaveProfileBio called with:', newValue);
-    setProfileBio(newValue);
-    await handleSaveChanges();
+    // Si la bio está vacía, usar un valor por defecto
+    const finalBio = newValue.trim() || 'Mi biografía';
+    console.log('Final bio to save:', finalBio);
+    
+    // Actualizar inmediatamente el estado local
+    setProfileBio(finalBio);
+    
+    try {
+      await handleSaveChanges(undefined, finalBio);
+    } catch (error) {
+      console.error('Error saving bio:', error);
+      // En caso de error, revertir al valor original
+      setProfileBio(profile?.bio || 'Mi biografía');
+    }
   };
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -571,59 +601,59 @@ export default function DashboardPage() {
         return (
           <>
             <section id="profile-section" className="mb-8">
-              <div className="flex flex-col items-center text-center">
-                <div className="relative mb-4">
-                  <Image
-                    src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
-                    alt={profileName || 'Avatar'}
-                    width={128}
-                    height={128}
-                    className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-                  />
-                  <label htmlFor="profileAvatar" className={`absolute -bottom-2 -right-2 ${avatarUploading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} text-white p-2 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 ${avatarUploading ? 'animate-pulse' : ''}`}>
-                    {avatarUploading ? (
-                      <div className="w-[18px] h-[18px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <User size={18} />
-                    )}
-                    <input
-                      type="file"
-                      id="profileAvatar"
-                      accept="image/*"
-                      className="hidden"
-                      disabled={avatarUploading}
-                      onChange={handleAvatarChange}
+              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                <div className="flex flex-col items-center text-center">
+                  <div className="relative mb-6">
+                    <Image
+                      src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
+                      alt={profileName || 'Avatar'}
+                      width={128}
+                      height={128}
+                      className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
                     />
-                  </label>
+                    <label htmlFor="profileAvatar" className={`absolute -bottom-2 -right-2 ${avatarUploading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} text-white p-2 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 ${avatarUploading ? 'animate-pulse' : ''}`}>
+                      {avatarUploading ? (
+                        <div className="w-[18px] h-[18px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      ) : (
+                        <User size={18} />
+                      )}
+                      <input
+                        type="file"
+                        id="profileAvatar"
+                        accept="image/*"
+                        className="hidden"
+                        disabled={avatarUploading}
+                        onChange={handleAvatarChange}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mb-4 w-full max-w-sm">
+                    <InlineEditableField
+                      value={profileName}
+                      onSave={handleSaveProfileName}
+                      placeholder="Tu Nombre"
+                      className="text-2xl font-bold text-center text-gray-900"
+                    />
+                  </div>
+                  <div className="w-full max-w-md">
+                    <InlineEditableField
+                      value={profileBio}
+                      onSave={handleSaveProfileBio}
+                      placeholder="Tu biografía increíble aquí."
+                      isTextarea
+                      className="text-center text-gray-600"
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => setIsShareModalOpen(true)}
+                    className="mt-6 inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
+                  >
+                    <Share2 size={18} className="mr-2" />
+                    Compartir
+                  </button>
                 </div>
-
-                <EditableField
-                  id="profileName"
-                  value={profileName}
-                  onChange={(e) => setProfileName(e.target.value)}
-                  onSave={handleSaveProfileName}
-                  placeholder="Tu Nombre"
-                  className="text-2xl font-bold text-center text-gray-900"
-                  label="nombre"
-                />
-                <EditableField
-                  id="profileBio"
-                  value={profileBio}
-                  onChange={(e) => setProfileBio(e.target.value)}
-                  onSave={handleSaveProfileBio}
-                  placeholder="Tu biografía increíble aquí."
-                  isTextarea
-                  className="text-center text-gray-900 mt-2"
-                  label="biografía"
-                />
-
-                <button
-                  onClick={() => setIsShareModalOpen(true)}
-                  className="mt-6 inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
-                >
-                  <Share2 size={18} className="mr-2" />
-                  Compartir
-                </button>
               </div>
             </section>
 
