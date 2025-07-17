@@ -44,12 +44,14 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
   const allLinks: Link[] = profileData.links || [];
 
   return (
-    <div className={`w-[300px] h-[600px] rounded-[40px] shadow-lg overflow-hidden border-8 border-gray-800 bg-white flex flex-col ${fontClass}`}>
-      <div style={backgroundStyle} className="relative flex-grow flex flex-col items-center justify-center p-6 text-center">
+    <div className={`w-[300px] h-[600px] rounded-[40px] shadow-lg overflow-hidden border-8 border-gray-800 bg-white ${fontClass}`}>
+      <div style={backgroundStyle} className="relative h-full flex flex-col items-center text-center">
         {profileData.background_preference === 'image' && profileData.background_image && overlayClass && (
           <div className={`absolute inset-0 w-full h-full ${overlayClass} rounded-2xl z-[1]`}></div>
         )}
-        <div className="relative z-10 flex flex-col items-center w-full h-full overflow-y-auto hide-scrollbar">
+        
+        {/* Header section - fixed height */}
+        <div className="relative z-10 flex-shrink-0 flex flex-col items-center pt-6 px-6">
           <div className="relative mb-4">
             {avatarSrc ? (
               <Image
@@ -64,8 +66,12 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
             )}
           </div>
           <h2 className={`text-2xl font-bold mb-2 ${nameColorClass} ${textShadowClass}`}>{profileData.name || 'Tu Nombre'}</h2>
-          <p className={`text-sm ${bioColorClass} ${textShadowClass}`}>{profileData.bio || 'Tu biografía increíble aquí.'}</p>
-          <div className="w-full max-w-xs mx-auto space-y-3 mt-6">
+          <p className={`text-sm ${bioColorClass} ${textShadowClass} mb-4`}>{profileData.bio || 'Tu biografía increíble aquí.'}</p>
+        </div>
+        
+        {/* Scrollable links section with fixed height */}
+        <div className="relative z-10 flex-1 w-full overflow-y-auto hide-scrollbar px-6 pb-6">
+          <div className="w-full max-w-xs mx-auto space-y-6">
             {allLinks.length > 0 ? (
               allLinks.map(link => (
                 <a
@@ -73,7 +79,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={getButtonClasses(profileData.button_style)}
+                  className={getButtonClasses(profileData.button_style).replace('w-[70%]', 'w-[95%]')}
                   style={buttonStyles}
                 >
                   {link.title}
@@ -81,8 +87,8 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
               ))
             ) : (
               <>
-                {['LINK 1', 'LINK 2', 'LINK 3', 'LINK 4'].map(link => (
-                  <div key={link} className={getButtonClasses(profileData.button_style)} style={buttonStyles}>
+                {['LINK 1', 'LINK 2', 'LINK 3', 'LINK 4', 'LINK 5', 'LINK 6', 'LINK 7', 'LINK 8'].map(link => (
+                  <div key={link} className={getButtonClasses(profileData.button_style).replace('w-[70%]', 'w-[95%]')} style={buttonStyles}>
                     {link}
                   </div>
                 ))}

@@ -20,9 +20,9 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
   const [copySuccess, setCopySuccess] = useState('');
   const [slugError, setSlugError] = useState<string | null>(null);
   const [initialSlug, setInitialSlug] = useState(currentSlug); // To store the slug before editing
+  const [baseUrl, setBaseUrl] = useState('');
 
-  const PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const fullLink = `${PUBLIC_BASE_URL}/${editableSlug}`;
+  const fullLink = `${baseUrl}/${editableSlug}`;
 
   useEffect(() => {
     if (isOpen) {
@@ -31,6 +31,13 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
       setIsEditing(false);
       setCopySuccess('');
       setSlugError(null);
+      
+      // Set the correct base URL when modal opens
+      if (typeof window !== 'undefined') {
+        setBaseUrl(window.location.origin);
+      } else {
+        setBaseUrl(process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000");
+      }
     }
   }, [isOpen, currentSlug]);
 
@@ -96,7 +103,7 @@ const ShareLinkModal: React.FC<ShareLinkModalProps> = ({
         <div className="mb-4">
           <label htmlFor="publicLink" className="sr-only">Enlace Público</label>
           <div className="flex items-center border border-gray-300 rounded-md shadow-sm focus-within:ring-indigo-500 focus-within:border-indigo-500">
-            {isEditing ? null : <span className="px-1 py-2 bg-gray-100 text-gray-600 rounded-l-md text-sm">{PUBLIC_BASE_URL}/</span>}
+            {isEditing ? null : <span className="px-1 py-2 bg-gray-100 text-gray-600 rounded-l-md text-sm">{baseUrl}/</span>}
             <input
               id="publicLink"
               type="text"
