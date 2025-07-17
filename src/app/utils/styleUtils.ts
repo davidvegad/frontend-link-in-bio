@@ -8,6 +8,14 @@ export interface LinkData {
   type?: string;
 }
 
+export interface SocialIconData {
+  id?: number;
+  social_type: string;
+  username: string;
+  url: string;
+  order?: number;
+}
+
 export interface ProfileData {
   id?: number;
   name: string;
@@ -16,6 +24,7 @@ export interface ProfileData {
   cover_image?: string;
   slug: string;
   links: LinkData[];
+  social_icons?: SocialIconData[];
   profile_type?: string;
   purpose?: string;
   template_style?: string;

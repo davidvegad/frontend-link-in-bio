@@ -18,6 +18,8 @@ import ShareLinkModal from '../components/ShareLinkModal';
 import EditableField from '../components/EditableField';
 import InlineEditableField from '../components/InlineEditableField';
 import CoverImageModal from '../components/CoverImageModal';
+import SocialIconModal from '../components/SocialIconModal';
+import { getSocialIcon } from '../components/SocialIcons';
 
 // Interfaces
 interface LinkData {
@@ -25,6 +27,14 @@ interface LinkData {
   title: string;
   url: string;
   type?: string;
+  order?: number;
+}
+
+interface SocialIconData {
+  id?: number;
+  social_type: string;
+  username: string;
+  url: string;
   order?: number;
 }
 
@@ -56,6 +66,7 @@ interface ProfileData {
   button_shadow_opacity?: number;
   font_family?: string;
   links: LinkData[];
+  social_icons?: SocialIconData[];
 }
 
 // Main Component
@@ -95,12 +106,14 @@ export default function DashboardPage() {
 
   // Unified link state
   const [links, setLinks] = useState<LinkData[]>([]);
+  const [socialIcons, setSocialIcons] = useState<SocialIconData[]>([]);
   
   const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
   const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
+  const [isSocialIconModalOpen, setIsSocialIconModalOpen] = useState(false);
 
   const saveDesignChanges = useCallback(async (currentDesignStates: any) => {
     if (!profile) return;
@@ -272,6 +285,7 @@ export default function DashboardPage() {
       setButtonShadowOpacity(fetchedProfile.button_shadow_opacity ?? 1);
       setFontFamily(fetchedProfile.font_family || 'font-inter');
       setLinks(fetchedProfile.links || []);
+      setSocialIcons(fetchedProfile.social_icons || []);
 
     } catch (err: any) {
       setError(err.message || 'Failed to fetch profile.');
@@ -305,6 +319,7 @@ export default function DashboardPage() {
 
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
+    formData.append('social_icons', JSON.stringify(socialIcons));
 
     console.log('FormData before sending:');
     for (let pair of formData.entries()) {
@@ -327,6 +342,7 @@ export default function DashboardPage() {
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
       setLinks(updatedProfile.links || []);
+      setSocialIcons(updatedProfile.social_icons || []);
       
       // Los estados locales se actualizan en las funciones específicas
       // Avatar se maneja por separado
@@ -334,7 +350,7 @@ export default function DashboardPage() {
     } catch (err: any) {
       setError(err.message || 'Failed to save changes.');
     }
-  }, [profile, profileName, profileBio, profileAvatar, avatarChanged, links, API_URL]);
+  }, [profile, profileName, profileBio, profileAvatar, avatarChanged, links, socialIcons, API_URL]);
 
   const handleLinkAdd = async (linkType: string) => {
     if (!profile) return;
@@ -571,6 +587,7 @@ export default function DashboardPage() {
     
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
+    formData.append('social_icons', JSON.stringify(socialIcons));
 
     console.log('Avatar FormData before sending:');
     for (let pair of formData.entries()) {
@@ -592,6 +609,7 @@ export default function DashboardPage() {
     const updatedProfile = await response.json();
     setProfile(updatedProfile);
     setLinks(updatedProfile.links || []);
+    setSocialIcons(updatedProfile.social_icons || []);
     setProfileAvatar(null); // Limpiar después del éxito
   };
 
@@ -607,6 +625,7 @@ export default function DashboardPage() {
     
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
+    formData.append('social_icons', JSON.stringify(socialIcons));
 
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
@@ -623,6 +642,7 @@ export default function DashboardPage() {
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
       setLinks(updatedProfile.links || []);
+      setSocialIcons(updatedProfile.social_icons || []);
     } catch (error) {
       console.error('Cover upload error:', error);
       setError('Error al subir la imagen de portada.');
@@ -641,6 +661,7 @@ export default function DashboardPage() {
     
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
+    formData.append('social_icons', JSON.stringify(socialIcons));
 
     try {
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
@@ -657,9 +678,80 @@ export default function DashboardPage() {
       const updatedProfile = await response.json();
       setProfile(updatedProfile);
       setLinks(updatedProfile.links || []);
+      setSocialIcons(updatedProfile.social_icons || []);
     } catch (error) {
       console.error('Cover delete error:', error);
       setError('Error al eliminar la imagen de portada.');
+    }
+  };
+
+  const saveWithSocialIcons = async (socialIconsToSave: SocialIconData[]) => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+
+    const formData = new FormData();
+    
+    const safeName = profileName?.trim() || 'Mi Perfil';
+    const safeBio = profileBio?.trim() || 'Mi biografía';
+
+    formData.append('name', safeName);
+    formData.append('bio', safeBio);
+    if (originalProfileSlug) formData.append('slug', originalProfileSlug);
+
+    const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
+    formData.append('links', JSON.stringify(linksToSave));
+    formData.append('social_icons', JSON.stringify(socialIconsToSave));
+
+    const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Save social icons error:', errorData);
+      throw new Error(errorData.detail || 'Failed to save social icons.');
+    }
+
+    const updatedProfile = await response.json();
+    setProfile(updatedProfile);
+    setLinks(updatedProfile.links || []);
+    setSocialIcons(updatedProfile.social_icons || []);
+  };
+
+  const handleAddSocialIcon = async (socialType: string, username: string, url: string) => {
+    const newSocialIcon: SocialIconData = {
+      social_type: socialType,
+      username: username,
+      url: url,
+      order: socialIcons.length,
+    };
+    
+    const updatedSocialIcons = [...socialIcons, newSocialIcon];
+    setSocialIcons(updatedSocialIcons);
+    
+    // Save immediately to backend with updated social icons
+    try {
+      await saveWithSocialIcons(updatedSocialIcons);
+    } catch (error) {
+      console.error('Error saving social icon:', error);
+      // Revert on error
+      setSocialIcons(socialIcons);
+    }
+  };
+
+  const handleDeleteSocialIcon = async (socialType: string) => {
+    const updatedSocialIcons = socialIcons.filter(icon => icon.social_type !== socialType);
+    setSocialIcons(updatedSocialIcons);
+    
+    // Save immediately to backend with updated social icons
+    try {
+      await saveWithSocialIcons(updatedSocialIcons);
+    } catch (error) {
+      console.error('Error deleting social icon:', error);
+      // Revert on error
+      setSocialIcons(socialIcons);
     }
   };
 
@@ -754,6 +846,42 @@ export default function DashboardPage() {
                       isTextarea
                       className="text-center text-gray-600"
                     />
+                  </div>
+
+                  {/* Social Icons Section */}
+                  <div className="mt-6 w-full max-w-md">
+                    {socialIcons.length > 0 && (
+                      <div className="flex flex-wrap justify-center gap-3 mb-4">
+                        {socialIcons.map((icon) => (
+                          <div key={icon.social_type} className="relative group">
+                            <a
+                              href={icon.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="block w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center transition-colors"
+                            >
+                              <div className="w-6 h-6 flex items-center justify-center">
+                                {getSocialIcon(icon.social_type, 20, 'text-gray-700')}
+                              </div>
+                            </a>
+                            <button
+                              onClick={() => handleDeleteSocialIcon(icon.social_type)}
+                              className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X size={12} />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <button
+                      onClick={() => setIsSocialIconModalOpen(true)}
+                      className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-gray-700 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <span className="text-lg">+</span>
+                      <span>Añadir icono social</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -886,6 +1014,7 @@ export default function DashboardPage() {
                     cover_image: profile?.cover_image || '',
                     slug: profile?.slug || 'preview',
                     links: links,
+                    social_icons: socialIcons,
                     theme: theme,
                     custom_gradient_start: customGradientStart,
                     custom_gradient_end: customGradientEnd,
@@ -918,6 +1047,11 @@ export default function DashboardPage() {
         currentCover={profile?.cover_image}
         onUpload={handleCoverUpload}
         onDelete={handleCoverDelete}
+      />
+      <SocialIconModal
+        isOpen={isSocialIconModalOpen}
+        onClose={() => setIsSocialIconModalOpen(false)}
+        onAddIcon={handleAddSocialIcon}
       />
     </div>
   );

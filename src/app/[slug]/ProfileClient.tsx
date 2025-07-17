@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '../utils/styleUtils';
+import { getSocialIcon } from '../components/SocialIcons';
 
 interface LinkData {
   id?: number;
@@ -113,6 +114,25 @@ export default function ProfileClient({ params }: ProfileClientProps) {
         
         <h1 className={`text-3xl font-bold mb-2 text-center ${nameColorClass} ${textShadowClass}`}>{profile.name}</h1>
         <p className={`mb-6 text-center ${bioColorClass} ${textShadowClass}`}>{profile.bio}</p>
+
+        {/* Social Icons */}
+        {profile.social_icons && profile.social_icons.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
+            {profile.social_icons.map((icon) => (
+              <a
+                key={icon.social_type}
+                href={icon.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-200 hover:scale-110"
+              >
+                <div className="w-6 h-6 flex items-center justify-center">
+                  {getSocialIcon(icon.social_type, 20, 'text-white')}
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
 
         <div className="space-y-4 w-full pb-8">
           {profile.links.map(link => (

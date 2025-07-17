@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import { UserCircle } from 'lucide-react';
 import { ProfileData, getButtonClasses, getButtonStyles, getBackgroundAndOverlayStyles } from '../utils/styleUtils';
+import { getSocialIcon } from './SocialIcons';
 
 interface Link {
   id?: number | string;
@@ -81,6 +82,25 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
           </div>
           <h2 className={`text-2xl font-bold mb-2 ${nameColorClass} ${textShadowClass}`}>{profileData.name || 'Tu Nombre'}</h2>
           <p className={`text-sm ${bioColorClass} ${textShadowClass} mb-4`}>{profileData.bio || 'Tu biografía increíble aquí.'}</p>
+          
+          {/* Social Icons */}
+          {profileData.social_icons && profileData.social_icons.length > 0 && (
+            <div className="flex flex-wrap justify-center gap-2 mb-4">
+              {profileData.social_icons.map((icon) => (
+                <a
+                  key={icon.social_type}
+                  href={icon.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border border-white/30 flex items-center justify-center transition-all duration-200 hover:scale-110"
+                >
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    {getSocialIcon(icon.social_type, 16, 'text-white')}
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
         </div>
         
         {/* Scrollable links section with fixed height */}
