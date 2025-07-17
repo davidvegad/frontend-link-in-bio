@@ -13,9 +13,12 @@ export default function PublishPage() {
   useEffect(() => {
     const saveAndRedirect = async () => {
       try {
-        await submitProfile();
-        // Asume que el slug se crea a partir del nombre de usuario o un campo similar
+        // Generar el slug antes de enviar al backend
         const slug = profileData.name?.toLowerCase().replace(/\s+/g, '-') || 'tu-perfil';
+        
+        // Enviar el slug al backend junto con el resto de los datos
+        await submitProfile(slug);
+        
         setPublicUrl(`${window.location.origin}/${slug}`);
         // NO redirigir automáticamente aquí. La redirección se hará con el botón.
       } catch (error) {

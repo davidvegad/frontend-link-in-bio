@@ -74,27 +74,27 @@ export default function ProfileClient({ params }: ProfileClientProps) {
 
   return (
     <div 
-      className={`relative min-h-screen flex flex-col items-center justify-center p-4 ${fontClass}`}
+      className={`relative min-h-screen w-full flex flex-col items-center justify-center ${fontClass}`}
       style={backgroundStyle}
     >
       {profile.background_preference === 'image' && profile.background_image && overlayClass && (
         <div className={`absolute inset-0 w-full h-full ${overlayClass} z-[1]`}></div>
       )}
-      {/* Mobile-like container */}
-      <div className="relative z-10 w-[320px] h-[600px] rounded-2xl shadow-lg flex flex-col items-center p-6 bg-white bg-opacity-90">
+      {/* Content taking full width */}
+      <div className="relative z-10 flex flex-col items-center px-4 py-6 w-[130%] lg:w-[1000px] lg:max-w-[calc(100vw-140px)] lg:min-w-[70px]">
         {profile.avatar && (
           <Image
             src={profile.avatar}
             alt={profile.name}
             width={128}
             height={128}
-            className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-indigo-500 shadow-md"
+            className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg"
           />
         )}
-        <h1 className={`text-3xl font-bold mb-2 ${nameColorClass} ${textShadowClass}`}>{profile.name}</h1>
-        <p className={`mb-6 ${bioColorClass} ${textShadowClass}`}>{profile.bio}</p>
+        <h1 className={`text-3xl font-bold mb-2 text-center ${nameColorClass} ${textShadowClass}`}>{profile.name}</h1>
+        <p className={`mb-6 text-center ${bioColorClass} ${textShadowClass}`}>{profile.bio}</p>
 
-        <div className="space-y-4 w-full">
+        <div className="space-y-8 w-full">
           {profile.links.map(link => (
             link.url && (
               <a

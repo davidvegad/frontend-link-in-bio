@@ -82,9 +82,9 @@ export const getButtonStyles = (profile: ProfileData) => {
     color: toRgba(profile.button_text_color || '#FFFFFF', profile.button_text_opacity),
     border: `2px solid ${toRgba(profile.button_border_color || '#000000', profile.button_border_opacity)}`,
     boxShadow: `0 4px 14px 0 ${toRgba(profile.button_shadow_color || '#000000', profile.button_shadow_opacity)}`,
-    paddingTop: '0.5rem', // py-5 (20px)
-    paddingBottom: '0.5rem', // py-5 (20px)
-    marginBottom: '0.5rem', // mb-6 (24px)
+    paddingTop: '0.825rem', // 25% más alto: 0.5rem * 1.25 = 0.625rem (10px)
+    paddingBottom: '0.825rem', // 25% más alto: 0.5rem * 1.25 = 0.625rem (10px)
+    marginBottom: '1rem', // Doble separación: 0.5rem * 2 = 1rem (16px)
   };
 };
 

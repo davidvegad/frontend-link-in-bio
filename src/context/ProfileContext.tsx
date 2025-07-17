@@ -39,7 +39,7 @@ interface ProfileData {
 interface ProfileContextType {
   profileData: ProfileData;
   updateProfileData: (newData: Partial<ProfileData>) => void;
-  submitProfile: () => Promise<void>;
+  submitProfile: (customSlug?: string) => Promise<void>;
   isLoaded: boolean;
 }
 
@@ -71,7 +71,7 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const submitProfile = async () => {
+  const submitProfile = async (customSlug?: string) => {
     console.log("Enviando datos a la API:", profileData);
 
     const formData = new FormData();
@@ -86,6 +86,11 @@ export const ProfileProvider = ({ children }: { children: ReactNode }) => {
           formData.append(key, String(value));
         }
       }
+    }
+
+    // Añadir el slug personalizado si se proporciona
+    if (customSlug) {
+      formData.append('slug', customSlug);
     }
 
     // Añadir archivos

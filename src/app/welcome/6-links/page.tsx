@@ -52,6 +52,7 @@ export default function LinksPage() {
   const router = useRouter();
   const [links, setLinks] = useState<Link[]>(profileData.links || []);
   const [whatsappCountryCode, setWhatsappCountryCode] = useState('+1');
+  const [whatsappLocalNumber, setWhatsappLocalNumber] = useState('');
 
   // Sincronizar el estado local de enlaces con el contexto del perfil
   useEffect(() => {
@@ -65,9 +66,6 @@ export default function LinksPage() {
     let finalUrl = value;
     if (platform.baseUrl && value && !value.startsWith('http')) {
       finalUrl = `${platform.baseUrl}${value}`;
-    } else if (platformId === 'whatsapp' && value) {
-      const phoneNumber = value.replace(/[^0-9]/g, '');
-      finalUrl = `https://wa.me/${whatsappCountryCode.replace('+', '')}${phoneNumber}`;
     }
 
     setLinks(prevLinks => {
@@ -75,26 +73,44 @@ export default function LinksPage() {
       if (existingLink) {
         // Actualizar enlace social existente
         return prevLinks.map(l => l.type === platformId ? { ...l, url: finalUrl } : l);
-      } else {
-        // Añadir nuevo enlace social
+      } else if (finalUrl) {
+        // Añadir nuevo enlace social solo si hay una URL válida
         return [...prevLinks, { id: `social-${platformId}`, title: platform.name, url: finalUrl, type: platformId }];
       }
+      return prevLinks;
     });
+  };
+
+  const handleWhatsappNumberChange = (value: string) => {
+    // Solo mantener números
+    const phoneNumber = value.replace(/[^0-9]/g, '');
+    setWhatsappLocalNumber(phoneNumber);
+
+    // Crear URL solo si hay número
+    if (phoneNumber) {
+      const finalUrl = `https://wa.me/${whatsappCountryCode.replace('+', '')}${phoneNumber}`;
+      setLinks(prevLinks => {
+        const existingLink = prevLinks.find(l => l.type === 'whatsapp');
+        if (existingLink) {
+          return prevLinks.map(l => l.type === 'whatsapp' ? { ...l, url: finalUrl } : l);
+        } else {
+          return [...prevLinks, { id: 'social-whatsapp', title: 'WhatsApp', url: finalUrl, type: 'whatsapp' }];
+        }
+      });
+    } else {
+      // Remover enlace si no hay número
+      setLinks(prevLinks => prevLinks.filter(l => l.type !== 'whatsapp'));
+    }
   };
 
   const handleWhatsappCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCountryCode = e.target.value;
     setWhatsappCountryCode(newCountryCode);
 
-    const whatsappLink = links.find(l => l.type === 'whatsapp');
-    if (whatsappLink) {
-        const currentUrl = whatsappLink.url;
-        const numberMatch = currentUrl.match(/\d+$/);
-        if (numberMatch) {
-            const phoneNumber = numberMatch[0];
-            const newWhatsappUrl = `https://wa.me/${newCountryCode.replace('+', '')}${phoneNumber}`;
-            setLinks(prevLinks => prevLinks.map(l => l.type === 'whatsapp' ? { ...l, url: newWhatsappUrl } : l));
-        }
+    // Actualizar URL si hay número local
+    if (whatsappLocalNumber) {
+      const newWhatsappUrl = `https://wa.me/${newCountryCode.replace('+', '')}${whatsappLocalNumber}`;
+      setLinks(prevLinks => prevLinks.map(l => l.type === 'whatsapp' ? { ...l, url: newWhatsappUrl } : l));
     }
   };
 
@@ -122,11 +138,27 @@ export default function LinksPage() {
   const getDisplayValue = (link: Link | undefined, platform: any) => {
     if (!link || !link.url) return '';
     if (platform.id === 'whatsapp') {
-        const match = link.url.match(/\d+$/);
-        return match ? match[0] : '';
+        return whatsappLocalNumber;
     }
     return link.url.replace(platform.baseUrl || '', '');
   };
+
+  // Inicializar el número local de WhatsApp al cargar
+  useEffect(() => {
+    const whatsappLink = links.find(l => l.type === 'whatsapp');
+    if (whatsappLink && whatsappLink.url && !whatsappLocalNumber) {
+      const match = whatsappLink.url.match(/https:\/\/wa\.me\/(\d+)/);
+      if (match) {
+        const fullNumber = match[1];
+        const countryCodeDigits = whatsappCountryCode.replace(/[^0-9]/g, '');
+        if (fullNumber.startsWith(countryCodeDigits)) {
+          setWhatsappLocalNumber(fullNumber.substring(countryCodeDigits.length));
+        } else {
+          setWhatsappLocalNumber(fullNumber);
+        }
+      }
+    }
+  }, [links, whatsappCountryCode, whatsappLocalNumber]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4">
@@ -166,7 +198,7 @@ export default function LinksPage() {
                             type="tel"
                             id={platform.id}
                             value={getDisplayValue(currentLink, platform)}
-                            onChange={(e) => handleSocialLinkChange(platform.id, e.target.value)}
+                            onChange={(e) => handleWhatsappNumberChange(e.target.value)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-r-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder={platform.placeholder}
                           />
