@@ -66,35 +66,33 @@ const fontOptions = [
   { id: 'font-playfair-display', name: 'Playfair Display', class: 'font-playfair-display' },
   { id: 'font-montserrat', name: 'Montserrat', class: 'font-montserrat' },
   { id: 'font-poppins', name: 'Poppins', class: 'font-poppins' },
-  { id: 'font-saira', name: 'Saira', class: 'font-saira' },
-  { id: 'font-mulish', name: 'Mulish', class: 'font-mulish' },
   { id: 'font-roboto', name: 'Roboto', class: 'font-roboto' },
-  { id: 'font-jost', name: 'Jost', class: 'font-jost' },
   { id: 'font-quicksand', name: 'Quicksand', class: 'font-quicksand' },
-  { id: 'font-karla', name: 'Karla', class: 'font-karla' },
-  { id: 'font-solway', name: 'Solway', class: 'font-solway' },
-  { id: 'font-arvo', name: 'Arvo', class: 'font-arvo' },
-  { id: 'font-berkshire-swash', name: 'Berkshire Swash', class: 'font-berkshire-swash' },
-  { id: 'font-itim', name: 'Itim', class: 'font-itim' },
-  { id: 'font-bellota', name: 'Bellota', class: 'font-bellota' },
-  { id: 'font-aldrich', name: 'Aldrich', class: 'font-aldrich' },
-  { id: 'font-palanquin-dark', name: 'Palanquin Dark', class: 'font-palanquin-dark' },
-  { id: 'font-comic-neue', name: 'Comic Neue', class: 'font-comic-neue' },
-  { id: 'font-source-sans-3', name: 'Source Sans Pro', class: 'font-source-sans-3' },
-  { id: 'font-spectral', name: 'Spectral', class: 'font-spectral' },
-  { id: 'font-open-sans', name: 'Open Sans', class: 'font-open-sans' },
-  { id: 'font-lato', name: 'Lato', class: 'font-lato' },
-  { id: 'font-oswald', name: 'Oswald', class: 'font-oswald' },
-  { id: 'font-pt-sans', name: 'PT Sans', class: 'font-pt-sans' },
   { id: 'font-merriweather', name: 'Merriweather', class: 'font-merriweather' },
   { id: 'font-ubuntu', name: 'Ubuntu', class: 'font-ubuntu' },
   { id: 'font-nunito', name: 'Nunito', class: 'font-nunito' },
   { id: 'font-fira-sans', name: 'Fira Sans', class: 'font-fira-sans' },
-  { id: 'font-crimson-text', name: 'Crimson Text', class: 'font-crimson-text' },
-  { id: 'font-libre-baskerville', name: 'Libre Baskerville', class: 'font-libre-baskerville' },
   { id: 'font-work-sans', name: 'Work Sans', class: 'font-work-sans' },
   { id: 'font-caveat', name: 'Caveat', class: 'font-caveat' },
   { id: 'font-pacifico', name: 'Pacifico', class: 'font-pacifico' },
+  { id: 'font-open-sans', name: 'Open Sans', class: 'font-open-sans' },
+  { id: 'font-lato', name: 'Lato', class: 'font-lato' },
+  { id: 'font-oswald', name: 'Oswald', class: 'font-oswald' },
+  { id: 'font-pt-sans', name: 'PT Sans', class: 'font-pt-sans' },
+  { id: 'font-crimson-text', name: 'Crimson Text', class: 'font-crimson-text' },
+  { id: 'font-libre-baskerville', name: 'Libre Baskerville', class: 'font-libre-baskerville' },
+  { id: 'font-source-sans-3', name: 'Source Sans Pro', class: 'font-source-sans-3' },
+  { id: 'font-spectral', name: 'Spectral', class: 'font-spectral' },
+  { id: 'font-karla', name: 'Karla', class: 'font-karla' },
+  { id: 'font-mulish', name: 'Mulish', class: 'font-mulish' },
+  { id: 'font-jost', name: 'Jost', class: 'font-jost' },
+  { id: 'font-arvo', name: 'Arvo', class: 'font-arvo' },
+  { id: 'font-itim', name: 'Itim', class: 'font-itim' },
+  { id: 'font-comfortaa', name: 'Comfortaa', class: 'font-comfortaa' },
+  { id: 'font-outfit', name: 'Outfit', class: 'font-outfit' },
+  { id: 'font-dancing-script', name: 'Dancing Script', class: 'font-dancing-script' },
+  { id: 'font-raleway', name: 'Raleway', class: 'font-raleway' },
+  { id: 'font-comic-neue', name: 'Comic Neue', class: 'font-comic-neue' },
 ];
 
 const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
@@ -550,7 +548,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
       {/* Sección de Fuentes */}
       <div className="mb-6">
         <h3 className="text-xl font-semibold mb-3">Fuente</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           {fontOptions.map(font => (
             <div
               key={font.id}

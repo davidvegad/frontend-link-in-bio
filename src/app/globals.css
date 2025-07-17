@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-roboto-mono);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,7 +22,6 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* Custom global styles for form elements */
@@ -45,5 +44,40 @@ textarea::placeholder {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;  /* Safari and Chrome */
 }
+
+/* Define all font classes directly */
+.font-inter { font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif; }
+.font-roboto-mono { font-family: var(--font-roboto-mono), ui-monospace, monospace; }
+.font-lora { font-family: var(--font-lora), ui-serif, serif; }
+.font-playfair-display { font-family: var(--font-playfair-display), ui-serif, serif; }
+.font-montserrat { font-family: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif; }
+.font-poppins { font-family: var(--font-poppins), ui-sans-serif, system-ui, sans-serif; }
+.font-roboto { font-family: var(--font-roboto), ui-sans-serif, system-ui, sans-serif; }
+.font-quicksand { font-family: var(--font-quicksand), ui-sans-serif, system-ui, sans-serif; }
+.font-merriweather { font-family: var(--font-merriweather), ui-serif, serif; }
+.font-ubuntu { font-family: var(--font-ubuntu), ui-sans-serif, system-ui, sans-serif; }
+.font-nunito { font-family: var(--font-nunito), ui-sans-serif, system-ui, sans-serif; }
+.font-fira-sans { font-family: var(--font-fira-sans), ui-sans-serif, system-ui, sans-serif; }
+.font-work-sans { font-family: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif; }
+.font-caveat { font-family: var(--font-caveat), ui-sans-serif, system-ui, sans-serif; }
+.font-pacifico { font-family: var(--font-pacifico), ui-sans-serif, system-ui, sans-serif; }
+.font-open-sans { font-family: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif; }
+.font-lato { font-family: var(--font-lato), ui-sans-serif, system-ui, sans-serif; }
+.font-oswald { font-family: var(--font-oswald), ui-sans-serif, system-ui, sans-serif; }
+.font-pt-sans { font-family: var(--font-pt-sans), ui-sans-serif, system-ui, sans-serif; }
+.font-crimson-text { font-family: var(--font-crimson-text), ui-serif, serif; }
+.font-libre-baskerville { font-family: var(--font-libre-baskerville), ui-serif, serif; }
+.font-source-sans-3 { font-family: var(--font-source-sans-3), ui-sans-serif, system-ui, sans-serif; }
+.font-spectral { font-family: var(--font-spectral), ui-serif, serif; }
+.font-karla { font-family: var(--font-karla), ui-sans-serif, system-ui, sans-serif; }
+.font-mulish { font-family: var(--font-mulish), ui-sans-serif, system-ui, sans-serif; }
+.font-jost { font-family: var(--font-jost), ui-sans-serif, system-ui, sans-serif; }
+.font-arvo { font-family: var(--font-arvo), ui-serif, serif; }
+.font-itim { font-family: var(--font-itim), ui-sans-serif, system-ui, sans-serif; }
+.font-comfortaa { font-family: var(--font-comfortaa), ui-sans-serif, system-ui, sans-serif; }
+.font-outfit { font-family: var(--font-outfit), ui-sans-serif, system-ui, sans-serif; }
+.font-dancing-script { font-family: var(--font-dancing-script), ui-sans-serif, system-ui, sans-serif; }
+.font-raleway { font-family: var(--font-raleway), ui-sans-serif, system-ui, sans-serif; }
+.font-comic-neue { font-family: var(--font-comic-neue), ui-sans-serif, system-ui, sans-serif; }
 
 

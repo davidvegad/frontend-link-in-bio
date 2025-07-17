@@ -29,9 +29,17 @@ interface ProfileData {
   custom_gradient_end?: string;
   background_image?: FileOrNull;
   background_preference?: 'image' | 'color';
+  image_overlay?: 'none' | 'dark' | 'light';
   button_style?: string;
   button_color?: string;
   button_text_color?: string;
+  button_text_opacity?: number;
+  button_background_opacity?: number;
+  button_border_color?: string;
+  button_border_opacity?: number;
+  button_shadow_color?: string;
+  button_shadow_opacity?: number;
+  font_family?: string;
   links?: Link[]; // Campo unificado para todos los enlaces
 }
 

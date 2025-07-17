@@ -118,7 +118,7 @@ export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgrou
     backgroundStyle = { backgroundColor: '#F3F4F6' }; // Default gray
   }
 
-  const fontClass = profile.font_family || 'font-inter';
+  const fontClass = profile.font_family || 'font-sans';
 
   const overlayClass = {
     none: '',
