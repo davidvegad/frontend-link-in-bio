@@ -13,6 +13,7 @@ export interface ProfileData {
   name: string;
   bio: string;
   avatar: string;
+  cover_image?: string;
   slug: string;
   links: LinkData[];
   profile_type?: string;
@@ -69,7 +70,7 @@ export const toRgba = (hex: string, opacity: number = 1) => {
 };
 
 export const getButtonClasses = (style?: string) => {
-  let classes = "block w-[70%] mx-auto text-center transition-all duration-300 shadow-md no-underline";
+  let classes = "block w-full max-w-[700px] mx-auto text-center transition-all duration-300 shadow-md no-underline";
   if (style === 'rounded-full') return classes + " rounded-full";
   if (style === 'rounded-md') return classes + " rounded-md";
   if (style === 'rounded-none') return classes + " rounded-none";
@@ -95,15 +96,34 @@ interface GetBackgroundAndOverlayStylesResult {
   bioColorClass: string;
   textShadowClass: string;
   fontClass: string;
+  useOverlay: boolean;
 }
 
 export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgroundAndOverlayStylesResult => {
   let backgroundStyle: React.CSSProperties = {};
+  let useOverlay = false;
+  
   if (profile.background_preference === 'image' && profile.background_image) {
+    // Apply filters directly to the background image
+    let filter = '';
+    switch (profile.image_overlay) {
+      case 'dark':
+        filter = 'brightness(0.6) contrast(1.1)';
+        break;
+      case 'light':
+        filter = 'brightness(1.3) contrast(0.9)';
+        break;
+      case 'none':
+      default:
+        filter = 'none';
+        break;
+    }
+    
     backgroundStyle = {
       backgroundImage: `url(${profile.background_image})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
+      filter: filter,
     };
   } else if (profile.theme === 'custom' && profile.custom_gradient_start && profile.custom_gradient_end) {
     backgroundStyle = {
@@ -120,6 +140,7 @@ export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgrou
 
   const fontClass = profile.font_family || 'font-sans';
 
+  // Keep overlay class for backward compatibility but won't be used for images
   const overlayClass = {
     none: '',
     dark: 'bg-black bg-opacity-50',
@@ -156,6 +177,7 @@ export const getBackgroundAndOverlayStyles = (profile: ProfileData): GetBackgrou
     bioColorClass,
     textShadowClass,
     fontClass,
+    useOverlay,
   };
 };
 

@@ -33,7 +33,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
   const avatarSrc = getImageUrl(profileData.avatar);
   const backgroundSrc = getImageUrl(profileData.background_image);
 
-  const { backgroundStyle, overlayClass, nameColorClass, bioColorClass, textShadowClass, fontClass } = getBackgroundAndOverlayStyles({
+  const { backgroundStyle, overlayClass, nameColorClass, bioColorClass, textShadowClass, fontClass, useOverlay } = getBackgroundAndOverlayStyles({
     ...profileData,
     background_image: backgroundSrc || undefined, // Pass the resolved image URL/blob
   });
@@ -45,14 +45,28 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
 
   return (
     <div className={`w-[300px] h-[600px] rounded-[40px] shadow-lg overflow-hidden border-8 border-gray-800 bg-white ${fontClass}`}>
-      <div style={backgroundStyle} className="relative h-full flex flex-col items-center text-center">
-        {profileData.background_preference === 'image' && profileData.background_image && overlayClass && (
+      <div style={backgroundStyle} className="relative h-full flex flex-col">
+        {useOverlay && profileData.background_preference === 'image' && profileData.background_image && overlayClass && (
           <div className={`absolute inset-0 w-full h-full ${overlayClass} rounded-2xl z-[1]`}></div>
         )}
         
-        {/* Header section - fixed height */}
-        <div className="relative z-10 flex-shrink-0 flex flex-col items-center pt-6 px-6">
-          <div className="relative mb-4">
+        {/* Cover Image - Full width at top */}
+        {profileData.cover_image && (
+          <div className="w-full h-20 overflow-hidden">
+            <Image
+              src={getImageUrl(profileData.cover_image) || ''}
+              alt="Cover"
+              width={300}
+              height={80}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        
+        {/* Content section */}
+        <div className="relative z-10 flex-1 flex flex-col items-center text-center px-6">
+          {/* Avatar */}
+          <div className={`relative mb-4 ${profileData.cover_image ? '-mt-10' : 'mt-6'}`}>
             {avatarSrc ? (
               <Image
                 src={avatarSrc}
@@ -79,7 +93,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={getButtonClasses(profileData.button_style).replace('w-[70%]', 'w-[95%]')}
+                  className={getButtonClasses(profileData.button_style).replace('max-w-[700px]', 'max-w-[240px]')}
                   style={buttonStyles}
                 >
                   {link.title}
@@ -88,7 +102,7 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
             ) : (
               <>
                 {['LINK 1', 'LINK 2', 'LINK 3', 'LINK 4', 'LINK 5', 'LINK 6', 'LINK 7', 'LINK 8'].map(link => (
-                  <div key={link} className={getButtonClasses(profileData.button_style).replace('w-[70%]', 'w-[95%]')} style={buttonStyles}>
+                  <div key={link} className={getButtonClasses(profileData.button_style).replace('max-w-[700px]', 'max-w-[240px]')} style={buttonStyles}>
                     {link}
                   </div>
                 ))}

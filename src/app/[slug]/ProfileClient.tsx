@@ -68,33 +68,53 @@ export default function ProfileClient({ params }: ProfileClientProps) {
     return <div className="min-h-screen flex items-center justify-center">Perfil no encontrado.</div>;
   }
 
-  const { backgroundStyle, overlayClass, nameColorClass, bioColorClass, textShadowClass, fontClass } = getBackgroundAndOverlayStyles(profile);
+  const { backgroundStyle, overlayClass, nameColorClass, bioColorClass, textShadowClass, fontClass, useOverlay } = getBackgroundAndOverlayStyles(profile);
 
   const buttonStyles = getButtonStyles(profile);
 
   return (
     <div 
-      className={`relative min-h-screen w-full flex flex-col items-center justify-center ${fontClass}`}
+      className={`relative min-h-screen w-full bg-white ${fontClass}`}
       style={backgroundStyle}
     >
-      {profile.background_preference === 'image' && profile.background_image && overlayClass && (
+      {useOverlay && profile.background_preference === 'image' && profile.background_image && overlayClass && (
         <div className={`absolute inset-0 w-full h-full ${overlayClass} z-[1]`}></div>
       )}
-      {/* Content taking full width */}
-      <div className="relative z-10 flex flex-col items-center px-4 py-6 w-[130%] lg:w-[1000px] lg:max-w-[calc(100vw-140px)] lg:min-w-[70px]">
-        {profile.avatar && (
-          <Image
-            src={profile.avatar}
-            alt={profile.name}
-            width={128}
-            height={128}
-            className="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-white shadow-lg"
-          />
-        )}
+      
+      {/* Cover Image - Full width on mobile, button width on desktop */}
+      {profile.cover_image && (
+        <div className="w-full md:max-w-[700px] md:mx-auto md:px-4">
+          <div className="w-full h-48 overflow-hidden md:rounded-lg mb-4">
+            <Image
+              src={profile.cover_image}
+              alt="Cover"
+              width={700}
+              height={192}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      )}
+      
+      {/* Content container */}
+      <div className="relative z-10 flex flex-col items-center px-4 w-full max-w-[700px] mx-auto">
+        {/* Avatar */}
+        <div className={`${profile.cover_image ? '-mt-20 mb-4' : 'mt-8 mb-4'}`}>
+          {profile.avatar && (
+            <Image
+              src={profile.avatar}
+              alt={profile.name}
+              width={128}
+              height={128}
+              className="w-32 h-32 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
+            />
+          )}
+        </div>
+        
         <h1 className={`text-3xl font-bold mb-2 text-center ${nameColorClass} ${textShadowClass}`}>{profile.name}</h1>
         <p className={`mb-6 text-center ${bioColorClass} ${textShadowClass}`}>{profile.bio}</p>
 
-        <div className="space-y-8 w-full">
+        <div className="space-y-4 w-full pb-8">
           {profile.links.map(link => (
             link.url && (
               <a

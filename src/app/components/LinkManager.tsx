@@ -236,7 +236,7 @@ const SortableItem: React.FC<SortableItemProps> = ({
       ref={setNodeRef} 
       style={style} 
       {...attributes} 
-      className="flex flex-col sm:flex-row items-center gap-3 p-3 border rounded-lg bg-white shadow-sm"
+      className="flex flex-col sm:flex-row items-center gap-3 p-6 bg-white rounded-xl border border-gray-200 shadow-sm"
     >
       <div className="flex-grow grid grid-cols-1 gap-3">
         <div className="col-span-full flex items-center gap-2 text-sm text-gray-500 font-medium mb-2">
@@ -342,41 +342,35 @@ const LinkManager: React.FC<LinkManagerProps> = ({
 
   return (
     <section id="links-section">
-      <h2 className="text-2xl font-semibold mb-6">Gestión de Enlaces</h2>
-
-      <div className="p-4 border rounded-lg bg-gray-50 mb-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">Todos los Enlaces</h3>
-          <button 
-            type="button" 
-            onClick={addLink} 
-            className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 font-semibold"
-          >
-            + Añadir Enlace
-          </button>
-        </div>
-        <DndContext 
-          sensors={sensors} 
-          collisionDetection={closestCenter} 
-          onDragEnd={handleDragEnd}
+      <DndContext 
+        sensors={sensors} 
+        collisionDetection={closestCenter} 
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext 
+          items={links.map(link => link.id)} 
+          strategy={verticalListSortingStrategy}
         >
-          <SortableContext 
-            items={links.map(link => link.id)} 
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="space-y-4">
-              {(links || []).map((link) => (
-                <SortableItem 
-                  key={link.id} 
-                  link={link} 
-                  handleLinkChange={handleLinkChange} 
-                  removeLink={removeLink}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-      </div>
+          <div className="space-y-4">
+            {(links || []).map((link) => (
+              <SortableItem 
+                key={link.id} 
+                link={link} 
+                handleLinkChange={handleLinkChange} 
+                removeLink={removeLink}
+              />
+            ))}
+          </div>
+        </SortableContext>
+      </DndContext>
+      
+      <button 
+        type="button" 
+        onClick={addLink} 
+        className="w-full mt-4 bg-indigo-600 text-white py-3 px-6 rounded-xl hover:bg-indigo-700 font-semibold border border-gray-200 shadow-sm"
+      >
+        + Añadir Enlace
+      </button>
     </section>
   );
 };

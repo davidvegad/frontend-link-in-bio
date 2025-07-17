@@ -15,8 +15,8 @@ const LinkTypeSelectionModal: React.FC<LinkTypeSelectionModalProps> = ({ isOpen,
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+      <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-md">
         <h2 className="text-xl font-bold mb-4">Selecciona el tipo de enlace</h2>
         <div className="space-y-4">
           <button

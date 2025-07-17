@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { debounce } from 'lodash';
-import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2 } from 'lucide-react';
+import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2, Flame } from 'lucide-react';
 
 import LivePreview from '../components/LivePreview';
 import DesignCustomizer from '../components/DesignCustomizer';
@@ -17,6 +17,7 @@ import LinkTypeSelectionModal from '../components/LinkTypeSelectionModal';
 import ShareLinkModal from '../components/ShareLinkModal';
 import EditableField from '../components/EditableField';
 import InlineEditableField from '../components/InlineEditableField';
+import CoverImageModal from '../components/CoverImageModal';
 
 // Interfaces
 interface LinkData {
@@ -33,6 +34,7 @@ interface ProfileData {
   name: string;
   bio: string;
   avatar: string;
+  cover_image?: string;
   slug?: string;
   profile_type?: string;
   purpose?: string;
@@ -98,6 +100,7 @@ export default function DashboardPage() {
 
   const [isLinkTypeModalOpen, setIsLinkTypeModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
 
   const saveDesignChanges = useCallback(async (currentDesignStates: any) => {
     if (!profile) return;
@@ -592,6 +595,74 @@ export default function DashboardPage() {
     setProfileAvatar(null); // Limpiar después del éxito
   };
 
+  const handleCoverUpload = async (coverFile: File) => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+    
+    const formData = new FormData();
+    formData.append('name', profileName);
+    formData.append('bio', profileBio);
+    formData.append('cover_image', coverFile);
+    if (originalProfileSlug) formData.append('slug', originalProfileSlug);
+    
+    const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
+    formData.append('links', JSON.stringify(linksToSave));
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to upload cover image.');
+      }
+
+      const updatedProfile = await response.json();
+      setProfile(updatedProfile);
+      setLinks(updatedProfile.links || []);
+    } catch (error) {
+      console.error('Cover upload error:', error);
+      setError('Error al subir la imagen de portada.');
+    }
+  };
+
+  const handleCoverDelete = async () => {
+    if (!profile) return;
+    const accessToken = localStorage.getItem('accessToken');
+    
+    const formData = new FormData();
+    formData.append('name', profileName);
+    formData.append('bio', profileBio);
+    formData.append('cover_image', ''); // Enviar cadena vacía para eliminar
+    if (originalProfileSlug) formData.append('slug', originalProfileSlug);
+    
+    const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
+    formData.append('links', JSON.stringify(linksToSave));
+
+    try {
+      const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${accessToken}` },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Failed to delete cover image.');
+      }
+
+      const updatedProfile = await response.json();
+      setProfile(updatedProfile);
+      setLinks(updatedProfile.links || []);
+    } catch (error) {
+      console.error('Cover delete error:', error);
+      setError('Error al eliminar la imagen de portada.');
+    }
+  };
+
   if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
   if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
 
@@ -603,7 +674,46 @@ export default function DashboardPage() {
             <section id="profile-section" className="mb-8">
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <div className="flex flex-col items-center text-center">
-                  <div className="relative mb-6">
+                  {/* Cover Image */}
+                  <div className="relative w-full mb-6">
+                    {profile?.cover_image ? (
+                      <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                        <Image
+                          src={profile.cover_image}
+                          alt="Cover"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
+                        <span className="text-gray-500 text-sm">Añade una imagen de portada</span>
+                      </div>
+                    )}
+                    
+                    {/* Botón de compartir - Esquina superior derecha */}
+                    <button
+                      onClick={() => setIsShareModalOpen(true)}
+                      className="absolute top-3 right-3 bg-[#ffce2f] hover:bg-[#e6b829] text-gray-800 px-3 py-2 rounded-full transition-all duration-200 hover:scale-105 shadow-lg font-medium text-sm flex items-center gap-2"
+                    >
+                      <Flame size={16} className="text-orange-600" />
+                      <span className="hidden sm:inline">Compartir mi enlace</span>
+                      <span className="sm:hidden">Compartir</span>
+                    </button>
+                    
+                    {/* Botón de editar portada */}
+                    <button
+                      onClick={() => setIsCoverModalOpen(true)}
+                      className="absolute -bottom-2 -right-2 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full transition-transform duration-200 hover:scale-110"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Avatar */}
+                  <div className="relative mb-6 -mt-20">
                     <Image
                       src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
                       alt={profileName || 'Avatar'}
@@ -645,14 +755,6 @@ export default function DashboardPage() {
                       className="text-center text-gray-600"
                     />
                   </div>
-
-                  <button
-                    onClick={() => setIsShareModalOpen(true)}
-                    className="mt-6 inline-flex items-center px-6 py-2 bg-blue-600 text-white rounded-full shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all"
-                  >
-                    <Share2 size={18} className="mr-2" />
-                    Compartir
-                  </button>
                 </div>
               </div>
             </section>
@@ -781,6 +883,7 @@ export default function DashboardPage() {
                     name: profileName,
                     bio: profileBio,
                     avatar: profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '',
+                    cover_image: profile?.cover_image || '',
                     slug: profile?.slug || 'preview',
                     links: links,
                     theme: theme,
@@ -809,6 +912,13 @@ export default function DashboardPage() {
 
       <LinkTypeSelectionModal isOpen={isLinkTypeModalOpen} onClose={() => setIsLinkTypeModalOpen(false)} onSelectType={handleLinkAdd} />
       {profile?.slug && <ShareLinkModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} currentSlug={profile.slug} onUpdateSlug={handleUpdateSlug} />}
+      <CoverImageModal 
+        isOpen={isCoverModalOpen} 
+        onClose={() => setIsCoverModalOpen(false)} 
+        currentCover={profile?.cover_image}
+        onUpload={handleCoverUpload}
+        onDelete={handleCoverDelete}
+      />
     </div>
   );
 }
