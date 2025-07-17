@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Upload, Palette, ImageIcon, Copy } from 'lucide-react';
+import UnsplashGalleryModal from './UnsplashGalleryModal';
 
 // Updated interface to include new fields
 interface ProfileData {
@@ -27,7 +28,7 @@ interface ProfileData {
 interface DesignCustomizerProps {
   profileData: ProfileData;
   updateProfileData: (newData: Partial<ProfileData>) => void;
-  setBackgroundImageFile: (file: File | null) => void;
+  setBackgroundImageFile: (file: File | string | null) => void;
 }
 
 const predefinedThemes = [
@@ -103,6 +104,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
   const [activeBackgroundTab, setActiveBackgroundTab] = React.useState<'colors' | 'upload' | 'gallery'>(
     profileData.background_preference === 'image' ? 'upload' : 'colors'
   );
+  const [isGalleryModalOpen, setIsGalleryModalOpen] = React.useState(false);
 
   React.useEffect(() => {
     setActiveBackgroundTab(profileData.background_preference === 'image' ? 'upload' : 'colors');
@@ -132,6 +134,8 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
       updateProfileData({ background_preference: 'color' });
     } else if (option === 'upload') {
       updateProfileData({ background_preference: 'image' });
+    } else if (option === 'gallery') {
+      setIsGalleryModalOpen(true);
     }
   };
 
@@ -141,6 +145,21 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
     }
     return profileData.background_image;
   }, [profileData.background_image]);
+
+  const handleGalleryImageSelect = (imageUrl: string) => {
+    // Actualizar directamente el archivo de fondo también
+    setBackgroundImageFile(imageUrl);
+    
+    updateProfileData({
+      background_image: imageUrl,
+      background_preference: 'image',
+      theme: undefined,
+      custom_gradient_start: undefined,
+      custom_gradient_end: undefined,
+    });
+    
+    setIsGalleryModalOpen(false);
+  };
 
   return (
     <section id="design-section" className="space-y-8">
@@ -168,10 +187,9 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                 style={{
                   backgroundColor: activeBackgroundTab === tab.id ? '#750A97' : 'transparent'
                 }}
-                disabled={tab.id === 'gallery'} // Disable gallery for now
               >
                 <IconComponent size={16} />
-                {tab.id === 'gallery' ? 'Galería (próx.)' : tab.label}
+                {tab.label}
               </button>
             );
           })}
@@ -344,9 +362,75 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
         )}
 
         {activeBackgroundTab === 'gallery' && (
-          <div>
-            <h4 className="text-lg font-semibold">Galería de Imágenes</h4>
-            <p className="text-gray-600 text-sm">Esta sección estará disponible pronto.</p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h4 className="text-lg font-semibold">Galería de Imágenes</h4>
+              <button
+                onClick={() => setIsGalleryModalOpen(true)}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+              >
+                Explorar Galería
+              </button>
+            </div>
+            <p className="text-gray-600 text-sm">Selecciona una imagen de nuestra galería curada de imágenes de negocios.</p>
+            
+            {/* Preview de imagen seleccionada */}
+            {imagePreviewUrl && typeof imagePreviewUrl === 'string' && profileData.background_preference === 'image' && (
+              <div className="p-4 border rounded-lg space-y-4">
+                <div className="flex items-center space-x-4">
+                  <Image src={imagePreviewUrl} alt="Background Preview" width={100} height={100} className="rounded-md object-cover" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-gray-900">Imagen seleccionada de la galería</p>
+                    <p className="text-sm text-gray-500">Fuente: Unsplash</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleClearBackgroundImage}
+                    className="bg-red-100 text-red-700 hover:bg-red-200 px-3 py-1 rounded-md text-sm font-medium"
+                  >
+                    Eliminar
+                  </button>
+                </div>
+                
+                {/* Opciones de superposición para galería */}
+                <div>
+                  <h5 className="text-md font-semibold mb-2">Superposición de color</h5>
+                  <div className="flex space-x-2">
+                    {[
+                      { id: 'none', label: 'Ninguno' },
+                      { id: 'dark', label: 'Oscuro' },
+                      { id: 'light', label: 'Claro' },
+                    ].map(overlay => (
+                      <button
+                        key={overlay.id}
+                        onClick={() => updateProfileData({ image_overlay: overlay.id as any })}
+                        className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                          profileData.image_overlay === overlay.id
+                            ? 'bg-indigo-600 text-white'
+                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                        }`}
+                      >
+                        {overlay.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Mensaje cuando no hay imagen seleccionada */}
+            {(!imagePreviewUrl || profileData.background_preference !== 'image') && (
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                <ImageIcon size={48} className="mx-auto text-gray-400 mb-4" />
+                <p className="text-gray-600 mb-4">No has seleccionado ninguna imagen de la galería</p>
+                <button
+                  onClick={() => setIsGalleryModalOpen(true)}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium"
+                >
+                  Seleccionar Imagen
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -564,6 +648,13 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
           ))}
         </div>
       </div>
+
+      {/* Modal de Galería */}
+      <UnsplashGalleryModal
+        isOpen={isGalleryModalOpen}
+        onClose={() => setIsGalleryModalOpen(false)}
+        onSelectImage={handleGalleryImageSelect}
+      />
     </section>
   );
 };

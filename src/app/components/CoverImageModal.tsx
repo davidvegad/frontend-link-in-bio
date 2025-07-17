@@ -220,9 +220,11 @@ const CoverImageModal: React.FC<CoverImageModalProps> = ({
                           title={`Imagen ${index + 1} por ${image.user.name}`}
                         >
                           <div className="w-full h-32 bg-gray-100 flex items-center justify-center">
-                            <img
+                            <Image
                               src={image.urls.small}
                               alt={image.alt_description || image.description}
+                              width={300}
+                              height={200}
                               className="w-full h-full object-cover"
                               loading="lazy"
                               onLoad={(e) => {

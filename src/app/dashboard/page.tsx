@@ -90,7 +90,7 @@ export default function DashboardPage() {
   const [theme, setTheme] = useState('');
   const [customGradientStart, setCustomGradientStart] = useState('');
   const [customGradientEnd, setCustomGradientEnd] = useState('');
-  const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [backgroundImage, setBackgroundImage] = useState<File | string | null>(null);
   const [backgroundPreference, setBackgroundPreference] = useState<'image' | 'color'>('color');
   const [imageOverlay, setImageOverlay] = useState<'none' | 'dark' | 'light'>('none');
   const [buttonStyle, setButtonStyle] = useState('');
@@ -119,31 +119,45 @@ export default function DashboardPage() {
     if (!profile) return;
     const accessToken = localStorage.getItem('accessToken');
 
-    const formData = new FormData();
-    formData.append('theme', currentDesignStates.theme);
-    formData.append('custom_gradient_start', currentDesignStates.customGradientStart);
-    formData.append('custom_gradient_end', currentDesignStates.customGradientEnd);
-    
-    if (currentDesignStates.backgroundPreference === 'color') {
-      formData.append('background_image', ''); 
-    } else if (currentDesignStates.backgroundImage) {
-      formData.append('background_image', currentDesignStates.backgroundImage);
-    }
-
-    formData.append('background_preference', currentDesignStates.backgroundPreference);
-    formData.append('image_overlay', currentDesignStates.imageOverlay);
-    formData.append('button_style', currentDesignStates.buttonStyle);
-    formData.append('button_color', currentDesignStates.buttonColor);
-    formData.append('button_text_color', currentDesignStates.buttonTextColor);
-    formData.append('button_text_opacity', currentDesignStates.buttonTextColorOpacity.toString());
-    formData.append('button_background_opacity', currentDesignStates.buttonBackgroundOpacity.toString());
-    formData.append('button_border_color', currentDesignStates.buttonBorderColor);
-    formData.append('button_border_opacity', currentDesignStates.buttonBorderOpacity.toString());
-    formData.append('button_shadow_color', currentDesignStates.buttonShadowColor);
-    formData.append('button_shadow_opacity', currentDesignStates.buttonShadowOpacity.toString());
-    formData.append('font_family', currentDesignStates.fontFamily);
+    // Función para descargar imagen de URL y convertirla a File
+    const downloadImageAsFile = async (imageUrl: string): Promise<File> => {
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      return new File([blob], 'unsplash-background.jpg', { type: 'image/jpeg' });
+    };
 
     try {
+      const formData = new FormData();
+      formData.append('theme', currentDesignStates.theme);
+      formData.append('custom_gradient_start', currentDesignStates.customGradientStart);
+      formData.append('custom_gradient_end', currentDesignStates.customGradientEnd);
+      
+      if (currentDesignStates.backgroundPreference === 'color') {
+        formData.append('background_image', ''); 
+      } else if (currentDesignStates.backgroundImage instanceof File) {
+        // Si es un archivo subido, usar directamente
+        formData.append('background_image', currentDesignStates.backgroundImage);
+      } else if (typeof currentDesignStates.backgroundImage === 'string' && currentDesignStates.backgroundImage) {
+        // Si es una URL de Unsplash, descargarla primero
+        const imageFile = await downloadImageAsFile(currentDesignStates.backgroundImage);
+        formData.append('background_image', imageFile);
+      } else {
+        formData.append('background_image', '');
+      }
+
+      formData.append('background_preference', currentDesignStates.backgroundPreference);
+      formData.append('image_overlay', currentDesignStates.imageOverlay);
+      formData.append('button_style', currentDesignStates.buttonStyle);
+      formData.append('button_color', currentDesignStates.buttonColor);
+      formData.append('button_text_color', currentDesignStates.buttonTextColor);
+      formData.append('button_text_opacity', currentDesignStates.buttonTextColorOpacity.toString());
+      formData.append('button_background_opacity', currentDesignStates.buttonBackgroundOpacity.toString());
+      formData.append('button_border_color', currentDesignStates.buttonBorderColor);
+      formData.append('button_border_opacity', currentDesignStates.buttonBorderOpacity.toString());
+      formData.append('button_shadow_color', currentDesignStates.buttonShadowColor);
+      formData.append('button_shadow_opacity', currentDesignStates.buttonShadowOpacity.toString());
+      formData.append('font_family', currentDesignStates.fontFamily);
+
       const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${accessToken}` },
@@ -272,6 +286,7 @@ export default function DashboardPage() {
       setTheme(fetchedProfile.theme || '');
       setCustomGradientStart(fetchedProfile.custom_gradient_start || '');
       setCustomGradientEnd(fetchedProfile.custom_gradient_end || '');
+      setBackgroundImage(fetchedProfile.background_image || null);
       setBackgroundPreference(fetchedProfile.background_preference || (fetchedProfile.background_image ? 'image' : 'color'));
       setImageOverlay(fetchedProfile.image_overlay || 'none');
       setButtonStyle(fetchedProfile.button_style || '');
@@ -921,6 +936,7 @@ export default function DashboardPage() {
               if (newData.theme !== undefined) setTheme(newData.theme);
               if (newData.custom_gradient_start !== undefined) setCustomGradientStart(newData.custom_gradient_start);
               if (newData.custom_gradient_end !== undefined) setCustomGradientEnd(newData.custom_gradient_end);
+              if (newData.background_image !== undefined) setBackgroundImage(newData.background_image);
               if (newData.background_preference !== undefined) setBackgroundPreference(newData.background_preference);
               if (newData.image_overlay !== undefined) setImageOverlay(newData.image_overlay);
               if (newData.button_style !== undefined) setButtonStyle(newData.button_style);
