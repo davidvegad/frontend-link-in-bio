@@ -3,15 +3,15 @@ import { notFound } from 'next/navigation';
 import LandingPageTemplate from '@/components/conversion/LandingPageTemplate';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     source: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     utm_campaign?: string;
     utm_medium?: string;
     utm_content?: string;
     ref?: string;
-  };
+  }>;
 }
 
 // Landing page configurations for different sources
@@ -163,7 +163,8 @@ const LANDING_PAGES = {
 };
 
 export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
-  const config = LANDING_PAGES[params.source as keyof typeof LANDING_PAGES];
+  const resolvedParams = await params;
+  const config = LANDING_PAGES[resolvedParams.source as keyof typeof LANDING_PAGES];
   
   if (!config) {
     return {
@@ -178,19 +179,21 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
     openGraph: {
       title: config.title,
       description: config.description,
-      images: [`/og-${params.source}.png`]
+      images: [`/og-${resolvedParams.source}.png`]
     },
     twitter: {
       card: 'summary_large_image',
       title: config.title,
       description: config.description,
-      images: [`/og-${params.source}.png`]
+      images: [`/og-${resolvedParams.source}.png`]
     }
   };
 }
 
-export default function SourceLandingPage({ params, searchParams }: PageProps) {
-  const config = LANDING_PAGES[params.source as keyof typeof LANDING_PAGES];
+export default async function SourceLandingPage({ params, searchParams }: PageProps) {
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
+  const config = LANDING_PAGES[resolvedParams.source as keyof typeof LANDING_PAGES];
   
   if (!config) {
     notFound();
@@ -199,8 +202,8 @@ export default function SourceLandingPage({ params, searchParams }: PageProps) {
   return (
     <LandingPageTemplate 
       config={config}
-      source={params.source}
-      utmParams={searchParams}
+      source={resolvedParams.source}
+      utmParams={resolvedSearchParams}
     />
   );
 }
