@@ -675,6 +675,319 @@ export const translations: Record<Language, Translations> = {
       }
     },
 
+    // Contact
+    contact: {
+      title: 'Contáctanos',
+      subtitle: 'Estamos aquí para ayudarte. Ponte en contacto con nuestro equipo de soporte y resolveremos todas tus dudas.',
+      form: {
+        title: 'Envíanos un mensaje',
+        name: 'Nombre completo',
+        namePlaceholder: 'Tu nombre completo',
+        email: 'Correo electrónico',
+        emailPlaceholder: 'tu@email.com',
+        type: 'Tipo de consulta',
+        types: {
+          general: 'Consulta general',
+          technical: 'Soporte técnico',
+          billing: 'Facturación',
+          feature: 'Solicitud de función',
+          partnership: 'Asociaciones'
+        },
+        subject: 'Asunto',
+        subjectPlaceholder: 'Breve descripción del tema',
+        message: 'Mensaje',
+        messagePlaceholder: 'Describe tu consulta o problema en detalle...',
+        send: 'Enviar mensaje',
+        sending: 'Enviando...',
+        successMessage: '¡Mensaje enviado exitosamente! Te responderemos pronto.',
+        errorMessage: 'Error al enviar el mensaje. Por favor, inténtalo de nuevo.'
+      },
+      methods: {
+        title: 'Métodos de contacto',
+        email: {
+          title: 'Correo electrónico',
+          description: 'Respuesta en menos de 24 horas',
+          action: 'Enviar email'
+        },
+        chat: {
+          title: 'Chat en vivo',
+          description: 'Soporte inmediato durante horario laboral',
+          hours: 'Lunes a Viernes, 9:00 - 18:00',
+          action: 'Iniciar chat'
+        },
+        phone: {
+          title: 'Teléfono',
+          description: 'Soporte telefónico para planes premium',
+          action: 'Llamar ahora'
+        }
+      },
+      topics: {
+        title: 'Temas de soporte',
+        account: {
+          title: 'Cuenta y perfil',
+          description: 'Ayuda con registro, configuración de cuenta y gestión de perfil',
+          responseTime: 'Respuesta en 2-4 horas'
+        },
+        technical: {
+          title: 'Soporte técnico',
+          description: 'Problemas técnicos, errores y ayuda con funcionalidades',
+          responseTime: 'Respuesta en 1-2 horas'
+        },
+        billing: {
+          title: 'Facturación y pagos',
+          description: 'Consultas sobre planes, facturación y métodos de pago',
+          responseTime: 'Respuesta en 24 horas'
+        }
+      },
+      office: {
+        title: 'Información de la oficina',
+        address: {
+          title: 'Dirección',
+          line1: 'Av. Tecnológica 123, Piso 10',
+          line2: 'Ciudad Digital, País 12345'
+        },
+        hours: {
+          title: 'Horarios de atención',
+          weekdays: 'Lunes a Viernes: 9:00 - 18:00',
+          weekends: 'Sábados: 10:00 - 14:00'
+        }
+      },
+      faq: {
+        title: '¿Buscas respuestas rápidas?',
+        subtitle: 'Consulta nuestras preguntas frecuentes y tutoriales',
+        viewAll: 'Ver todas las preguntas'
+      }
+    },
+
+    // Features page
+    featuresPage: {
+      title: 'Todas las funcionalidades que necesitas',
+      subtitle: 'Descubre las herramientas profesionales que te ayudarán a hacer crecer tu negocio y convertir más visitantes en clientes',
+      cta: {
+        try: 'Probar gratis',
+        demo: 'Ver demo'
+      },
+      categories: {
+        design: {
+          title: 'Diseño y Personalización',
+          description: 'Herramientas avanzadas para crear páginas únicas que representen perfectamente tu marca'
+        },
+        analytics: {
+          title: 'Analytics y Métricas',
+          description: 'Datos detallados para entender a tu audiencia y optimizar el rendimiento de tus enlaces'
+        },
+        management: {
+          title: 'Gestión de Enlaces',
+          description: 'Controla y organiza todos tus enlaces con herramientas profesionales de gestión'
+        },
+        advanced: {
+          title: 'Funciones Avanzadas',
+          description: 'Características premium para usuarios profesionales y empresas en crecimiento'
+        }
+      },
+      design: {
+        templates: {
+          title: 'Plantillas Profesionales',
+          description: 'Más de 50 diseños creados por expertos, listos para usar y completamente personalizables'
+        },
+        customization: {
+          title: 'Personalización Total',
+          description: 'Cambia colores, fuentes, layouts y añade tu propio CSS para un control completo'
+        },
+        responsive: {
+          title: 'Diseño Responsive',
+          description: 'Todos los diseños se adaptan perfectamente a móviles, tablets y escritorio'
+        },
+        media: {
+          title: 'Gestión de Medios',
+          description: 'Sube imágenes, videos y GIFs para crear experiencias visuales impactantes'
+        }
+      },
+      analytics: {
+        realtime: {
+          title: 'Analytics en Tiempo Real',
+          description: 'Ve el tráfico y las interacciones de tu página al instante'
+        },
+        clicks: {
+          title: 'Seguimiento de Clicks',
+          description: 'Analiza qué enlaces funcionan mejor y optimiza tu estrategia'
+        },
+        audience: {
+          title: 'Análisis de Audiencia',
+          description: 'Conoce la demografía, ubicación y comportamiento de tus visitantes'
+        },
+        export: {
+          title: 'Exportar Reportes',
+          description: 'Descarga reportes detallados en Excel y PDF para presentaciones'
+        }
+      },
+      management: {
+        unlimited: {
+          title: 'Enlaces Ilimitados',
+          description: 'Añade tantos enlaces como necesites sin restricciones'
+        },
+        preview: {
+          title: 'Vista Previa Instantánea',
+          description: 'Ve cómo se verá tu página antes de publicar los cambios'
+        },
+        social: {
+          title: 'Integración Social',
+          description: 'Conecta automáticamente con Instagram, TikTok, YouTube y más'
+        },
+        automation: {
+          title: 'Automatización',
+          description: 'Programa la publicación de enlaces y actualiza contenido automáticamente'
+        }
+      },
+      advanced: {
+        domain: {
+          title: 'Dominio Personalizado',
+          description: 'Usa tu propio dominio para mayor profesionalismo y confianza'
+        },
+        integrations: {
+          title: 'Integraciones API',
+          description: 'Conecta con Zapier, Google Analytics, Facebook Pixel y más'
+        },
+        notifications: {
+          title: 'Notificaciones Push',
+          description: 'Mantén a tu audiencia comprometida con notificaciones inteligentes'
+        },
+        security: {
+          title: 'Seguridad Avanzada',
+          description: 'SSL gratuito, protección DDoS y backups automáticos incluidos'
+        }
+      },
+      comparison: {
+        title: 'Compara nuestros planes',
+        subtitle: 'Encuentra el plan perfecto para tus necesidades',
+        feature: 'Característica',
+        free: 'Gratuito',
+        pro: 'Pro',
+        business: 'Business',
+        customDomain: 'Dominio personalizado',
+        analytics: 'Analytics',
+        templates: 'Plantillas',
+        links: 'Enlaces',
+        support: 'Soporte'
+      },
+      testimonials: {
+        title: 'Lo que dicen sobre nuestras funcionalidades',
+        subtitle: 'Testimonios reales de usuarios que han transformado su negocio',
+        maria: {
+          name: 'María González',
+          role: 'Influencer de Moda',
+          feature: 'Analytics Avanzados',
+          quote: 'Los analytics me han ayudado a entender qué contenido genera más engagement. He aumentado mis conversiones un 250%.'
+        },
+        carlos: {
+          name: 'Carlos Mendoza',
+          role: 'Entrepreneur',
+          feature: 'Dominio Personalizado',
+          quote: 'Tener mi propio dominio me ha dado muchísima credibilidad. Mis clientes confían más en mi marca ahora.'
+        },
+        ana: {
+          name: 'Ana Ruiz',
+          role: 'Diseñadora Gráfica',
+          feature: 'Personalización Total',
+          quote: 'La flexibilidad de diseño es increíble. Puedo crear páginas que realmente representan mi estilo único.'
+        }
+      },
+      finalCta: {
+        title: '¿Listo para desbloquear todo el potencial?',
+        subtitle: 'Únete a miles de profesionales que ya están usando todas estas funcionalidades para hacer crecer su negocio',
+        start: 'Comenzar gratis',
+        plans: 'Ver planes'
+      }
+    },
+
+    // Tutorials page
+    tutorials: {
+      title: 'Tutoriales y Guías',
+      subtitle: 'Aprende a crear páginas increíbles con nuestros tutoriales paso a paso, desde lo básico hasta técnicas avanzadas',
+      searchPlaceholder: 'Buscar tutoriales...',
+      filter: 'Filtrar',
+      featured: 'Destacados',
+      watch: 'Ver tutorial',
+      categories: {
+        all: 'Todos',
+        gettingStarted: 'Primeros Pasos',
+        design: 'Diseño',
+        analytics: 'Analytics',
+        advanced: 'Avanzado',
+        marketing: 'Marketing'
+      },
+      difficulty: {
+        beginner: 'Principiante',
+        intermediate: 'Intermedio',
+        advanced: 'Avanzado'
+      },
+      items: {
+        quickStart: {
+          title: 'Inicio Rápido: Tu Primera Página en 5 Minutos',
+          description: 'Aprende a crear tu primera página profesional desde cero en pocos minutos'
+        },
+        firstPage: {
+          title: 'Creando Tu Primera Página Profesional',
+          description: 'Guía completa para configurar tu perfil y añadir tus primeros enlaces'
+        },
+        addLinks: {
+          title: 'Cómo Añadir y Organizar Enlaces',
+          description: 'Mejores prácticas para gestionar tus enlaces y maximizar conversiones'
+        },
+        chooseTemplate: {
+          title: 'Eligiendo la Plantilla Perfecta',
+          description: 'Encuentra el diseño que mejor represente tu marca y personalidad'
+        },
+        customColors: {
+          title: 'Personalización de Colores y Fuentes',
+          description: 'Crea una identidad visual única con colores y tipografías personalizadas'
+        },
+        mobileOptimization: {
+          title: 'Optimización para Móviles',
+          description: 'Asegúrate de que tu página se vea perfecta en todos los dispositivos'
+        },
+        understandAnalytics: {
+          title: 'Entendiendo tus Analytics',
+          description: 'Interpreta los datos de tu página para tomar mejores decisiones'
+        },
+        trackConversions: {
+          title: 'Seguimiento de Conversiones Avanzado',
+          description: 'Configura eventos personalizados y mide el ROI de tus enlaces'
+        },
+        customDomain: {
+          title: 'Configurando tu Dominio Personalizado',
+          description: 'Conecta tu propio dominio para mayor profesionalismo'
+        },
+        apiIntegration: {
+          title: 'Integraciones API Avanzadas',
+          description: 'Conecta con herramientas externas usando nuestra API'
+        },
+        socialMediaStrategy: {
+          title: 'Estrategia de Redes Sociales',
+          description: 'Maximiza tu alcance en Instagram, TikTok y otras plataformas'
+        },
+        seoOptimization: {
+          title: 'Optimización SEO para Link Pages',
+          description: 'Mejora tu visibilidad en buscadores con técnicas SEO específicas'
+        }
+      },
+      noResults: {
+        title: 'No se encontraron tutoriales',
+        description: 'Intenta con otros términos de búsqueda o cambia la categoría'
+      },
+      learningPath: {
+        title: '¿Listo para dominar tu página?',
+        subtitle: 'Sigue nuestro plan de aprendizaje completo y conviértete en un experto en páginas de enlaces',
+        start: 'Comenzar ahora',
+        download: 'Descargar guía PDF'
+      },
+      help: {
+        title: '¿Necesitas ayuda personalizada?',
+        subtitle: 'Nuestro equipo de soporte está listo para ayudarte con cualquier pregunta',
+        contact: 'Contactar soporte'
+      }
+    },
+
     // Metadata
     metadata: {
       title: 'EnlacePro - Crea tu página de enlaces profesional | Link in Bio',
@@ -1373,6 +1686,319 @@ export const translations: Record<Language, Translations> = {
         subtitle: 'Join thousands of creators already using our platform to connect with their audience.',
         startFree: 'Start Free',
         contactSales: 'Contact Sales'
+      }
+    },
+
+    // Contact
+    contact: {
+      title: 'Contact Us',
+      subtitle: 'We\'re here to help you. Get in touch with our support team and we\'ll resolve all your questions.',
+      form: {
+        title: 'Send us a message',
+        name: 'Full name',
+        namePlaceholder: 'Your full name',
+        email: 'Email address',
+        emailPlaceholder: 'your@email.com',
+        type: 'Inquiry type',
+        types: {
+          general: 'General inquiry',
+          technical: 'Technical support',
+          billing: 'Billing',
+          feature: 'Feature request',
+          partnership: 'Partnerships'
+        },
+        subject: 'Subject',
+        subjectPlaceholder: 'Brief description of the topic',
+        message: 'Message',
+        messagePlaceholder: 'Describe your inquiry or problem in detail...',
+        send: 'Send message',
+        sending: 'Sending...',
+        successMessage: 'Message sent successfully! We\'ll respond soon.',
+        errorMessage: 'Error sending message. Please try again.'
+      },
+      methods: {
+        title: 'Contact methods',
+        email: {
+          title: 'Email',
+          description: 'Response within 24 hours',
+          action: 'Send email'
+        },
+        chat: {
+          title: 'Live chat',
+          description: 'Immediate support during business hours',
+          hours: 'Monday to Friday, 9:00 - 18:00',
+          action: 'Start chat'
+        },
+        phone: {
+          title: 'Phone',
+          description: 'Phone support for premium plans',
+          action: 'Call now'
+        }
+      },
+      topics: {
+        title: 'Support topics',
+        account: {
+          title: 'Account & profile',
+          description: 'Help with registration, account setup and profile management',
+          responseTime: 'Response in 2-4 hours'
+        },
+        technical: {
+          title: 'Technical support',
+          description: 'Technical issues, errors and help with functionalities',
+          responseTime: 'Response in 1-2 hours'
+        },
+        billing: {
+          title: 'Billing & payments',
+          description: 'Questions about plans, billing and payment methods',
+          responseTime: 'Response in 24 hours'
+        }
+      },
+      office: {
+        title: 'Office information',
+        address: {
+          title: 'Address',
+          line1: 'Tech Avenue 123, 10th Floor',
+          line2: 'Digital City, Country 12345'
+        },
+        hours: {
+          title: 'Business hours',
+          weekdays: 'Monday to Friday: 9:00 - 18:00',
+          weekends: 'Saturdays: 10:00 - 14:00'
+        }
+      },
+      faq: {
+        title: 'Looking for quick answers?',
+        subtitle: 'Check our frequently asked questions and tutorials',
+        viewAll: 'View all questions'
+      }
+    },
+
+    // Features page
+    featuresPage: {
+      title: 'All the features you need',
+      subtitle: 'Discover the professional tools that will help you grow your business and convert more visitors into customers',
+      cta: {
+        try: 'Try for free',
+        demo: 'View demo'
+      },
+      categories: {
+        design: {
+          title: 'Design & Customization',
+          description: 'Advanced tools to create unique pages that perfectly represent your brand'
+        },
+        analytics: {
+          title: 'Analytics & Metrics',
+          description: 'Detailed data to understand your audience and optimize your link performance'
+        },
+        management: {
+          title: 'Link Management',
+          description: 'Control and organize all your links with professional management tools'
+        },
+        advanced: {
+          title: 'Advanced Features',
+          description: 'Premium features for professional users and growing businesses'
+        }
+      },
+      design: {
+        templates: {
+          title: 'Professional Templates',
+          description: 'Over 50 expert-designed templates, ready to use and fully customizable'
+        },
+        customization: {
+          title: 'Total Customization',
+          description: 'Change colors, fonts, layouts and add your own CSS for complete control'
+        },
+        responsive: {
+          title: 'Responsive Design',
+          description: 'All designs adapt perfectly to mobile, tablets and desktop'
+        },
+        media: {
+          title: 'Media Management',
+          description: 'Upload images, videos and GIFs to create impactful visual experiences'
+        }
+      },
+      analytics: {
+        realtime: {
+          title: 'Real-time Analytics',
+          description: 'See your page traffic and interactions instantly'
+        },
+        clicks: {
+          title: 'Click Tracking',
+          description: 'Analyze which links work best and optimize your strategy'
+        },
+        audience: {
+          title: 'Audience Analysis',
+          description: 'Know the demographics, location and behavior of your visitors'
+        },
+        export: {
+          title: 'Export Reports',
+          description: 'Download detailed reports in Excel and PDF for presentations'
+        }
+      },
+      management: {
+        unlimited: {
+          title: 'Unlimited Links',
+          description: 'Add as many links as you need without restrictions'
+        },
+        preview: {
+          title: 'Instant Preview',
+          description: 'See how your page will look before publishing changes'
+        },
+        social: {
+          title: 'Social Integration',
+          description: 'Automatically connect with Instagram, TikTok, YouTube and more'
+        },
+        automation: {
+          title: 'Automation',
+          description: 'Schedule link publishing and update content automatically'
+        }
+      },
+      advanced: {
+        domain: {
+          title: 'Custom Domain',
+          description: 'Use your own domain for greater professionalism and trust'
+        },
+        integrations: {
+          title: 'API Integrations',
+          description: 'Connect with Zapier, Google Analytics, Facebook Pixel and more'
+        },
+        notifications: {
+          title: 'Push Notifications',
+          description: 'Keep your audience engaged with intelligent notifications'
+        },
+        security: {
+          title: 'Advanced Security',
+          description: 'Free SSL, DDoS protection and automatic backups included'
+        }
+      },
+      comparison: {
+        title: 'Compare our plans',
+        subtitle: 'Find the perfect plan for your needs',
+        feature: 'Feature',
+        free: 'Free',
+        pro: 'Pro',
+        business: 'Business',
+        customDomain: 'Custom domain',
+        analytics: 'Analytics',
+        templates: 'Templates',
+        links: 'Links',
+        support: 'Support'
+      },
+      testimonials: {
+        title: 'What they say about our features',
+        subtitle: 'Real testimonials from users who have transformed their business',
+        maria: {
+          name: 'Maria González',
+          role: 'Fashion Influencer',
+          feature: 'Advanced Analytics',
+          quote: 'The analytics have helped me understand what content generates more engagement. I\'ve increased my conversions by 250%.'
+        },
+        carlos: {
+          name: 'Carlos Mendoza',
+          role: 'Entrepreneur',
+          feature: 'Custom Domain',
+          quote: 'Having my own domain has given me a lot of credibility. My clients trust my brand more now.'
+        },
+        ana: {
+          name: 'Ana Ruiz',
+          role: 'Graphic Designer',
+          feature: 'Total Customization',
+          quote: 'The design flexibility is incredible. I can create pages that really represent my unique style.'
+        }
+      },
+      finalCta: {
+        title: 'Ready to unlock the full potential?',
+        subtitle: 'Join thousands of professionals who are already using all these features to grow their business',
+        start: 'Start free',
+        plans: 'View plans'
+      }
+    },
+
+    // Tutorials page
+    tutorials: {
+      title: 'Tutorials & Guides',
+      subtitle: 'Learn to create amazing pages with our step-by-step tutorials, from basics to advanced techniques',
+      searchPlaceholder: 'Search tutorials...',
+      filter: 'Filter',
+      featured: 'Featured',
+      watch: 'Watch tutorial',
+      categories: {
+        all: 'All',
+        gettingStarted: 'Getting Started',
+        design: 'Design',
+        analytics: 'Analytics',
+        advanced: 'Advanced',
+        marketing: 'Marketing'
+      },
+      difficulty: {
+        beginner: 'Beginner',
+        intermediate: 'Intermediate',
+        advanced: 'Advanced'
+      },
+      items: {
+        quickStart: {
+          title: 'Quick Start: Your First Page in 5 Minutes',
+          description: 'Learn to create your first professional page from scratch in just minutes'
+        },
+        firstPage: {
+          title: 'Creating Your First Professional Page',
+          description: 'Complete guide to set up your profile and add your first links'
+        },
+        addLinks: {
+          title: 'How to Add and Organize Links',
+          description: 'Best practices for managing your links and maximizing conversions'
+        },
+        chooseTemplate: {
+          title: 'Choosing the Perfect Template',
+          description: 'Find the design that best represents your brand and personality'
+        },
+        customColors: {
+          title: 'Custom Colors and Fonts',
+          description: 'Create a unique visual identity with custom colors and typography'
+        },
+        mobileOptimization: {
+          title: 'Mobile Optimization',
+          description: 'Ensure your page looks perfect on all devices'
+        },
+        understandAnalytics: {
+          title: 'Understanding Your Analytics',
+          description: 'Interpret your page data to make better decisions'
+        },
+        trackConversions: {
+          title: 'Advanced Conversion Tracking',
+          description: 'Set up custom events and measure ROI of your links'
+        },
+        customDomain: {
+          title: 'Setting Up Your Custom Domain',
+          description: 'Connect your own domain for greater professionalism'
+        },
+        apiIntegration: {
+          title: 'Advanced API Integrations',
+          description: 'Connect with external tools using our API'
+        },
+        socialMediaStrategy: {
+          title: 'Social Media Strategy',
+          description: 'Maximize your reach on Instagram, TikTok and other platforms'
+        },
+        seoOptimization: {
+          title: 'SEO Optimization for Link Pages',
+          description: 'Improve your search visibility with specific SEO techniques'
+        }
+      },
+      noResults: {
+        title: 'No tutorials found',
+        description: 'Try different search terms or change the category'
+      },
+      learningPath: {
+        title: 'Ready to master your page?',
+        subtitle: 'Follow our complete learning path and become an expert in link pages',
+        start: 'Start now',
+        download: 'Download PDF guide'
+      },
+      help: {
+        title: 'Need personalized help?',
+        subtitle: 'Our support team is ready to help you with any questions',
+        contact: 'Contact support'
       }
     },
 
