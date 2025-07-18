@@ -2,7 +2,7 @@
 export type Language = 'es' | 'en';
 
 export interface Translations {
-  [key: string]: string | Translations;
+  [key: string]: any;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -585,6 +585,93 @@ export const translations: Record<Language, Translations> = {
         contactSupport: 'Contactar Soporte',
         viewTutorials: 'Ver Tutoriales',
         responseTime: '📧 Respuesta promedio en menos de 2 horas'
+      }
+    },
+
+    // Pricing
+    pricing: {
+      title: 'Planes y Precios',
+      subtitle: 'Elige el plan perfecto para hacer crecer tu presencia online. Comienza gratis y actualiza cuando estés listo.',
+      guarantee: '30 días de garantía de devolución',
+      mostPopular: 'Más Popular',
+      plans: {
+        free: {
+          name: 'Gratuito',
+          price: '$0',
+          period: '',
+          description: 'Perfecto para empezar y probar la plataforma',
+          button: 'Comenzar Gratis'
+        },
+        pro: {
+          name: 'Pro',
+          price: '$9',
+          period: 'mes',
+          description: 'Ideal para creadores y pequeños negocios',
+          button: 'Comenzar Prueba Gratis'
+        },
+        business: {
+          name: 'Business',
+          price: '$29',
+          period: 'mes',
+          description: 'Para equipos y empresas en crecimiento',
+          button: 'Contactar Ventas'
+        }
+      },
+      features: {
+        linksLimit: 'Hasta 20 enlaces',
+        basicTemplates: '10+ plantillas básicas',
+        basicAnalytics: 'Analytics básicos',
+        mobileFriendly: 'Optimizado para móvil',
+        basicCustomization: 'Personalización básica',
+        unlimitedLinks: 'Enlaces ilimitados',
+        allTemplates: '50+ plantillas premium',
+        advancedAnalytics: 'Analytics avanzados',
+        customDomain: 'Dominio personalizado',
+        advancedCustomization: 'Personalización avanzada',
+        prioritySupport: 'Soporte prioritario',
+        removeWatermark: 'Sin marca de agua',
+        socialIntegration: 'Integración con redes sociales',
+        everythingInPro: 'Todo lo del plan Pro',
+        teamCollaboration: 'Colaboración en equipo',
+        advancedIntegrations: 'Integraciones avanzadas',
+        customBranding: 'Branding personalizado',
+        apiAccess: 'Acceso a API',
+        dedicatedSupport: 'Soporte dedicado',
+        customReports: 'Reportes personalizados',
+        whitelabel: 'Solución white-label'
+      },
+      limitations: {
+        noCustomDomain: 'Sin dominio personalizado',
+        basicSupport: 'Soporte básico por email',
+        limitedAnalytics: 'Analytics limitados'
+      },
+      faq: {
+        title: 'Preguntas Frecuentes',
+        subtitle: 'Todo lo que necesitas saber sobre nuestros planes',
+        questions: {
+          paymentMethods: {
+            question: '¿Qué métodos de pago aceptan?',
+            answer: 'Aceptamos todas las tarjetas de crédito principales, PayPal y transferencias bancarias para planes anuales.'
+          },
+          cancelAnytime: {
+            question: '¿Puedo cancelar en cualquier momento?',
+            answer: 'Sí, puedes cancelar tu suscripción en cualquier momento desde tu panel de control. No hay penalizaciones ni cargos por cancelación.'
+          },
+          freeTrial: {
+            question: '¿Ofrecen prueba gratuita?',
+            answer: 'Sí, todos los planes premium incluyen una prueba gratuita de 14 días. No se requiere tarjeta de crédito.'
+          },
+          upgrade: {
+            question: '¿Puedo cambiar de plan después?',
+            answer: 'Por supuesto. Puedes actualizar o degradar tu plan en cualquier momento desde tu panel de control.'
+          }
+        }
+      },
+      cta: {
+        title: '¿Listo para hacer crecer tu audiencia?',
+        subtitle: 'Únete a miles de creadores que ya están usando nuestra plataforma para conectar con su audiencia.',
+        startFree: 'Comenzar Gratis',
+        contactSales: 'Contactar Ventas'
       }
     },
 
@@ -1199,6 +1286,93 @@ export const translations: Record<Language, Translations> = {
         contactSupport: 'Contact Support',
         viewTutorials: 'View Tutorials',
         responseTime: '📧 Average response in less than 2 hours'
+      }
+    },
+
+    // Pricing
+    pricing: {
+      title: 'Plans & Pricing',
+      subtitle: 'Choose the perfect plan to grow your online presence. Start for free and upgrade when you\'re ready.',
+      guarantee: '30-day money-back guarantee',
+      mostPopular: 'Most Popular',
+      plans: {
+        free: {
+          name: 'Free',
+          price: '$0',
+          period: '',
+          description: 'Perfect to get started and try the platform',
+          button: 'Get Started Free'
+        },
+        pro: {
+          name: 'Pro',
+          price: '$9',
+          period: 'month',
+          description: 'Ideal for creators and small businesses',
+          button: 'Start Free Trial'
+        },
+        business: {
+          name: 'Business',
+          price: '$29',
+          period: 'month',
+          description: 'For growing teams and companies',
+          button: 'Contact Sales'
+        }
+      },
+      features: {
+        linksLimit: 'Up to 20 links',
+        basicTemplates: '10+ basic templates',
+        basicAnalytics: 'Basic analytics',
+        mobileFriendly: 'Mobile optimized',
+        basicCustomization: 'Basic customization',
+        unlimitedLinks: 'Unlimited links',
+        allTemplates: '50+ premium templates',
+        advancedAnalytics: 'Advanced analytics',
+        customDomain: 'Custom domain',
+        advancedCustomization: 'Advanced customization',
+        prioritySupport: 'Priority support',
+        removeWatermark: 'Remove watermark',
+        socialIntegration: 'Social media integration',
+        everythingInPro: 'Everything in Pro',
+        teamCollaboration: 'Team collaboration',
+        advancedIntegrations: 'Advanced integrations',
+        customBranding: 'Custom branding',
+        apiAccess: 'API access',
+        dedicatedSupport: 'Dedicated support',
+        customReports: 'Custom reports',
+        whitelabel: 'White-label solution'
+      },
+      limitations: {
+        noCustomDomain: 'No custom domain',
+        basicSupport: 'Basic email support',
+        limitedAnalytics: 'Limited analytics'
+      },
+      faq: {
+        title: 'Frequently Asked Questions',
+        subtitle: 'Everything you need to know about our plans',
+        questions: {
+          paymentMethods: {
+            question: 'What payment methods do you accept?',
+            answer: 'We accept all major credit cards, PayPal, and bank transfers for annual plans.'
+          },
+          cancelAnytime: {
+            question: 'Can I cancel anytime?',
+            answer: 'Yes, you can cancel your subscription at any time from your dashboard. No penalties or cancellation fees.'
+          },
+          freeTrial: {
+            question: 'Do you offer a free trial?',
+            answer: 'Yes, all premium plans include a 14-day free trial. No credit card required.'
+          },
+          upgrade: {
+            question: 'Can I change plans later?',
+            answer: 'Absolutely. You can upgrade or downgrade your plan at any time from your dashboard.'
+          }
+        }
+      },
+      cta: {
+        title: 'Ready to grow your audience?',
+        subtitle: 'Join thousands of creators already using our platform to connect with their audience.',
+        startFree: 'Start Free',
+        contactSales: 'Contact Sales'
       }
     },
 

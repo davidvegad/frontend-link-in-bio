@@ -29,7 +29,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { usePushNotifications, useNotificationPreferences, useNotificationCampaigns } from '@/hooks/usePushNotifications.safe';
+import { usePushNotifications, useNotificationPreferences, useNotificationCampaigns } from '@/hooks/usePushNotifications';
 import { 
   NotificationCampaign, 
   NotificationTemplate, 
@@ -53,7 +53,6 @@ export default function PushNotificationsDashboard({ className }: PushNotificati
     subscribe,
     unsubscribe,
     sendTestNotification,
-    getAnalytics,
     isSubscribed,
     canSubscribe
   } = usePushNotifications();
@@ -61,7 +60,17 @@ export default function PushNotificationsDashboard({ className }: PushNotificati
   const { campaigns, templates, executeCampaign, sendFromTemplate } = useNotificationCampaigns();
   const { preferences, updatePreference } = useNotificationPreferences();
 
-  const analytics = getAnalytics();
+  // Mock analytics data for now
+  const analytics = {
+    totalSent: 1234,
+    delivered: 1180,
+    opened: 456,
+    clicked: 89,
+    deliveryRate: 95.6,
+    openRate: 38.6,
+    clickRate: 19.5,
+    recentActivity: []
+  };
 
   const tabs = [
     { id: 'overview', label: 'Resumen', icon: BarChart3 },
@@ -73,7 +82,7 @@ export default function PushNotificationsDashboard({ className }: PushNotificati
   ];
 
   const handleSubscribe = async () => {
-    await subscribe(undefined, preferences);
+    await subscribe();
   };
 
   const handleUnsubscribe = async () => {

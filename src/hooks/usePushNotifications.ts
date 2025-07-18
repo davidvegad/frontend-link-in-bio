@@ -119,14 +119,16 @@ export function usePushNotifications() {
 
   // Track notification interactions
   const trackNotificationClick = useCallback((notificationId: string) => {
-    if (subscription) {
-      pushNotificationService.trackNotificationClick(notificationId, subscription.sessionId);
+    const service = getService();
+    if (subscription && service) {
+      service.trackNotificationClick(notificationId, subscription.sessionId);
     }
   }, [subscription]);
 
   const trackNotificationDismiss = useCallback((notificationId: string) => {
-    if (subscription) {
-      pushNotificationService.trackNotificationDismiss(notificationId, subscription.sessionId);
+    const service = getService();
+    if (subscription && service) {
+      service.trackNotificationDismiss(notificationId, subscription.sessionId);
     }
   }, [subscription]);
 
@@ -135,7 +137,10 @@ export function usePushNotifications() {
     if (!subscription) return;
 
     try {
-      await pushNotificationService.sendAbandonedCartNotification(subscription.sessionId, cartItems);
+      const service = getService();
+      if (service) {
+        await service.sendAbandonedCartNotification(subscription.sessionId, cartItems);
+      }
     } catch (error) {
       setError('Failed to send abandoned cart notification');
     }
@@ -145,7 +150,10 @@ export function usePushNotifications() {
     if (!subscription) return;
 
     try {
-      await pushNotificationService.sendPromotionalNotification(subscription.sessionId, offer);
+      const service = getService();
+      if (service) {
+        await service.sendPromotionalNotification(subscription.sessionId, offer);
+      }
     } catch (error) {
       setError('Failed to send promotional notification');
     }
@@ -153,7 +161,8 @@ export function usePushNotifications() {
 
   // Get analytics
   const getAnalytics = useCallback(() => {
-    return pushNotificationService.getAnalytics();
+    const service = getService();
+    return service ? service.getAnalytics() : null;
   }, []);
 
   return {
@@ -254,17 +263,26 @@ export function useNotificationPreferences() {
 
 // Hook for managing notification campaigns
 export function useNotificationCampaigns() {
-  const [campaigns, setCampaigns] = useState(pushNotificationService.getCampaigns());
-  const [templates, setTemplates] = useState(pushNotificationService.getTemplates());
+  const getService = () => getPushNotificationService();
+  const service = getService();
+  
+  const [campaigns, setCampaigns] = useState(service ? service.getCampaigns() : []);
+  const [templates, setTemplates] = useState(service ? service.getTemplates() : []);
 
   const refreshData = useCallback(() => {
-    setCampaigns(pushNotificationService.getCampaigns());
-    setTemplates(pushNotificationService.getTemplates());
+    const service = getService();
+    if (service) {
+      setCampaigns(service.getCampaigns());
+      setTemplates(service.getTemplates());
+    }
   }, []);
 
   const executeCampaign = useCallback(async (campaignId: string) => {
+    const service = getService();
+    if (!service) return false;
+    
     try {
-      await pushNotificationService.executeCampaign(campaignId);
+      await service.executeCampaign(campaignId);
       refreshData();
       return true;
     } catch (error) {
@@ -277,8 +295,11 @@ export function useNotificationCampaigns() {
     sessionId: string, 
     variables: Record<string, string> = {}
   ) => {
+    const service = getService();
+    if (!service) return false;
+    
     try {
-      await pushNotificationService.sendFromTemplate(templateId, sessionId, variables);
+      await service.sendFromTemplate(templateId, sessionId, variables);
       return true;
     } catch (error) {
       return false;
