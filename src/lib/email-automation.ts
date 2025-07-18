@@ -43,6 +43,7 @@ export interface EmailCampaign {
     clicked: number;
     unsubscribed: number;
     bounced: number;
+    complained: number;
   };
   createdAt: Date;
   updatedAt: Date;
@@ -209,7 +210,8 @@ export class EmailAutomationService {
         opened: 0,
         clicked: 0,
         unsubscribed: 0,
-        bounced: 0
+        bounced: 0,
+        complained: 0
       },
       createdAt: new Date(),
       updatedAt: new Date()
@@ -404,8 +406,8 @@ export class EmailAutomationService {
     // Update campaign stats if applicable
     if (campaignId) {
       const campaign = this.campaigns.get(campaignId);
-      if (campaign) {
-        campaign.stats[eventType]++;
+      if (campaign && eventType in campaign.stats) {
+        (campaign.stats as any)[eventType]++;
         this.campaigns.set(campaignId, campaign);
       }
     }

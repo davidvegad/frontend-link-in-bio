@@ -375,7 +375,7 @@ function ContactsTab({
                       'bg-yellow-100 text-yellow-800': contact.status === 'warm',
                       'bg-red-100 text-red-800': contact.status === 'hot',
                       'bg-green-100 text-green-800': contact.status === 'customer',
-                      'bg-gray-100 text-gray-800': contact.status === 'churned'
+                      'bg-slate-100 text-slate-800': contact.status === 'churned'
                     }
                   )}>
                     {contact.status}
@@ -585,8 +585,18 @@ function AnalyticsTab({ contacts, leads }: { contacts: Contact[], leads: Lead[] 
 }
 
 // Utility Components
-function StatCard({ title, value, icon: Icon, color, trend }: any) {
-  const colorClasses = {
+type StatCardColorKey = 'blue' | 'green' | 'purple' | 'emerald';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: StatCardColorKey;
+  trend?: string;
+}
+
+function StatCard({ title, value, icon: Icon, color, trend }: StatCardProps) {
+  const colorClasses: Record<StatCardColorKey, string> = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
     purple: 'bg-purple-500',

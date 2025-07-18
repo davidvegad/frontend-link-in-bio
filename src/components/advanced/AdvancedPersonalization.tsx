@@ -13,7 +13,8 @@ import {
   Smartphone,
   Tablet,
   Monitor,
-  Wand2
+  Wand2,
+  X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 

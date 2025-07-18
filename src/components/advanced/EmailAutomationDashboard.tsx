@@ -733,8 +733,18 @@ function AnalyticsTab({ campaigns, sequences }: { campaigns: EmailCampaign[], se
 }
 
 // Utility Components
-function StatCard({ title, value, icon: Icon, color, trend }: any) {
-  const colorClasses = {
+type StatCardColorKey = 'blue' | 'green' | 'purple' | 'emerald';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: StatCardColorKey;
+  trend?: string;
+}
+
+function StatCard({ title, value, icon: Icon, color, trend }: StatCardProps) {
+  const colorClasses: Record<StatCardColorKey, string> = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
     purple: 'bg-purple-500',
@@ -759,8 +769,18 @@ function StatCard({ title, value, icon: Icon, color, trend }: any) {
   );
 }
 
-function QuickActionCard({ title, description, icon: Icon, color, onClick }: any) {
-  const colorClasses = {
+type QuickActionColorKey = 'blue' | 'green' | 'purple';
+
+interface QuickActionCardProps {
+  title: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  color: QuickActionColorKey;
+  onClick: () => void;
+}
+
+function QuickActionCard({ title, description, icon: Icon, color, onClick }: QuickActionCardProps) {
+  const colorClasses: Record<QuickActionColorKey, string> = {
     blue: 'bg-blue-500 hover:bg-blue-600',
     green: 'bg-green-500 hover:bg-green-600',
     purple: 'bg-purple-500 hover:bg-purple-600'
