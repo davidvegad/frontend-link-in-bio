@@ -18,6 +18,7 @@ import WebAnalytics from './components/WebAnalytics';
 import ExitIntentModal from '../components/conversion/ExitIntentModal';
 import SpecialOfferModal from '../components/conversion/SpecialOfferModal';
 import LiveChatWidget from '../components/conversion/LiveChatWidget';
+import RecommendationWidget from '../components/advanced/RecommendationWidget';
 import { useSpecialOffer } from '@/hooks/useSpecialOffer';
 
 export default function HomePage() {
@@ -80,6 +81,7 @@ export default function HomePage() {
         />
       )}
       <LiveChatWidget />
+      <RecommendationWidget />
     </div>
   );
 }
