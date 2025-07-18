@@ -1,81 +1,93 @@
+'use client';
+
 import { ExternalLink, Heart, Users, TrendingUp } from 'lucide-react';
-
-const templates = [
-  {
-    id: 1,
-    name: 'Influencer Lifestyle',
-    category: 'Influencer',
-    description: 'Perfecto para creadores de contenido y lifestyle bloggers',
-    preview: '/template-influencer.jpg',
-    colors: ['bg-pink-500', 'bg-purple-500', 'bg-blue-500'],
-    stats: { likes: '2.4k', users: '150+' },
-    features: ['Instagram Stories', 'YouTube Videos', 'Blog Personal', 'Tienda Online']
-  },
-  {
-    id: 2,
-    name: 'Business Pro',
-    category: 'Negocio',
-    description: 'Ideal para empresas y profesionales independientes',
-    preview: '/template-business.jpg',
-    colors: ['bg-blue-600', 'bg-gray-800', 'bg-green-600'],
-    stats: { likes: '3.1k', users: '200+' },
-    features: ['Servicios', 'Contacto', 'Portfolio', 'Testimonios']
-  },
-  {
-    id: 3,
-    name: 'Creative Artist',
-    category: 'Arte',
-    description: 'Para artistas, músicos y creativos que buscan destacar',
-    preview: '/template-creative.jpg',
-    colors: ['bg-orange-500', 'bg-red-500', 'bg-yellow-500'],
-    stats: { likes: '1.8k', users: '120+' },
-    features: ['Galería', 'Música', 'Eventos', 'Comisiones']
-  },
-  {
-    id: 4,
-    name: 'Food & Restaurant',
-    category: 'Restaurante',
-    description: 'Especializado para restaurantes y food bloggers',
-    preview: '/template-food.jpg',
-    colors: ['bg-red-600', 'bg-orange-600', 'bg-yellow-600'],
-    stats: { likes: '2.7k', users: '180+' },
-    features: ['Menú', 'Reservas', 'Delivery', 'Reseñas']
-  },
-  {
-    id: 5,
-    name: 'Fitness Coach',
-    category: 'Fitness',
-    description: 'Diseñado para entrenadores y coaches de fitness',
-    preview: '/template-fitness.jpg',
-    colors: ['bg-green-600', 'bg-blue-600', 'bg-gray-800'],
-    stats: { likes: '2.2k', users: '160+' },
-    features: ['Programas', 'Nutrición', 'Coaching', 'Comunidad']
-  },
-  {
-    id: 6,
-    name: 'Minimalist',
-    category: 'Minimalista',
-    description: 'Elegante y simple, para cualquier tipo de profesional',
-    preview: '/template-minimal.jpg',
-    colors: ['bg-gray-900', 'bg-gray-600', 'bg-gray-400'],
-    stats: { likes: '3.5k', users: '250+' },
-    features: ['Limpio', 'Rápido', 'Profesional', 'Versátil']
-  }
-];
-
-const categories = ['Todos', 'Influencer', 'Negocio', 'Arte', 'Restaurante', 'Fitness', 'Minimalista'];
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Templates() {
+  const { t } = useTranslation();
+  
+  const templates = [
+    {
+      id: 1,
+      name: t('templates.templateNames.influencerLifestyle'),
+      category: t('templates.categories.influencer'),
+      description: t('templates.descriptions.influencerLifestyle'),
+      preview: '/template-influencer.jpg',
+      colors: ['bg-pink-500', 'bg-purple-500', 'bg-blue-500'],
+      stats: { likes: '2.4k', users: '150+' },
+      features: ['Instagram Stories', 'YouTube Videos', 'Blog Personal', 'Tienda Online']
+    },
+    {
+      id: 2,
+      name: t('templates.templateNames.businessPro'),
+      category: t('templates.categories.business'),
+      description: t('templates.descriptions.businessPro'),
+      preview: '/template-business.jpg',
+      colors: ['bg-blue-600', 'bg-gray-800', 'bg-green-600'],
+      stats: { likes: '3.1k', users: '200+' },
+      features: ['Servicios', 'Contacto', 'Portfolio', 'Testimonios']
+    },
+    {
+      id: 3,
+      name: t('templates.templateNames.creativeArtist'),
+      category: t('templates.categories.art'),
+      description: t('templates.descriptions.creativeArtist'),
+      preview: '/template-creative.jpg',
+      colors: ['bg-orange-500', 'bg-red-500', 'bg-yellow-500'],
+      stats: { likes: '1.8k', users: '120+' },
+      features: ['Galería', 'Música', 'Eventos', 'Comisiones']
+    },
+    {
+      id: 4,
+      name: t('templates.templateNames.foodRestaurant'),
+      category: t('templates.categories.restaurant'),
+      description: t('templates.descriptions.foodRestaurant'),
+      preview: '/template-food.jpg',
+      colors: ['bg-red-600', 'bg-orange-600', 'bg-yellow-600'],
+      stats: { likes: '2.7k', users: '180+' },
+      features: ['Menú', 'Reservas', 'Delivery', 'Reseñas']
+    },
+    {
+      id: 5,
+      name: t('templates.templateNames.fitnessCoach'),
+      category: t('templates.categories.fitness'),
+      description: t('templates.descriptions.fitnessCoach'),
+      preview: '/template-fitness.jpg',
+      colors: ['bg-green-600', 'bg-blue-600', 'bg-gray-800'],
+      stats: { likes: '2.2k', users: '160+' },
+      features: ['Programas', 'Nutrición', 'Coaching', 'Comunidad']
+    },
+    {
+      id: 6,
+      name: t('templates.templateNames.minimalist'),
+      category: t('templates.categories.minimalist'),
+      description: t('templates.descriptions.minimalist'),
+      preview: '/template-minimal.jpg',
+      colors: ['bg-gray-900', 'bg-gray-600', 'bg-gray-400'],
+      stats: { likes: '3.5k', users: '250+' },
+      features: ['Limpio', 'Rápido', 'Profesional', 'Versátil']
+    }
+  ];
+
+  const categories = [
+    t('templates.categories.all'),
+    t('templates.categories.influencer'),
+    t('templates.categories.business'),
+    t('templates.categories.art'),
+    t('templates.categories.restaurant'),
+    t('templates.categories.fitness'),
+    t('templates.categories.minimalist')
+  ];
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Plantillas que inspiran
+            {t('templates.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Descubre diseños profesionales creados especialmente para diferentes industrias y estilos
+            {t('templates.subtitle')}
           </p>
           
           {/* Category Filter */}
@@ -132,7 +144,7 @@ export default function Templates() {
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <button className="bg-white text-gray-900 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors">
                     <ExternalLink className="w-4 h-4 inline mr-2" />
-                    Vista Previa
+                    {t('templates.actions.preview')}
                   </button>
                 </div>
               </div>
@@ -159,7 +171,7 @@ export default function Templates() {
                     ))}
                     {template.features.length > 3 && (
                       <span className="text-gray-400 text-xs px-2 py-1">
-                        +{template.features.length - 3} más
+                        +{template.features.length - 3} {t('templates.actions.more')}
                       </span>
                     )}
                   </div>
@@ -183,7 +195,7 @@ export default function Templates() {
                 {/* Action Buttons */}
                 <div className="flex space-x-2">
                   <button className="flex-1 bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
-                    Usar Plantilla
+                    {t('templates.actions.useTemplate')}
                   </button>
                   <button className="px-3 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors">
                     <ExternalLink className="w-4 h-4" />
@@ -198,23 +210,23 @@ export default function Templates() {
         <div className="text-center">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
             <h3 className="text-2xl font-bold mb-4">
-              ¿No encuentras lo que buscas?
+              {t('templates.cta.title')}
             </h3>
             <p className="mb-6 opacity-90 max-w-2xl mx-auto">
-              Nuestro editor visual te permite crear diseños únicos desde cero o personalizar cualquier plantilla a tu gusto
+              {t('templates.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/crear-pagina-gratis"
                 className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
               >
-                Crear desde cero
+                {t('templates.cta.createFromScratch')}
               </a>
               <a 
                 href="/templates"
                 className="border border-white/30 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
               >
-                Ver todas las plantillas
+                {t('templates.cta.viewAll')}
               </a>
             </div>
           </div>

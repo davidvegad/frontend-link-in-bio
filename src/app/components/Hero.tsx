@@ -1,9 +1,13 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, CheckCircle, Star, Users } from 'lucide-react';
 import ABTestButton from '../../components/conversion/ABTestButton';
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Hero() {
+  const { t } = useTranslation();
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 text-white py-20 px-4 overflow-hidden">
       <div className="container mx-auto">
@@ -11,7 +15,7 @@ export default function Hero() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 mb-8">
             <Star className="w-5 h-5 text-yellow-400 mr-2" />
-            <span className="text-sm font-medium">Valorado 4.9/5 por más de 10,000 usuarios</span>
+            <span className="text-sm font-medium">{t('hero.rating')}</span>
           </div>
         </div>
 
@@ -19,25 +23,25 @@ export default function Hero() {
           {/* Contenido de Texto */}
           <div className="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
-              Tu enlace,
+              {t('hero.title')}
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
-                infinitas
+                {t('hero.titleHighlight')}
               </span>
-              posibilidades
+              {t('hero.titleEnd')}
             </h1>
             <p className="text-xl md:text-2xl mb-8 opacity-90 leading-relaxed max-w-2xl">
-              Convierte tus seguidores en clientes con una página profesional que centraliza todos tus enlaces, productos y contenido.
+              {t('hero.subtitle')}
             </p>
             
             {/* Benefits */}
             <div className="flex flex-col sm:flex-row gap-4 mb-8 text-left">
               <div className="flex items-center">
                 <CheckCircle className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-lg">100% Gratis para empezar</span>
+                <span className="text-lg">{t('hero.freeStart')}</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-lg">Configuración en 2 minutos</span>
+                <span className="text-lg">{t('hero.quickSetup')}</span>
               </div>
             </div>
 
@@ -49,13 +53,14 @@ export default function Hero() {
                 trackingGoal="signup_click"
                 className="group flex items-center justify-center"
               >
+                {t('hero.createFree')}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </ABTestButton>
               <Link 
                 href="/ver-demo" 
                 className="border-2 border-white/30 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white/10 transition-colors backdrop-blur-sm flex items-center justify-center"
               >
-                Ver demo en vivo
+                {t('hero.viewDemo')}
               </Link>
             </div>
 
@@ -63,11 +68,11 @@ export default function Hero() {
             <div className="flex items-center justify-center lg:justify-start space-x-6 text-sm opacity-90">
               <div className="flex items-center">
                 <Users className="w-4 h-4 mr-2" />
-                <span>50K+ usuarios activos</span>
+                <span>{t('hero.activeUsers')}</span>
               </div>
               <div className="hidden sm:block w-1 h-1 bg-white/50 rounded-full"></div>
               <div>
-                <span>Usado por creadores de Netflix, Spotify y más</span>
+                <span>{t('hero.usedBy')}</span>
               </div>
             </div>
           </div>
@@ -100,10 +105,10 @@ export default function Hero() {
 
               {/* Floating Elements */}
               <div className="absolute -top-4 -right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-bounce">
-                ¡Nuevo!
+                {t('hero.newBadge')}
               </div>
               <div className="absolute -bottom-4 -left-4 bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-bold">
-                Analytics
+                {t('hero.analytics')}
               </div>
             </div>
           </div>
@@ -112,10 +117,10 @@ export default function Hero() {
         {/* Bottom CTA Strip */}
         <div className="text-center mt-16">
           <p className="text-lg opacity-75 mb-4">
-            Únete a creadores de contenido que ya están generando más ingresos
+            {t('hero.joinCreators')}
           </p>
           <div className="flex flex-wrap justify-center gap-8 items-center opacity-60">
-            <div className="text-sm">Como aparece en:</div>
+            <div className="text-sm">{t('hero.asSeenIn')}</div>
             <div className="flex space-x-8">
               <span className="font-semibold">TechCrunch</span>
               <span className="font-semibold">Product Hunt</span>

@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslation } from '@/contexts/LanguageContext';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <header className="bg-white shadow-sm p-4">
@@ -21,30 +24,38 @@ export default function Header() {
 
         {/* Logo/Título */}
         <div className="flex items-center">
-          <Image src="/mi-logo.png" alt="Logo" width={150} height={40}  /> {/* Reemplaza con tu logo */}
+          <Image 
+            src="/mi-logo.png" 
+            alt="Logo" 
+            width={150} 
+            height={40} 
+            style={{ width: 'auto', height: '40px' }}
+          />
           
         </div>
 
         {/* Navegación Desktop */}
         <nav className="hidden md:flex items-center space-x-4">
-          <Link href="/contactanos" className="text-gray-600 hover:text-blue-600">Contáctanos</Link>
-          <Link href="/precios" className="text-gray-600 hover:text-blue-600">Precios</Link>
-          <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600">Funcionalidades</Link>
-          <Link href="/tutoriales" className="text-gray-600 hover:text-blue-600">Tutoriales</Link>
-          <Link href="/login" className="text-gray-600 hover:text-blue-600">Login</Link>
-          <Link href="/crear-pagina-gratis" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">Crear página gratis</Link>
+          <Link href="/contactanos" className="text-gray-600 hover:text-blue-600">{t('header.contactUs')}</Link>
+          <Link href="/precios" className="text-gray-600 hover:text-blue-600">{t('header.pricing')}</Link>
+          <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600">{t('header.features')}</Link>
+          <Link href="/tutoriales" className="text-gray-600 hover:text-blue-600">{t('header.tutorials')}</Link>
+          <Link href="/login" className="text-gray-600 hover:text-blue-600">{t('header.login')}</Link>
+          <LanguageSelector className="mr-2" compact />
+          <Link href="/crear-pagina-gratis" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">{t('header.createFree')}</Link>
         </nav>
 
         {/* Menú Móvil */}
         {isOpen && (
           <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg py-4 z-10">
             <nav className="flex flex-col items-center space-y-4">
-              <Link href="/contactanos" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Contáctanos</Link>
-              <Link href="/precios" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Precios</Link>
-              <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Funcionalidades</Link>
-              <Link href="/tutoriales" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Tutoriales</Link>
-              <Link href="/login" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>Login</Link>
-              <Link href="/crear-pagina-gratis" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors" onClick={() => setIsOpen(false)}>Crear página gratis</Link>
+              <Link href="/contactanos" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.contactUs')}</Link>
+              <Link href="/precios" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.pricing')}</Link>
+              <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.features')}</Link>
+              <Link href="/tutoriales" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.tutorials')}</Link>
+              <Link href="/login" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.login')}</Link>
+              <LanguageSelector className="mb-2" compact />
+              <Link href="/crear-pagina-gratis" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors" onClick={() => setIsOpen(false)}>{t('header.createFree')}</Link>
             </nav>
           </div>
         )}

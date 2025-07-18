@@ -276,7 +276,15 @@ export const detectDeviceType = (): 'mobile' | 'tablet' | 'desktop' => {
 
 export const getUserLocation = async (): Promise<string | undefined> => {
   try {
+    // Skip location fetching in development to avoid CORS issues
+    if (process.env.NODE_ENV === 'development') {
+      return 'Development Location';
+    }
+    
     const response = await fetch('https://ipapi.co/json/');
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
     const data = await response.json();
     return `${data.city}, ${data.country_name}`;
   } catch (error) {

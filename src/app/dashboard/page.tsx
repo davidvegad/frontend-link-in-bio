@@ -6,7 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { debounce } from 'lodash';
-import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2, Flame } from 'lucide-react';
+import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2, Flame, Bell } from 'lucide-react';
 
 import LivePreview from '../components/LivePreview';
 import DesignCustomizer from '../components/DesignCustomizer';
@@ -20,6 +20,9 @@ import InlineEditableField from '../components/InlineEditableField';
 import CoverImageModal from '../components/CoverImageModal';
 import SocialIconModal from '../components/SocialIconModal';
 import { getSocialIcon } from '../components/SocialIcons';
+import PushNotificationsDashboard from '../../components/advanced/PushNotificationsDashboard';
+import { useLanguage } from '@/contexts/LanguageContext';
+import LanguageSelector from '@/components/LanguageSelector';
 
 // Interfaces
 interface LinkData {
@@ -72,6 +75,7 @@ interface ProfileData {
 // Main Component
 export default function DashboardPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -964,6 +968,8 @@ export default function DashboardPage() {
         );
       case 'stats':
         return <Analytics />;
+      case 'notifications':
+        return <PushNotificationsDashboard className="mb-8" />;
       default:
         return <p>Selecciona una sección</p>;
     }
@@ -996,21 +1002,30 @@ export default function DashboardPage() {
         </div>
         <nav className="flex-1 space-y-2">
           <ul>
-            <NavLink tabId="profile" icon={User}>Perfil</NavLink>
-            <NavLink tabId="design" icon={Palette}>Diseño</NavLink>
-            <NavLink tabId="stats" icon={BarChart2}>Estadísticas</NavLink>
-            <NavLink tabId="settings" icon={SettingsIcon}>Ajustes</NavLink>
+            <NavLink tabId="profile" icon={User}>{t('nav.profile')}</NavLink>
+            <NavLink tabId="design" icon={Palette}>{t('nav.design')}</NavLink>
+            <NavLink tabId="stats" icon={BarChart2}>{t('nav.stats')}</NavLink>
+            <NavLink tabId="notifications" icon={Bell}>{t('nav.notifications')}</NavLink>
+            <NavLink tabId="settings" icon={SettingsIcon}>{t('nav.settings')}</NavLink>
           </ul>
         </nav>
+        
+        {/* Language Selector for Desktop */}
+        <div className="hidden md:block p-4 border-t border-gray-700">
+          <LanguageSelector />
+        </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm p-4 flex justify-between items-center md:hidden">
-          <h1 className="text-xl font-bold">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
-          <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600 hover:text-gray-800">
-            <Menu size={24} />
-          </button>
+        <header className="bg-white shadow-sm p-4 flex justify-between items-center">
+          <h1 className="text-xl font-bold md:hidden">{t(`nav.${activeTab}`)}</h1>
+          <div className="flex items-center space-x-4">
+            <LanguageSelector compact />
+            <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600 hover:text-gray-800 md:hidden">
+              <Menu size={24} />
+            </button>
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto p-4 md:p-8">

@@ -1,53 +1,50 @@
+'use client';
+
 import { UserPlus, Palette, Share2 } from 'lucide-react';
 import UrgencyButton from '../../components/conversion/UrgencyButton';
-
-const steps = [
-  {
-    number: '01',
-    icon: UserPlus,
-    title: 'Regístrate Gratis',
-    description: 'Crea tu cuenta en menos de 30 segundos. No necesitas tarjeta de crédito.',
-    details: [
-      'Registro con email o Google',
-      'Verificación instantánea',
-      'Acceso inmediato al dashboard'
-    ]
-  },
-  {
-    number: '02',
-    icon: Palette,
-    title: 'Personaliza tu Página',
-    description: 'Elige tu tema, añade tus enlaces y personaliza el diseño a tu gusto.',
-    details: [
-      'Más de 20 temas profesionales',
-      'Editor visual intuitivo',
-      'Vista previa en tiempo real'
-    ]
-  },
-  {
-    number: '03',
-    icon: Share2,
-    title: 'Comparte y Crece',
-    description: 'Publica tu enlace único y comienza a dirigir tráfico a donde más importa.',
-    details: [
-      'URL personalizada (tu-nombre.com)',
-      'Perfecto para bio de Instagram',
-      'Analytics detallado incluido'
-    ]
-  }
-];
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function HowItWorks() {
+  const { t } = useTranslation();
+  
+  const getStepDetails = (stepKey: string) => {
+    const details = t(`howItWorks.steps.${stepKey}.details`);
+    return Array.isArray(details) ? details : [];
+  };
+
+  const steps = [
+    {
+      number: '01',
+      icon: UserPlus,
+      title: t('howItWorks.steps.step1.title'),
+      description: t('howItWorks.steps.step1.description'),
+      details: getStepDetails('step1')
+    },
+    {
+      number: '02',
+      icon: Palette,
+      title: t('howItWorks.steps.step2.title'),
+      description: t('howItWorks.steps.step2.description'),
+      details: getStepDetails('step2')
+    },
+    {
+      number: '03',
+      icon: Share2,
+      title: t('howItWorks.steps.step3.title'),
+      description: t('howItWorks.steps.step3.description'),
+      details: getStepDetails('step3')
+    }
+  ];
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Cómo funciona
+            {t('howItWorks.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            En solo 3 pasos simples tendrás tu página profesional lista para compartir
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
@@ -113,14 +110,14 @@ export default function HowItWorks() {
         <div className="text-center mt-16">
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              ¿Listo para comenzar?
+              {t('howItWorks.cta.title')}
             </h3>
             <p className="text-gray-600 mb-6">
-              Miles de creadores ya están usando nuestra plataforma para hacer crecer su audiencia
+              {t('howItWorks.cta.subtitle')}
             </p>
             <UrgencyButton
               href="/crear-pagina-gratis"
-              text="Crear mi página gratis"
+              text={t('howItWorks.cta.button')}
               urgencyType="social_proof"
               variant="primary"
               size="lg"
@@ -129,7 +126,7 @@ export default function HowItWorks() {
               <UserPlus className="w-5 h-5 ml-2" />
             </UrgencyButton>
             <p className="text-sm text-gray-500 mt-3">
-              No se requiere tarjeta de crédito • Configuración en 2 minutos
+              {t('howItWorks.cta.disclaimer')}
             </p>
           </div>
         </div>

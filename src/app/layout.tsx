@@ -1,5 +1,7 @@
 import './globals.css';
 import { Metadata } from 'next';
+import { LanguageProvider } from '@/contexts/LanguageContext';
+import DynamicMetadata from './components/DynamicMetadata';
 import { Inter, Roboto_Mono, Lora, Playfair_Display, Montserrat, Poppins, Roboto, Quicksand, Merriweather, Ubuntu, Nunito, Fira_Sans, Work_Sans, Caveat, Pacifico, Open_Sans, Lato, Oswald, PT_Sans, Crimson_Text, Libre_Baskerville, Source_Sans_3, Spectral, Karla, Mulish, Jost, Arvo, Itim, Comfortaa, Outfit, Dancing_Script, Raleway, Comic_Neue } from 'next/font/google';
 
 export const metadata: Metadata = {
@@ -255,7 +257,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <LanguageProvider>
+          <DynamicMetadata />
+          {children}
+        </LanguageProvider>
+      </body>
     </html>
   );
 }

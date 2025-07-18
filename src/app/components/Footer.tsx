@@ -10,53 +10,54 @@ import {
   MapPin,
   Heart
 } from 'lucide-react';
+import { useTranslation } from '@/contexts/LanguageContext';
 
-const footerSections = {
+const getFooterSections = (t: (key: string) => string) => ({
   product: {
-    title: 'Producto',
+    title: t('footer.sections.product'),
     links: [
-      { name: 'Funcionalidades', href: '/funcionalidades' },
-      { name: 'Plantillas', href: '/templates' },
-      { name: 'Precios', href: '/precios' },
-      { name: 'Analytics', href: '/analytics' },
-      { name: 'Integraciones', href: '/integraciones' },
-      { name: 'API', href: '/api' }
+      { name: t('footer.links.features'), href: '/funcionalidades' },
+      { name: t('footer.links.templates'), href: '/templates' },
+      { name: t('footer.links.pricing'), href: '/precios' },
+      { name: t('footer.links.analytics'), href: '/analytics' },
+      { name: t('footer.links.integrations'), href: '/integraciones' },
+      { name: t('footer.links.api'), href: '/api' }
     ]
   },
   support: {
-    title: 'Soporte',
+    title: t('footer.sections.support'),
     links: [
-      { name: 'Centro de Ayuda', href: '/ayuda' },
-      { name: 'Tutoriales', href: '/tutoriales' },
-      { name: 'FAQ', href: '/faq' },
-      { name: 'Contáctanos', href: '/contactanos' },
-      { name: 'Estado del Servicio', href: '/status' },
-      { name: 'Reportar Bug', href: '/reportar-bug' }
+      { name: t('footer.links.helpCenter'), href: '/ayuda' },
+      { name: t('footer.links.tutorials'), href: '/tutoriales' },
+      { name: t('footer.links.faq'), href: '/faq' },
+      { name: t('footer.links.contact'), href: '/contactanos' },
+      { name: t('footer.links.status'), href: '/status' },
+      { name: t('footer.links.reportBug'), href: '/reportar-bug' }
     ]
   },
   company: {
-    title: 'Empresa',
+    title: t('footer.sections.company'),
     links: [
-      { name: 'Sobre Nosotros', href: '/sobre-nosotros' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Carreras', href: '/carreras' },
-      { name: 'Prensa', href: '/prensa' },
-      { name: 'Partners', href: '/partners' },
-      { name: 'Afiliados', href: '/afiliados' }
+      { name: t('footer.links.about'), href: '/sobre-nosotros' },
+      { name: t('footer.links.blog'), href: '/blog' },
+      { name: t('footer.links.careers'), href: '/carreras' },
+      { name: t('footer.links.press'), href: '/prensa' },
+      { name: t('footer.links.partners'), href: '/partners' },
+      { name: t('footer.links.affiliates'), href: '/afiliados' }
     ]
   },
   legal: {
-    title: 'Legal',
+    title: t('footer.sections.legal'),
     links: [
-      { name: 'Términos de Servicio', href: '/terminos' },
-      { name: 'Política de Privacidad', href: '/privacidad' },
-      { name: 'Política de Cookies', href: '/cookies' },
-      { name: 'GDPR', href: '/gdpr' },
-      { name: 'Seguridad', href: '/seguridad' },
-      { name: 'Compliance', href: '/compliance' }
+      { name: t('footer.links.terms'), href: '/terminos' },
+      { name: t('footer.links.privacy'), href: '/privacidad' },
+      { name: t('footer.links.cookies'), href: '/cookies' },
+      { name: t('footer.links.gdpr'), href: '/gdpr' },
+      { name: t('footer.links.security'), href: '/seguridad' },
+      { name: t('footer.links.compliance'), href: '/compliance' }
     ]
   }
-};
+});
 
 const socialLinks = [
   { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/enlacepro' },
@@ -72,6 +73,9 @@ const contactInfo = [
 ];
 
 export default function Footer() {
+  const { t } = useTranslation();
+  const footerSections = getFooterSections(t);
+  
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
@@ -89,8 +93,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-gray-400 mb-6 leading-relaxed">
-              La plataforma más fácil y profesional para crear tu página de enlaces. 
-              Conecta todas tus redes sociales y contenido en un solo lugar.
+              {t('footer.description')}
             </p>
             
             {/* Contact Info */}
@@ -148,20 +151,20 @@ export default function Footer() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div>
               <h3 className="text-xl font-semibold mb-2">
-                Mantente al día con las últimas novedades
+                {t('footer.newsletter.title')}
               </h3>
               <p className="text-gray-400">
-                Recibe tips, tutoriales y noticias sobre nuevas funcionalidades
+                {t('footer.newsletter.subtitle')}
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
-                placeholder="Tu email"
+                placeholder={t('footer.newsletter.placeholder')}
                 className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
               />
               <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors whitespace-nowrap">
-                Suscribirse
+                {t('footer.newsletter.subscribe')}
               </button>
             </div>
           </div>
@@ -172,19 +175,19 @@ export default function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-2xl font-bold text-blue-400 mb-1">50K+</div>
-              <div className="text-gray-400 text-sm">Usuarios Activos</div>
+              <div className="text-gray-400 text-sm">{t('footer.stats.activeUsers')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-green-400 mb-1">2M+</div>
-              <div className="text-gray-400 text-sm">Enlaces Creados</div>
+              <div className="text-gray-400 text-sm">{t('footer.stats.linksCreated')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-purple-400 mb-1">99.9%</div>
-              <div className="text-gray-400 text-sm">Uptime</div>
+              <div className="text-gray-400 text-sm">{t('footer.stats.uptime')}</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-yellow-400 mb-1">150+</div>
-              <div className="text-gray-400 text-sm">Países</div>
+              <div className="text-gray-400 text-sm">{t('footer.stats.countries')}</div>
             </div>
           </div>
         </div>
@@ -196,19 +199,19 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
               <p className="text-gray-400 text-sm">
-                © 2024 EnlacePro. Todos los derechos reservados.
+                {t('footer.copyright')}
               </p>
               <div className="flex items-center text-gray-400 text-sm">
-                <span>Hecho con</span>
+                <span>{t('footer.madeWith')}</span>
                 <Heart className="w-4 h-4 mx-1 text-red-500 fill-current" />
-                <span>para creadores</span>
+                <span>{t('footer.forCreators')}</span>
               </div>
             </div>
             
             <div className="flex items-center space-x-6">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-gray-400 text-sm">Todos los sistemas operativos</span>
+                <span className="text-gray-400 text-sm">{t('footer.allSystems')}</span>
               </div>
               <div className="text-gray-400 text-sm">
                 v2.1.0

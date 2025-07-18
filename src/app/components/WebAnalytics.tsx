@@ -9,8 +9,8 @@ interface WebAnalyticsProps {
 }
 
 export default function WebAnalytics({ 
-  googleAnalyticsId = 'G-XXXXXXXXXX', 
-  facebookPixelId = 'YOUR_PIXEL_ID' 
+  googleAnalyticsId, 
+  facebookPixelId 
 }: WebAnalyticsProps) {
   
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function WebAnalytics({
         </>
       )}
 
-      {facebookPixelId && (
+      {facebookPixelId && facebookPixelId !== 'YOUR_PIXEL_ID' && (
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"

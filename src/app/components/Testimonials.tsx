@@ -1,77 +1,81 @@
+'use client';
+
 import { Star, Quote } from 'lucide-react';
 import RotatingTestimonials from '../../components/conversion/RotatingTestimonials';
-
-const testimonials = [
-  {
-    id: 1,
-    name: 'María González',
-    role: 'Influencer de Lifestyle',
-    company: '@mariavibe',
-    image: '/testimonial-maria.jpg',
-    rating: 5,
-    testimonial: 'Desde que uso esta plataforma, he aumentado mis conversiones un 300%. Es súper fácil de usar y mis seguidores encuentran todo lo que necesitan en un solo lugar.',
-    metrics: '300% más conversiones'
-  },
-  {
-    id: 2,
-    name: 'Carlos Mendoza',
-    role: 'Coach de Fitness',
-    company: 'FitLife Training',
-    image: '/testimonial-carlos.jpg',
-    rating: 5,
-    testimonial: 'Perfecto para mi negocio de coaching. Mis clientes pueden acceder fácilmente a mis programas, calendario de citas y contenido exclusivo. Los analytics me ayudan a entender qué funciona mejor.',
-    metrics: '50+ clientes nuevos'
-  },
-  {
-    id: 3,
-    name: 'Ana Ruiz',
-    role: 'Emprendedora',
-    company: 'AnaCreativa',
-    image: '/testimonial-ana.jpg',
-    rating: 5,
-    testimonial: 'Como diseñadora gráfica, necesitaba algo que se viera profesional. Este servicio superó mis expectativas. Mis clientes siempre comentan lo elegante que se ve mi página.',
-    metrics: 'Portfolio profesional'
-  },
-  {
-    id: 4,
-    name: 'Luis Fernández',
-    role: 'Músico',
-    company: '@luismusic',
-    image: '/testimonial-luis.jpg',
-    rating: 5,
-    testimonial: 'Increíble para artistas. Puedo mostrar mi música, fechas de conciertos y vender mi merchandise, todo desde un solo enlace. Mis fans lo aman.',
-    metrics: '2M+ reproducciones'
-  },
-  {
-    id: 5,
-    name: 'Sofia Morales',
-    role: 'Food Blogger',
-    company: 'Sabores Únicos',
-    image: '/testimonial-sofia.jpg',
-    rating: 5,
-    testimonial: 'La sección de recetas y el enlace a mi blog han transformado completamente mi alcance. Ahora dirijo tráfico de calidad directamente a mi contenido.',
-    metrics: '500% más tráfico'
-  },
-  {
-    id: 6,
-    name: 'Pedro Vega',
-    role: 'Consultor Digital',
-    company: 'Digital Growth',
-    image: '/testimonial-pedro.jpg',
-    rating: 5,
-    testimonial: 'Como consultor, necesitaba transmitir profesionalismo. Esta herramienta no solo se ve increíble, sino que los analytics detallados me ayudan a optimizar constantemente.',
-    metrics: '40+ consultas mensuales'
-  }
-];
-
-const stats = [
-  { number: '50K+', label: 'Usuarios activos' },
-  { number: '2M+', label: 'Enlaces creados' },
-  { number: '99.9%', label: 'Uptime garantizado' },
-  { number: '4.9/5', label: 'Valoración promedio' }
-];
+import { useTranslation } from '@/contexts/LanguageContext';
 
 export default function Testimonials() {
+  const { t } = useTranslation();
+  
+  const testimonials = [
+    {
+      id: 1,
+      name: t('testimonials.users.maria.name'),
+      role: t('testimonials.users.maria.role'),
+      company: '@mariavibe',
+      image: '/testimonial-maria.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.maria.testimonial'),
+      metrics: t('testimonials.users.maria.metric')
+    },
+    {
+      id: 2,
+      name: t('testimonials.users.carlos.name'),
+      role: t('testimonials.users.carlos.role'),
+      company: 'FitLife Training',
+      image: '/testimonial-carlos.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.carlos.testimonial'),
+      metrics: t('testimonials.users.carlos.metric')
+    },
+    {
+      id: 3,
+      name: t('testimonials.users.ana.name'),
+      role: t('testimonials.users.ana.role'),
+      company: 'AnaCreativa',
+      image: '/testimonial-ana.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.ana.testimonial'),
+      metrics: t('testimonials.users.ana.metric')
+    },
+    {
+      id: 4,
+      name: t('testimonials.users.luis.name'),
+      role: t('testimonials.users.luis.role'),
+      company: '@luismusic',
+      image: '/testimonial-luis.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.luis.testimonial'),
+      metrics: t('testimonials.users.luis.metric')
+    },
+    {
+      id: 5,
+      name: t('testimonials.users.sofia.name'),
+      role: t('testimonials.users.sofia.role'),
+      company: 'Sabores Únicos',
+      image: '/testimonial-sofia.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.sofia.testimonial'),
+      metrics: t('testimonials.users.sofia.metric')
+    },
+    {
+      id: 6,
+      name: t('testimonials.users.pedro.name'),
+      role: t('testimonials.users.pedro.role'),
+      company: 'Digital Growth',
+      image: '/testimonial-pedro.jpg',
+      rating: 5,
+      testimonial: t('testimonials.users.pedro.testimonial'),
+      metrics: t('testimonials.users.pedro.metric')
+    }
+  ];
+
+  const stats = [
+    { number: '50K+', label: t('testimonials.stats.activeUsers') },
+    { number: '2M+', label: t('testimonials.stats.linksCreated') },
+    { number: '99.9%', label: t('testimonials.stats.uptimeGuaranteed') },
+    { number: '4.9/5', label: t('testimonials.stats.averageRating') }
+  ];
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -89,10 +93,10 @@ export default function Testimonials() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Lo que dicen nuestros usuarios
+            {t('testimonials.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Miles de creadores, empresarios y profesionales confían en nosotros para hacer crecer su negocio
+            {t('testimonials.originalSubtitle')}
           </p>
         </div>
 
@@ -165,27 +169,27 @@ export default function Testimonials() {
         <div className="text-center">
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
-              Únete a miles de usuarios satisfechos
+              {t('testimonials.cta.title')}
             </h3>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Comienza a crear tu página profesional hoy mismo y descubre por qué somos la opción favorita de creadores y empresarios
+              {t('testimonials.cta.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/crear-pagina-gratis"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                Crear mi página gratis
+                {t('testimonials.cta.createPage')}
               </a>
               <a 
                 href="/testimonios"
                 className="border border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
               >
-                Ver más testimonios
+                {t('testimonials.cta.viewMore')}
               </a>
             </div>
             <p className="text-sm text-gray-500 mt-4">
-              ⭐ Valoración promedio de 4.9/5 basada en más de 1,000 reseñas
+              {t('testimonials.cta.rating')}
             </p>
           </div>
         </div>
