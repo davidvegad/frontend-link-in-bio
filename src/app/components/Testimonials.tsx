@@ -147,7 +147,7 @@ export default function Testimonials() {
               {/* Author Info */}
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg mr-4">
-                  {testimonial.name.split(' ').map(n => n[0]).join('')}
+                  {testimonial.name.split(' ').map((n: string) => n[0]).join('')}
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-900">
