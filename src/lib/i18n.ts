@@ -270,6 +270,7 @@ export const translations: Record<Language, Translations> = {
     
     // Header
     header: {
+      home: 'Inicio',
       contactUs: 'Contáctanos',
       pricing: 'Precios',
       features: 'Funcionalidades',
@@ -1284,6 +1285,7 @@ export const translations: Record<Language, Translations> = {
     
     // Header
     header: {
+      home: 'Home',
       contactUs: 'Contact Us',
       pricing: 'Pricing',
       features: 'Features',

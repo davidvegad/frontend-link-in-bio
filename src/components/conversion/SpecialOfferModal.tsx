@@ -112,9 +112,10 @@ export default function SpecialOfferModal({
           {/* Close Button */}
           <button
             onClick={handleClose}
-            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white transition-colors z-10"
+            className="absolute top-2 right-2 md:top-4 md:right-4 p-3 md:p-2 bg-black/20 hover:bg-black/30 rounded-full text-white/90 hover:text-white transition-all z-20 touch-manipulation"
+            style={{ minWidth: '44px', minHeight: '44px' }}
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 md:w-4 md:h-4" />
           </button>
 
           {/* Animated Background Elements */}

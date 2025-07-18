@@ -11,7 +11,7 @@ export default function Header() {
   const { t } = useTranslation();
 
   return (
-    <header className="bg-white shadow-sm p-4">
+    <header className="bg-white shadow-sm p-4 relative z-40">
       <div className="container mx-auto flex justify-between items-center">
         {/* Menú Hamburguesa */}
         <div className="md:hidden">
@@ -24,18 +24,21 @@ export default function Header() {
 
         {/* Logo/Título */}
         <div className="flex items-center">
-          <Image 
-            src="/mi-logo.png" 
-            alt="Logo" 
-            width={150} 
-            height={40} 
-            style={{ width: 'auto', height: '40px' }}
-          />
-          
+          <Link href="/" className="flex items-center">
+            <Image 
+              src="/mi-logo.png" 
+              alt="Logo" 
+              width={150} 
+              height={40} 
+              style={{ width: 'auto', height: '40px' }}
+              className="hover:opacity-80 transition-opacity"
+            />
+          </Link>
         </div>
 
         {/* Navegación Desktop */}
         <nav className="hidden md:flex items-center space-x-4">
+          <Link href="/" className="text-gray-600 hover:text-blue-600">{t('header.home')}</Link>
           <Link href="/contactanos" className="text-gray-600 hover:text-blue-600">{t('header.contactUs')}</Link>
           <Link href="/precios" className="text-gray-600 hover:text-blue-600">{t('header.pricing')}</Link>
           <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600">{t('header.features')}</Link>
@@ -47,8 +50,9 @@ export default function Header() {
 
         {/* Menú Móvil */}
         {isOpen && (
-          <div className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg py-4 z-10">
+          <div className="md:hidden fixed top-16 left-0 w-full bg-white shadow-lg py-4 z-50">
             <nav className="flex flex-col items-center space-y-4">
+              <Link href="/" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.home')}</Link>
               <Link href="/contactanos" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.contactUs')}</Link>
               <Link href="/precios" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.pricing')}</Link>
               <Link href="/funcionalidades" className="text-gray-600 hover:text-blue-600" onClick={() => setIsOpen(false)}>{t('header.features')}</Link>
