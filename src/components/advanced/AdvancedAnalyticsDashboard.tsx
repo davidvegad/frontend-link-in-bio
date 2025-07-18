@@ -650,6 +650,18 @@ function RealTimeTab({ realTimeData }: { realTimeData: any }) {
 }
 
 // Utility Components
+type ColorKey = 'blue' | 'green' | 'red' | 'purple' | 'emerald' | 'indigo' | 'pink';
+
+interface MetricCardProps {
+  title: string;
+  value: string;
+  change?: number;
+  icon: React.ComponentType<{ className?: string }>;
+  color: ColorKey;
+  isPercentage?: boolean;
+  isRealTime?: boolean;
+}
+
 function MetricCard({ 
   title, 
   value, 
@@ -658,8 +670,8 @@ function MetricCard({
   color, 
   isPercentage = false, 
   isRealTime = false 
-}: any) {
-  const colorClasses = {
+}: MetricCardProps) {
+  const colorClasses: Record<ColorKey, string> = {
     blue: 'bg-blue-500',
     green: 'bg-green-500',
     red: 'bg-red-500',
