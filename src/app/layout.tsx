@@ -1,5 +1,39 @@
 import './globals.css';
+import { Metadata } from 'next';
 import { Inter, Roboto_Mono, Lora, Playfair_Display, Montserrat, Poppins, Roboto, Quicksand, Merriweather, Ubuntu, Nunito, Fira_Sans, Work_Sans, Caveat, Pacifico, Open_Sans, Lato, Oswald, PT_Sans, Crimson_Text, Libre_Baskerville, Source_Sans_3, Spectral, Karla, Mulish, Jost, Arvo, Itim, Comfortaa, Outfit, Dancing_Script, Raleway, Comic_Neue } from 'next/font/google';
+
+export const metadata: Metadata = {
+  title: 'EnlacePro - Crea tu página de enlaces profesional | Link in Bio',
+  description: 'La plataforma más fácil para crear tu página de links profesional. Centraliza todos tus enlaces, aumenta conversiones y haz crecer tu negocio. 100% gratis para empezar.',
+  keywords: 'link in bio, página de enlaces, linktree, bio link, enlaces instagram, página web gratis, creadores de contenido',
+  openGraph: {
+    title: 'EnlacePro - Tu enlace, infinitas posibilidades',
+    description: 'Convierte tus seguidores en clientes con una página profesional que centraliza todos tus enlaces, productos y contenido.',
+    images: [
+      {
+        url: 'https://tumbesfc-media.s3.us-east-2.amazonaws.com/meta/enlacepro-og.png',
+        width: 1200,
+        height: 630,
+        alt: 'EnlacePro - Página de enlaces profesional',
+      }
+    ],
+    type: 'website',
+    siteName: 'EnlacePro',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'EnlacePro - Crea tu página de enlaces profesional',
+    description: 'La plataforma más fácil para crear tu página de links profesional. 100% gratis para empezar.',
+    images: ['https://tumbesfc-media.s3.us-east-2.amazonaws.com/meta/enlacepro-twitter.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: 'https://enlacepro.com',
+  },
+};
 
 // Load the most commonly used fonts
 const inter = Inter({ 
@@ -220,7 +254,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     `}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Prueba de Renderizado</title>
       </head>
       <body className={inter.className}>{children}</body>
     </html>
