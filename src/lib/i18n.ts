@@ -562,6 +562,44 @@ export const translations: Record<Language, Translations> = {
       }
     },
     
+    // Dashboard
+    dashboard: {
+      loading: 'Cargando dashboard...',
+      loadingDesc: 'Preparando tu espacio de trabajo',
+      error: 'Error al cargar',
+      retry: 'Reintentar',
+      
+      // Quick Actions
+      quickActions: 'Acciones Rápidas',
+      viewPage: 'Ver mi página',
+      sharePage: 'Compartir página',
+      logout: 'Cerrar sesión',
+      
+      // Header Stats
+      links: 'Enlaces',
+      socials: 'Sociales',
+      online: 'En línea',
+      preview: 'Vista Previa',
+      share: 'Compartir',
+      
+      // Tab Titles and Descriptions
+      profileTitle: 'Mi Perfil',
+      profileDesc: 'Administra tu información personal y enlaces',
+      designTitle: 'Diseño',
+      designDesc: 'Personaliza la apariencia de tu página',
+      statsTitle: 'Estadísticas',
+      statsDesc: 'Analiza el rendimiento de tus enlaces',
+      notificationsTitle: 'Notificaciones',
+      notificationsDesc: 'Configura alertas y notificaciones push',
+      settingsTitle: 'Configuración',
+      settingsDesc: 'Ajustes de cuenta y preferencias',
+      
+      // Live Preview
+      livePreview: 'Vista Previa en Vivo',
+      lastUpdated: 'Actualizado',
+      justNow: 'Ahora mismo'
+    },
+    
     // Header
     header: {
       home: 'Inicio',
@@ -2003,6 +2041,44 @@ export const translations: Record<Language, Translations> = {
         achievement2: '🎨 Custom design',
         achievement3: '🔗 Links configured'
       }
+    },
+    
+    // Dashboard
+    dashboard: {
+      loading: 'Loading dashboard...',
+      loadingDesc: 'Preparing your workspace',
+      error: 'Loading error',
+      retry: 'Retry',
+      
+      // Quick Actions
+      quickActions: 'Quick Actions',
+      viewPage: 'View my page',
+      sharePage: 'Share page',
+      logout: 'Logout',
+      
+      // Header Stats
+      links: 'Links',
+      socials: 'Socials',
+      online: 'Online',
+      preview: 'Preview',
+      share: 'Share',
+      
+      // Tab Titles and Descriptions
+      profileTitle: 'My Profile',
+      profileDesc: 'Manage your personal information and links',
+      designTitle: 'Design',
+      designDesc: 'Customize your page appearance',
+      statsTitle: 'Analytics',
+      statsDesc: 'Analyze your links performance',
+      notificationsTitle: 'Notifications',
+      notificationsDesc: 'Configure alerts and push notifications',
+      settingsTitle: 'Settings',
+      settingsDesc: 'Account settings and preferences',
+      
+      // Live Preview
+      livePreview: 'Live Preview',
+      lastUpdated: 'Updated',
+      justNow: 'Just now'
     },
     
     // Header

@@ -6,7 +6,35 @@ import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { debounce } from 'lodash';
-import { Menu, X, User, Palette, BarChart2, Settings as SettingsIcon, Save, Share2, Flame, Bell } from 'lucide-react';
+import { 
+  Menu, 
+  X, 
+  User, 
+  Palette, 
+  BarChart2, 
+  Settings as SettingsIcon, 
+  Save, 
+  Share2, 
+  Flame, 
+  Bell,
+  Home,
+  Eye,
+  ExternalLink,
+  Copy,
+  Edit3,
+  Plus,
+  Trash2,
+  Upload,
+  Camera,
+  LogOut,
+  ChevronDown,
+  Star,
+  TrendingUp,
+  Users as UsersIcon,
+  Link as LinkIcon,
+  Smartphone,
+  Globe
+} from 'lucide-react';
 
 import LivePreview from '../components/LivePreview';
 import DesignCustomizer from '../components/DesignCustomizer';
@@ -774,8 +802,37 @@ export default function DashboardPage() {
     }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p>Loading dashboard...</p></div>;
-  if (error) return <div className="min-h-screen flex items-center justify-center bg-gray-100"><p className="text-red-500">Error: {error}</p></div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('dashboard.loading')}</h2>
+          <p className="text-gray-600">{t('dashboard.loadingDesc')}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-50 to-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white p-8 rounded-2xl shadow-xl max-w-md">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <X className="w-8 h-8 text-red-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">{t('dashboard.error')}</h2>
+          <p className="text-red-600 mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            {t('dashboard.retry')}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -975,101 +1032,274 @@ export default function DashboardPage() {
     }
   };
 
-  const NavLink = ({ tabId, children, icon: Icon }: { tabId: string, children: React.ReactNode, icon: React.ElementType }) => (
+  const NavLink = ({ tabId, children, icon: Icon, badge }: { tabId: string, children: React.ReactNode, icon: React.ElementType, badge?: number }) => (
     <li>
       <button
         onClick={() => {
           setActiveTab(tabId);
           if (isSidebarOpen) setIsSidebarOpen(false);
         }}
-        className={`flex items-center w-full text-left py-3 px-4 rounded-lg transition-colors duration-200 ${activeTab === tabId ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+        className={`flex items-center justify-between w-full text-left py-3 px-4 rounded-xl transition-all duration-200 group ${
+          activeTab === tabId 
+            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg transform scale-105' 
+            : 'text-gray-300 hover:bg-gray-700 hover:text-white hover:scale-102'
+        }`}
       >
-        <Icon className="mr-3" size={20} />
-        {children}
+        <div className="flex items-center">
+          <Icon className="mr-3" size={20} />
+          {children}
+        </div>
+        {badge && badge > 0 && (
+          <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {badge > 99 ? '99+' : badge}
+          </span>
+        )}
       </button>
     </li>
   );
 
   return (
-    <div className="flex h-screen bg-gray-50 font-sans">
+    <div className="flex h-screen bg-gradient-to-br from-gray-50 to-blue-50 font-sans">
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white p-4 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col`}>
-        <div className="flex items-center justify-between mb-8">
-            <h1 className="text-2xl font-bold text-white">TuLink</h1>
-            <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-300 hover:text-white">
-                <X size={24} />
+      <aside className={`fixed inset-y-0 left-0 z-30 w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white transform ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:flex-col shadow-2xl`}>
+        
+        {/* Header */}
+        <div className="p-6 border-b border-gray-700">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <LinkIcon className="w-6 h-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                EnlacePro
+              </h1>
+            </div>
+            <button 
+              onClick={() => setIsSidebarOpen(false)} 
+              className="md:hidden p-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-700 transition-colors"
+            >
+              <X size={20} />
             </button>
+          </div>
+          
+          {/* User Profile Summary */}
+          <div className="bg-gray-800/50 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <img
+                  src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-blue-400"
+                />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-gray-800"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-medium truncate">{profileName || 'Tu Nombre'}</p>
+                <p className="text-gray-300 text-sm truncate">{profile?.slug || 'tu-enlace'}</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <nav className="flex-1 space-y-2">
-          <ul>
+        
+        {/* Navigation */}
+        <nav className="flex-1 p-6">
+          <ul className="space-y-2">
             <NavLink tabId="profile" icon={User}>{t('nav.profile')}</NavLink>
             <NavLink tabId="design" icon={Palette}>{t('nav.design')}</NavLink>
             <NavLink tabId="stats" icon={BarChart2}>{t('nav.stats')}</NavLink>
-            <NavLink tabId="notifications" icon={Bell}>{t('nav.notifications')}</NavLink>
+            <NavLink tabId="notifications" icon={Bell} badge={0}>{t('nav.notifications')}</NavLink>
             <NavLink tabId="settings" icon={SettingsIcon}>{t('nav.settings')}</NavLink>
           </ul>
+          
+          {/* Quick Actions */}
+          <div className="mt-8 pt-6 border-t border-gray-700">
+            <h3 className="text-gray-400 text-xs uppercase tracking-wider font-semibold mb-4">
+              {t('dashboard.quickActions')}
+            </h3>
+            <div className="space-y-2">
+              <button
+                onClick={() => setIsShareModalOpen(true)}
+                className="flex items-center w-full text-left py-2 px-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors text-sm"
+              >
+                <ExternalLink className="mr-3" size={16} />
+                {t('dashboard.viewPage')}
+              </button>
+              <button
+                onClick={() => setIsShareModalOpen(true)}
+                className="flex items-center w-full text-left py-2 px-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors text-sm"
+              >
+                <Share2 className="mr-3" size={16} />
+                {t('dashboard.sharePage')}
+              </button>
+            </div>
+          </div>
         </nav>
         
-        {/* Language Selector for Desktop */}
-        <div className="hidden md:block p-4 border-t border-gray-700">
-          <LanguageSelector />
+        {/* Footer */}
+        <div className="p-6 border-t border-gray-700">
+          <div className="hidden md:block mb-4">
+            <LanguageSelector />
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center w-full text-left py-2 px-3 rounded-lg text-red-300 hover:bg-red-600/20 hover:text-red-200 transition-colors text-sm"
+          >
+            <LogOut className="mr-3" size={16} />
+            {t('dashboard.logout')}
+          </button>
         </div>
       </aside>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm p-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold md:hidden">{t(`nav.${activeTab}`)}</h1>
-          <div className="flex items-center space-x-4">
-            <LanguageSelector compact />
-            <button onClick={() => setIsSidebarOpen(true)} className="text-gray-600 hover:text-gray-800 md:hidden">
-              <Menu size={24} />
-            </button>
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 md:p-6">
+            <div className="flex items-center space-x-4">
+              <button 
+                onClick={() => setIsSidebarOpen(true)} 
+                className="p-2 rounded-lg text-gray-600 hover:text-gray-800 hover:bg-gray-100 md:hidden transition-colors"
+              >
+                <Menu size={20} />
+              </button>
+              <div>
+                <h1 className="text-xl md:text-2xl font-bold text-gray-900">
+                  {t(`dashboard.${activeTab}Title`)}
+                </h1>
+                <p className="text-gray-600 text-sm hidden md:block">
+                  {t(`dashboard.${activeTab}Desc`)}
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              {/* Quick Stats */}
+              <div className="hidden lg:flex items-center space-x-6 text-sm">
+                <div className="text-center">
+                  <div className="text-lg font-bold text-gray-900">{links.length}</div>
+                  <div className="text-gray-600">{t('dashboard.links')}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-gray-900">{socialIcons.length}</div>
+                  <div className="text-gray-600">{t('dashboard.socials')}</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-lg font-bold text-green-600">●</div>
+                  <div className="text-gray-600">{t('dashboard.online')}</div>
+                </div>
+              </div>
+              
+              {/* Actions */}
+              <div className="flex items-center space-x-2">
+                <LanguageSelector compact />
+                
+                <button
+                  onClick={() => window.open(`/${profile?.slug}`, '_blank')}
+                  className="inline-flex items-center px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium"
+                >
+                  <Eye className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline">{t('dashboard.preview')}</span>
+                </button>
+                
+                <button
+                  onClick={() => setIsShareModalOpen(true)}
+                  className="inline-flex items-center px-3 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 hover:scale-105 shadow-lg text-sm font-medium"
+                >
+                  <Share2 className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline">{t('dashboard.share')}</span>
+                </button>
+              </div>
+            </div>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="flex flex-col lg:flex-row gap-8">
-            <div className="w-full lg:w-2/3 bg-white p-6 rounded-xl shadow-md text-gray-900">
-              {renderContent()}
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">
+          <div className="flex flex-col xl:flex-row gap-6">
+            {/* Main Content Area */}
+            <div className="flex-1">
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="p-6 md:p-8">
+                  {renderContent()}
+                </div>
+              </div>
             </div>
             
-            <div className="hidden lg:block w-full lg:w-1/3">
-              <div className="sticky top-8">
-                <h2 className="text-xl font-semibold mb-4 text-center text-gray-700">Vista Previa</h2>
-                <LivePreview
-                  profileData={{
-                    name: profileName,
-                    bio: profileBio,
-                    avatar: profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '',
-                    cover_image: profile?.cover_image || '',
-                    slug: profile?.slug || 'preview',
-                    links: links,
-                    social_icons: socialIcons,
-                    theme: theme,
-                    custom_gradient_start: customGradientStart,
-                    custom_gradient_end: customGradientEnd,
-                    background_image: backgroundPreference === 'image' ? (backgroundImage || profile?.background_image) : undefined,
-                    background_preference: backgroundPreference,
-                    image_overlay: imageOverlay,
-                    button_style: buttonStyle,
-                    button_color: buttonColor,
-                    button_text_color: buttonTextColor,
-                    button_text_opacity: buttonTextColorOpacity,
-                    button_background_opacity: buttonBackgroundOpacity,
-                    button_border_color: buttonBorderColor,
-                    button_border_opacity: buttonBorderOpacity,
-                    button_shadow_color: buttonShadowColor,
-                    button_shadow_opacity: buttonShadowOpacity,
-                    font_family: fontFamily,
-                  } as import('@/app/utils/styleUtils').ProfileData}
-                />
+            {/* Live Preview Sidebar */}
+            <div className="hidden xl:block w-80">
+              <div className="sticky top-6">
+                <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+                    <div className="flex items-center justify-between text-white">
+                      <div className="flex items-center space-x-2">
+                        <Smartphone className="w-5 h-5" />
+                        <h2 className="font-semibold">{t('dashboard.livePreview')}</h2>
+                      </div>
+                      <button
+                        onClick={() => window.open(`/${profile?.slug}`, '_blank')}
+                        className="p-2 rounded-lg bg-white/20 hover:bg-white/30 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 bg-gray-50">
+                    <div className="transform scale-90 origin-top">
+                      <LivePreview
+                        profileData={{
+                          name: profileName,
+                          bio: profileBio,
+                          avatar: profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '',
+                          cover_image: profile?.cover_image || '',
+                          slug: profile?.slug || 'preview',
+                          links: links,
+                          social_icons: socialIcons,
+                          theme: theme,
+                          custom_gradient_start: customGradientStart,
+                          custom_gradient_end: customGradientEnd,
+                          background_image: backgroundPreference === 'image' ? (backgroundImage || profile?.background_image) : undefined,
+                          background_preference: backgroundPreference,
+                          image_overlay: imageOverlay,
+                          button_style: buttonStyle,
+                          button_color: buttonColor,
+                          button_text_color: buttonTextColor,
+                          button_text_opacity: buttonTextColorOpacity,
+                          button_background_opacity: buttonBackgroundOpacity,
+                          button_border_color: buttonBorderColor,
+                          button_border_opacity: buttonBorderOpacity,
+                          button_shadow_color: buttonShadowColor,
+                          button_shadow_opacity: buttonShadowOpacity,
+                          font_family: fontFamily,
+                        } as import('@/app/utils/styleUtils').ProfileData}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="p-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">{t('dashboard.lastUpdated')}</span>
+                      <span className="text-gray-900 font-medium">{t('dashboard.justNow')}</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </main>
       </div>
+      
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 z-20 bg-black bg-opacity-50 md:hidden" 
+          onClick={() => setIsSidebarOpen(false)}
+        ></div>
+      )}
 
+      {/* Modals */}
       <LinkTypeSelectionModal isOpen={isLinkTypeModalOpen} onClose={() => setIsLinkTypeModalOpen(false)} onSelectType={handleLinkAdd} />
       {profile?.slug && <ShareLinkModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} currentSlug={profile.slug} onUpdateSlug={handleUpdateSlug} />}
       <CoverImageModal 
