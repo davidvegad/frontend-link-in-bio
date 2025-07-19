@@ -208,63 +208,357 @@ export const translations: Record<Language, Translations> = {
     // Welcome Flow
     welcome: {
       category: {
-        title: '¿Qué tipo de perfil quieres crear?',
-        subtitle: 'Elige la opción que mejor describa tu objetivo',
-        personal: 'Personal',
-        business: 'Negocio',
-        creator: 'Creador',
-        influencer: 'Influencer',
+        title: 'Construyamos tu página perfecta',
+        subtitle: 'Vamos a personalizar tu experiencia en base a tu perfil y objetivos para crear la página ideal para ti',
+        welcomeBadge: '¡Empecemos!',
+        step: 'Paso',
+        of: 'de',
+        profileQuestion: '¿Qué tipo de perfil quieres crear?',
+        profileSubtitle: 'Elige la opción que mejor describa quién eres',
+        purposeQuestion: '¿Para qué usarás tu página?',
+        purposeSubtitle: 'Selecciona tu objetivo principal',
+        back: 'Volver',
+        continue: 'Continuar',
+        whatYouGet: '¿Qué obtienes con tu página?',
+        feature1Title: 'Diseño Personalizado',
+        feature1Desc: 'Temas y estilos adaptados a tu tipo de perfil',
+        feature2Title: 'Enlaces Optimizados',
+        feature2Desc: 'Sugerencias inteligentes para maximizar conversiones',
+        feature3Title: 'Analytics Detallados',
+        feature3Desc: 'Métricas específicas para tu industria',
+        
+        // Profile types
+        creator: 'Creador de Contenido',
+        creatorDesc: 'Para YouTubers, TikTokers, Instagramers y otros creadores',
         artist: 'Artista',
-        professional: 'Profesional'
+        artistDesc: 'Para músicos, diseñadores, fotógrafos y artistas visuales',
+        business: 'Negocio',
+        businessDesc: 'Para empresas, startups y servicios profesionales',
+        individual: 'Profesional',
+        individualDesc: 'Para perfiles personales y profesionales independientes'
+      },
+      
+      purpose: {
+        // Creator purposes
+        promoteContent: 'Promocionar mi contenido',
+        promoteContentDesc: 'Dirigir tráfico a videos, posts y proyectos creativos',
+        growAudience: 'Hacer crecer mi audiencia',
+        growAudienceDesc: 'Conectar con nuevos seguidores en todas las plataformas',
+        monetize: 'Monetizar mis creaciones',
+        monetizeDesc: 'Generar ingresos con patrocinios, ventas y membresías',
+        
+        // Artist purposes
+        showcasePortfolio: 'Mostrar mi portafolio',
+        showcasePortfolioDesc: 'Exhibir mi trabajo y proyectos artísticos',
+        sellArt: 'Vender mi arte',
+        sellArtDesc: 'Comercializar obras, prints y servicios creativos',
+        connectFans: 'Conectar con mis fans',
+        connectFansDesc: 'Crear una comunidad alrededor de mi arte',
+        
+        // Business purposes
+        generateLeads: 'Generar leads',
+        generateLeadsDesc: 'Capturar contactos potenciales y clientes',
+        driveSales: 'Impulsar ventas',
+        driveSalesDesc: 'Dirigir tráfico a productos y servicios',
+        customerSupport: 'Ofrecer soporte',
+        customerSupportDesc: 'Centralizar recursos y contacto para clientes',
+        
+        // Individual purposes
+        professionalProfile: 'Perfil profesional',
+        professionalProfileDesc: 'Crear presencia digital para networking y oportunidades',
+        personalHobbies: 'Hobbies y proyectos',
+        personalHobbiesDesc: 'Compartir intereses personales y side projects',
+        socialLinks: 'Consolidar mis redes',
+        socialLinksDesc: 'Unificar todas mis redes sociales en un solo lugar'
       },
       style: {
-        title: 'Elige tu estilo',
-        subtitle: 'Selecciona el diseño que más te guste',
-        minimal: 'Minimalista',
-        modern: 'Moderno',
-        colorful: 'Colorido',
-        elegant: 'Elegante',
-        bold: 'Audaz',
-        creative: 'Creativo'
+        title: 'Elige tu estilo perfecto',
+        subtitle: 'Selecciona el diseño que mejor represente tu personalidad y objetivos',
+        back: 'Volver',
+        step: 'Paso',
+        of: 'de',
+        progress: 'Progreso',
+        continue: 'Continuar',
+        whyMatters: '¿Por qué importa el estilo?',
+        whyMattersDesc: 'El estilo de tu página influye en cómo te perciben tus visitantes y puede impactar directamente en tus conversiones',
+        
+        // Style options
+        minimalist: 'Minimalista',
+        minimalistDesc: 'Diseño limpio y profesional, perfecto para negocios',
+        minimalistFeature1: 'Diseño limpio y enfocado',
+        minimalistFeature2: 'Carga rápida',
+        minimalistFeature3: 'Profesional y elegante',
+        
+        featuredImage: 'Imagen Destacada',
+        featuredImageDesc: 'Tu foto de perfil es el protagonista principal',
+        featuredFeature1: 'Imagen de perfil grande',
+        featuredFeature2: 'Ideal para influencers',
+        featuredFeature3: 'Conexión personal',
+        
+        fullBackground: 'Fondo Completo',
+        fullBackgroundDesc: 'Imagen de fondo que abarca toda la pantalla',
+        fullBgFeature1: 'Fondo visual impactante',
+        fullBgFeature2: 'Experiencia inmersiva',
+        fullBgFeature3: 'Perfecto para artistas',
+        
+        creative: 'Creativo',
+        creativeDesc: 'Diseño único con elementos dinámicos y creativos',
+        creativeFeature1: 'Animaciones suaves',
+        creativeFeature2: 'Elementos interactivos',
+        creativeFeature3: 'Destacas del resto',
+        
+        // Benefits
+        benefit1Title: 'Primera Impresión',
+        benefit1Desc: 'Tu estilo determina la primera impresión que causas en tus visitantes',
+        benefit2Title: 'Engagement',
+        benefit2Desc: 'Un buen diseño aumenta el tiempo que pasan en tu página',
+        benefit3Title: 'Conversiones',
+        benefit3Desc: 'El estilo correcto puede aumentar tus clicks hasta un 40%'
       },
       info: {
         title: 'Cuéntanos sobre ti',
-        subtitle: 'Esta información aparecerá en tu perfil',
-        fullName: 'Nombre Completo',
-        bio: 'Biografía',
-        location: 'Ubicación',
-        website: 'Sitio Web'
+        subtitle: 'Esta información será visible en tu página y ayudará a tus visitantes a conocerte mejor',
+        back: 'Volver',
+        step: 'Paso',
+        of: 'de',
+        progress: 'Progreso',
+        continue: 'Continuar',
+        
+        avatarTitle: 'Foto de perfil',
+        uploadPhoto: 'Subir foto',
+        changePhoto: 'Cambiar foto',
+        photoHint: 'JPG, PNG o GIF. Máximo 5MB. Recomendado: 400x400px',
+        
+        nameLabel: 'Tu nombre',
+        namePlaceholder: 'Ej: Ana García o Mi Marca',
+        bioLabel: 'Biografía',
+        bioPlaceholder: 'Cuéntanos brevemente sobre ti, tu profesión o lo que haces...',
+        bioHint: 'Una buena biografía ayuda a conectar con tu audiencia',
+        
+        preview: 'Vista previa',
+        tipsTitle: 'Consejos para destacar',
+        
+        tip1Title: 'Sé auténtico',
+        tip1Desc: 'Usa tu nombre real o marca conocida. La autenticidad genera confianza.',
+        tip2Title: 'Bio efectiva',
+        tip2Desc: 'Menciona qué haces, para quién y qué valor aportas en pocas palabras.',
+        tip3Title: 'Foto profesional',
+        tip3Desc: 'Una buena foto de perfil puede aumentar tus conversiones hasta un 40%.',
+        
+        validation: {
+          nameRequired: 'El nombre es obligatorio',
+          nameTooShort: 'El nombre debe tener al menos 2 caracteres',
+          nameTooLong: 'El nombre no puede tener más de 50 caracteres',
+          bioRequired: 'La biografía es obligatoria',
+          bioTooShort: 'La biografía debe tener al menos 10 caracteres',
+          bioTooLong: 'La biografía no puede tener más de 160 caracteres',
+          avatarTooLarge: 'La imagen es muy grande. Máximo 5MB',
+          avatarInvalidType: 'Formato no válido. Usa JPG, PNG o GIF',
+          avatarUploadError: 'Error al subir la imagen. Inténtalo de nuevo'
+        }
       },
       theme: {
-        title: 'Personaliza tu tema',
-        subtitle: 'Ajusta los colores y el diseño',
-        selectTheme: 'Seleccionar Tema',
-        customize: 'Personalizar',
-        preview: 'Vista Previa'
+        title: 'Personaliza tu apariencia',
+        subtitle: 'Elige los colores y diseño que mejor representen tu estilo personal o marca',
+        back: 'Volver',
+        step: 'Paso',
+        of: 'de',
+        progress: 'Progreso',
+        continue: 'Continuar',
+        livePreview: 'Vista previa',
+        
+        // Tabs
+        themesTab: 'Temas y Colores',
+        uploadTab: 'Subir Imagen',
+        
+        // Predefined themes
+        predefinedTitle: 'Temas Prediseñados',
+        predefinedDesc: 'Elige entre nuestros temas cuidadosamente diseñados para diferentes estilos y profesiones',
+        
+        // Custom gradient
+        customTitle: 'Crea tu Degradado',
+        customDesc: 'Diseña un degradado único combinando dos colores de tu elección',
+        colorStart: 'Color de inicio',
+        colorEnd: 'Color final',
+        copied: '¡Copiado al portapapeles!',
+        
+        // Background image
+        backgroundTitle: 'Imagen de Fondo',
+        backgroundDesc: 'Sube una imagen personalizada que servirá como fondo de tu página',
+        uploadImage: 'Subir imagen',
+        changeImage: 'Cambiar imagen',
+        imageSelected: 'Imagen seleccionada',
+        remove: 'Quitar',
+        imageHint: 'JPG, PNG o GIF. Máximo 10MB. Recomendado: 1080x1920px',
+        
+        // Tips
+        tipsTitle: 'Consejos de diseño',
+        tip1Title: 'Contraste es clave',
+        tip1Desc: 'Asegúrate de que el texto sea fácil de leer sobre tu fondo elegido',
+        tip2Title: 'Consistencia visual',
+        tip2Desc: 'Los colores deben alinearse con tu marca o personalidad',
+        tip3Title: 'Menos es más',
+        tip3Desc: 'Un diseño simple y elegante suele ser más efectivo que uno complejo',
+        
+        validation: {
+          imageTooLarge: 'La imagen es muy grande. Máximo 10MB',
+          imageInvalidType: 'Formato no válido. Usa JPG, PNG o GIF',
+          imageUploadError: 'Error al subir la imagen. Inténtalo de nuevo'
+        }
       },
       buttons: {
-        title: 'Configura tus botones',
-        subtitle: 'Elige el estilo de tus botones',
-        style: 'Estilo',
+        title: 'Personaliza tus botones',
+        subtitle: 'Define el estilo y apariencia de los enlaces que aparecerán en tu página',
+        back: 'Volver',
+        step: 'Paso',
+        of: 'de',
+        progress: 'Progreso',
+        continue: 'Continuar',
+        livePreview: 'Vista previa',
+        
+        // Tabs
+        quickTab: 'Configuración Rápida',
+        advancedTab: 'Opciones Avanzadas',
+        
+        // Quick Setup
+        styleTitle: 'Estilo de Botón',
+        styleDesc: 'Elige la forma que mejor se adapte a tu diseño',
+        colorsTitle: 'Colores',
+        colorsDesc: 'Selecciona los colores que representen tu marca o estilo',
+        previewTitle: 'Vista Previa',
+        suggestedColors: 'Colores Sugeridos',
+        themeColors: 'Colores del Tema',
+        exampleButton: 'Botón de Ejemplo',
+        
+        // Button Styles
+        styles: {
+          rounded: 'Redondeado',
+          roundedDesc: 'Esquinas completamente redondeadas, estilo moderno',
+          semiRounded: 'Semi-redondeado',
+          semiRoundedDesc: 'Esquinas ligeramente redondeadas, equilibrado',
+          square: 'Cuadrado',
+          squareDesc: 'Esquinas rectas, estilo clásico y profesional'
+        },
+        
+        // Advanced Options
+        advancedTitle: 'Personalización Avanzada',
+        advancedDesc: 'Ajusta cada detalle para crear botones únicos',
+        colorsAndAppearance: 'Colores y Apariencia',
+        shapeAndStyle: 'Forma y Estilo',
+        
+        // Color controls
+        background: 'Fondo',
+        text: 'Texto',
+        border: 'Borde',
+        shadow: 'Sombra',
         color: 'Color',
-        shape: 'Forma',
-        size: 'Tamaño'
+        opacity: 'Opacidad',
+        
+        // Tips
+        tipsTitle: 'Consejos para botones efectivos',
+        tip1Title: 'Contraste claro',
+        tip1Desc: 'Asegúrate de que el texto sea fácil de leer sobre el fondo del botón',
+        tip2Title: 'Tamaño apropiado',
+        tip2Desc: 'Los botones deben ser lo suficientemente grandes para hacer clic fácilmente',
+        tip3Title: 'Consistencia visual',
+        tip3Desc: 'Mantén el mismo estilo para todos los botones en tu página'
       },
       links: {
         title: 'Añade tus enlaces',
-        subtitle: 'Conecta con tu audiencia',
+        subtitle: 'Conecta todas tus redes sociales y sitios importantes en un solo lugar',
+        back: 'Volver',
+        step: 'Paso',
+        of: 'de',
+        progress: 'Progreso',
+        continue: 'Continuar',
+        livePreview: 'Vista previa',
+        
+        // Tabs
+        socialTab: 'Redes Sociales',
+        customTab: 'Enlaces Personalizados',
+        
+        // Social Links
+        socialTitle: 'Redes Sociales',
+        socialDesc: 'Conecta tus perfiles de redes sociales para que tus visitantes puedan seguirte',
+        connected: 'Conectado',
+        
+        // Social Platform placeholders
+        instagram: {
+          placeholder: 'Tu usuario de Instagram'
+        },
+        tiktok: {
+          placeholder: 'Tu usuario de TikTok'
+        },
+        whatsapp: {
+          placeholder: 'Tu número de WhatsApp'
+        },
+        youtube: {
+          placeholder: 'URL de tu canal de YouTube'
+        },
+        twitter: {
+          placeholder: 'Tu usuario de X'
+        },
+        facebook: {
+          placeholder: 'URL de tu perfil de Facebook'
+        },
+        
+        // Custom Links
+        customTitle: 'Enlaces Personalizados',
+        customDesc: 'Añade enlaces a tu sitio web, tienda online, blog o cualquier otro sitio importante',
         addLink: 'Añadir Enlace',
-        linkTitle: 'Título del Enlace',
-        linkUrl: 'URL del Enlace',
-        socialMedia: 'Redes Sociales'
+        addFirstLink: 'Añadir mi primer enlace',
+        noCustomLinks: 'Sin enlaces personalizados',
+        noCustomLinksDesc: 'Añade enlaces a tu sitio web, portafolio, tienda online o cualquier sitio importante',
+        titlePlaceholder: 'Título del enlace',
+        urlPlaceholder: 'https://ejemplo.com',
+        
+        // Tips
+        tipsTitle: 'Consejos para enlaces efectivos',
+        tip1Title: 'Prioritiza lo importante',
+        tip1Desc: 'Coloca los enlaces más importantes al principio para mayor visibilidad',
+        tip2Title: 'Títulos claros',
+        tip2Desc: 'Usa títulos descriptivos que expliquen claramente a dónde lleva cada enlace',
+        tip3Title: 'Mantén actualizado',
+        tip3Desc: 'Revisa regularmente que todos tus enlaces funcionen correctamente'
       },
       publish: {
         title: '¡Todo listo!',
-        subtitle: 'Tu perfil está configurado y listo para compartir',
-        yourUrl: 'Tu URL',
-        share: 'Compartir',
-        copyLink: 'Copiar Enlace',
-        viewProfile: 'Ver Perfil'
+        subtitle: 'Tu página ya está publicada y lista para ser compartida con el mundo',
+        back: 'Volver',
+        completed: '¡Completado!',
+        progress: 'Progreso',
+        finalPreview: 'Vista previa final',
+        
+        // Loading state
+        publishing: 'Publicando tu página...',
+        publishingDesc: 'Estamos preparando todo para ti, solo un momento más',
+        
+        // URL section
+        yourUrl: 'Tu URL Pública',
+        copy: 'Copiar',
+        copied: '¡Copiado!',
+        view: 'Ver',
+        urlHint: 'Esta es la dirección que puedes compartir con tus seguidores',
+        
+        // Share section
+        shareTitle: 'Comparte tu página',
+        shareButton: 'Compartir ahora',
+        shareText: 'Mira mi nueva página de enlaces',
+        dashboard: 'Ir al Dashboard',
+        
+        // What's next
+        whatsNext: '¿Qué sigue?',
+        feature1: 'Analytics',
+        feature2: 'Engagement',
+        feature3: 'Personalización',
+        feature4: 'Móvil Ready',
+        
+        // Congratulations
+        congratulations: '¡Felicitaciones! 🎉',
+        congratulationsDesc: 'Has creado exitosamente tu página de enlaces profesional. Ahora puedes comenzar a compartirla y hacer crecer tu audiencia.',
+        achievement1: '✅ Página creada',
+        achievement2: '🎨 Diseño personalizado',
+        achievement3: '🔗 Enlaces configurados'
       }
     },
     
@@ -1357,63 +1651,357 @@ export const translations: Record<Language, Translations> = {
     // Welcome Flow
     welcome: {
       category: {
-        title: 'What type of profile do you want to create?',
-        subtitle: 'Choose the option that best describes your goal',
-        personal: 'Personal',
-        business: 'Business',
-        creator: 'Creator',
-        influencer: 'Influencer',
+        title: 'Let\'s build your perfect page',
+        subtitle: 'We\'ll customize your experience based on your profile and goals to create the ideal page for you',
+        welcomeBadge: 'Let\'s start!',
+        step: 'Step',
+        of: 'of',
+        profileQuestion: 'What type of profile do you want to create?',
+        profileSubtitle: 'Choose the option that best describes who you are',
+        purposeQuestion: 'What will you use your page for?',
+        purposeSubtitle: 'Select your main objective',
+        back: 'Back',
+        continue: 'Continue',
+        whatYouGet: 'What do you get with your page?',
+        feature1Title: 'Custom Design',
+        feature1Desc: 'Themes and styles adapted to your profile type',
+        feature2Title: 'Optimized Links',
+        feature2Desc: 'Smart suggestions to maximize conversions',
+        feature3Title: 'Detailed Analytics',
+        feature3Desc: 'Industry-specific metrics',
+        
+        // Profile types
+        creator: 'Content Creator',
+        creatorDesc: 'For YouTubers, TikTokers, Instagramers and other creators',
         artist: 'Artist',
-        professional: 'Professional'
+        artistDesc: 'For musicians, designers, photographers and visual artists',
+        business: 'Business',
+        businessDesc: 'For companies, startups and professional services',
+        individual: 'Professional',
+        individualDesc: 'For personal profiles and independent professionals'
+      },
+      
+      purpose: {
+        // Creator purposes
+        promoteContent: 'Promote my content',
+        promoteContentDesc: 'Drive traffic to videos, posts and creative projects',
+        growAudience: 'Grow my audience',
+        growAudienceDesc: 'Connect with new followers across all platforms',
+        monetize: 'Monetize my creations',
+        monetizeDesc: 'Generate income with sponsorships, sales and memberships',
+        
+        // Artist purposes
+        showcasePortfolio: 'Showcase my portfolio',
+        showcasePortfolioDesc: 'Display my work and artistic projects',
+        sellArt: 'Sell my art',
+        sellArtDesc: 'Commercialize works, prints and creative services',
+        connectFans: 'Connect with my fans',
+        connectFansDesc: 'Create a community around my art',
+        
+        // Business purposes
+        generateLeads: 'Generate leads',
+        generateLeadsDesc: 'Capture potential contacts and customers',
+        driveSales: 'Drive sales',
+        driveSalesDesc: 'Direct traffic to products and services',
+        customerSupport: 'Offer support',
+        customerSupportDesc: 'Centralize resources and contact for customers',
+        
+        // Individual purposes
+        professionalProfile: 'Professional profile',
+        professionalProfileDesc: 'Create digital presence for networking and opportunities',
+        personalHobbies: 'Hobbies and projects',
+        personalHobbiesDesc: 'Share personal interests and side projects',
+        socialLinks: 'Consolidate my networks',
+        socialLinksDesc: 'Unify all my social networks in one place'
       },
       style: {
-        title: 'Choose your style',
-        subtitle: 'Select the design you like the most',
-        minimal: 'Minimal',
-        modern: 'Modern',
-        colorful: 'Colorful',
-        elegant: 'Elegant',
-        bold: 'Bold',
-        creative: 'Creative'
+        title: 'Choose your perfect style',
+        subtitle: 'Select the design that best represents your personality and goals',
+        back: 'Back',
+        step: 'Step',
+        of: 'of',
+        progress: 'Progress',
+        continue: 'Continue',
+        whyMatters: 'Why does style matter?',
+        whyMattersDesc: 'Your page style influences how visitors perceive you and can directly impact your conversions',
+        
+        // Style options
+        minimalist: 'Minimalist',
+        minimalistDesc: 'Clean and professional design, perfect for business',
+        minimalistFeature1: 'Clean and focused design',
+        minimalistFeature2: 'Fast loading',
+        minimalistFeature3: 'Professional and elegant',
+        
+        featuredImage: 'Featured Image',
+        featuredImageDesc: 'Your profile photo is the main protagonist',
+        featuredFeature1: 'Large profile image',
+        featuredFeature2: 'Ideal for influencers',
+        featuredFeature3: 'Personal connection',
+        
+        fullBackground: 'Full Background',
+        fullBackgroundDesc: 'Background image that spans the entire screen',
+        fullBgFeature1: 'Impactful visual background',
+        fullBgFeature2: 'Immersive experience',
+        fullBgFeature3: 'Perfect for artists',
+        
+        creative: 'Creative',
+        creativeDesc: 'Unique design with dynamic and creative elements',
+        creativeFeature1: 'Smooth animations',
+        creativeFeature2: 'Interactive elements',
+        creativeFeature3: 'Stand out from the rest',
+        
+        // Benefits
+        benefit1Title: 'First Impression',
+        benefit1Desc: 'Your style determines the first impression you make on visitors',
+        benefit2Title: 'Engagement',
+        benefit2Desc: 'Good design increases the time visitors spend on your page',
+        benefit3Title: 'Conversions',
+        benefit3Desc: 'The right style can increase your clicks by up to 40%'
       },
       info: {
         title: 'Tell us about yourself',
-        subtitle: 'This information will appear on your profile',
-        fullName: 'Full Name',
-        bio: 'Bio',
-        location: 'Location',
-        website: 'Website'
+        subtitle: 'This information will be visible on your page and help visitors get to know you better',
+        back: 'Back',
+        step: 'Step',
+        of: 'of',
+        progress: 'Progress',
+        continue: 'Continue',
+        
+        avatarTitle: 'Profile photo',
+        uploadPhoto: 'Upload photo',
+        changePhoto: 'Change photo',
+        photoHint: 'JPG, PNG or GIF. Max 5MB. Recommended: 400x400px',
+        
+        nameLabel: 'Your name',
+        namePlaceholder: 'Ex: John Smith or My Brand',
+        bioLabel: 'Biography',
+        bioPlaceholder: 'Tell us briefly about yourself, your profession or what you do...',
+        bioHint: 'A good biography helps connect with your audience',
+        
+        preview: 'Preview',
+        tipsTitle: 'Tips to stand out',
+        
+        tip1Title: 'Be authentic',
+        tip1Desc: 'Use your real name or known brand. Authenticity builds trust.',
+        tip2Title: 'Effective bio',
+        tip2Desc: 'Mention what you do, for whom, and what value you provide in few words.',
+        tip3Title: 'Professional photo',
+        tip3Desc: 'A good profile photo can increase your conversions by up to 40%.',
+        
+        validation: {
+          nameRequired: 'Name is required',
+          nameTooShort: 'Name must be at least 2 characters',
+          nameTooLong: 'Name cannot be more than 50 characters',
+          bioRequired: 'Biography is required',
+          bioTooShort: 'Biography must be at least 10 characters',
+          bioTooLong: 'Biography cannot be more than 160 characters',
+          avatarTooLarge: 'Image is too large. Maximum 5MB',
+          avatarInvalidType: 'Invalid format. Use JPG, PNG or GIF',
+          avatarUploadError: 'Error uploading image. Please try again'
+        }
       },
       theme: {
-        title: 'Customize your theme',
-        subtitle: 'Adjust colors and design',
-        selectTheme: 'Select Theme',
-        customize: 'Customize',
-        preview: 'Preview'
+        title: 'Customize your appearance',
+        subtitle: 'Choose colors and design that best represent your personal style or brand',
+        back: 'Back',
+        step: 'Step',
+        of: 'of',
+        progress: 'Progress',
+        continue: 'Continue',
+        livePreview: 'Live preview',
+        
+        // Tabs
+        themesTab: 'Themes & Colors',
+        uploadTab: 'Upload Image',
+        
+        // Predefined themes
+        predefinedTitle: 'Predefined Themes',
+        predefinedDesc: 'Choose from our carefully designed themes for different styles and professions',
+        
+        // Custom gradient
+        customTitle: 'Create your Gradient',
+        customDesc: 'Design a unique gradient by combining two colors of your choice',
+        colorStart: 'Start color',
+        colorEnd: 'End color',
+        copied: 'Copied to clipboard!',
+        
+        // Background image
+        backgroundTitle: 'Background Image',
+        backgroundDesc: 'Upload a custom image that will serve as your page background',
+        uploadImage: 'Upload image',
+        changeImage: 'Change image',
+        imageSelected: 'Image selected',
+        remove: 'Remove',
+        imageHint: 'JPG, PNG or GIF. Max 10MB. Recommended: 1080x1920px',
+        
+        // Tips
+        tipsTitle: 'Design tips',
+        tip1Title: 'Contrast is key',
+        tip1Desc: 'Make sure text is easy to read on your chosen background',
+        tip2Title: 'Visual consistency',
+        tip2Desc: 'Colors should align with your brand or personality',
+        tip3Title: 'Less is more',
+        tip3Desc: 'A simple and elegant design is usually more effective than a complex one',
+        
+        validation: {
+          imageTooLarge: 'Image is too large. Maximum 10MB',
+          imageInvalidType: 'Invalid format. Use JPG, PNG or GIF',
+          imageUploadError: 'Error uploading image. Please try again'
+        }
       },
       buttons: {
-        title: 'Configure your buttons',
-        subtitle: 'Choose your button style',
-        style: 'Style',
+        title: 'Customize your buttons',
+        subtitle: 'Define the style and appearance of the links that will appear on your page',
+        back: 'Back',
+        step: 'Step',
+        of: 'of',
+        progress: 'Progress',
+        continue: 'Continue',
+        livePreview: 'Live preview',
+        
+        // Tabs
+        quickTab: 'Quick Setup',
+        advancedTab: 'Advanced Options',
+        
+        // Quick Setup
+        styleTitle: 'Button Style',
+        styleDesc: 'Choose the shape that best fits your design',
+        colorsTitle: 'Colors',
+        colorsDesc: 'Select colors that represent your brand or style',
+        previewTitle: 'Preview',
+        suggestedColors: 'Suggested Colors',
+        themeColors: 'Theme Colors',
+        exampleButton: 'Example Button',
+        
+        // Button Styles
+        styles: {
+          rounded: 'Rounded',
+          roundedDesc: 'Fully rounded corners, modern style',
+          semiRounded: 'Semi-rounded',
+          semiRoundedDesc: 'Slightly rounded corners, balanced',
+          square: 'Square',
+          squareDesc: 'Straight corners, classic and professional style'
+        },
+        
+        // Advanced Options
+        advancedTitle: 'Advanced Customization',
+        advancedDesc: 'Adjust every detail to create unique buttons',
+        colorsAndAppearance: 'Colors and Appearance',
+        shapeAndStyle: 'Shape and Style',
+        
+        // Color controls
+        background: 'Background',
+        text: 'Text',
+        border: 'Border',
+        shadow: 'Shadow',
         color: 'Color',
-        shape: 'Shape',
-        size: 'Size'
+        opacity: 'Opacity',
+        
+        // Tips
+        tipsTitle: 'Tips for effective buttons',
+        tip1Title: 'Clear contrast',
+        tip1Desc: 'Make sure text is easy to read on the button background',
+        tip2Title: 'Appropriate size',
+        tip2Desc: 'Buttons should be large enough to click easily',
+        tip3Title: 'Visual consistency',
+        tip3Desc: 'Keep the same style for all buttons on your page'
       },
       links: {
         title: 'Add your links',
-        subtitle: 'Connect with your audience',
+        subtitle: 'Connect all your social networks and important sites in one place',
+        back: 'Back',
+        step: 'Step',
+        of: 'of',
+        progress: 'Progress',
+        continue: 'Continue',
+        livePreview: 'Live preview',
+        
+        // Tabs
+        socialTab: 'Social Media',
+        customTab: 'Custom Links',
+        
+        // Social Links
+        socialTitle: 'Social Media',
+        socialDesc: 'Connect your social media profiles so visitors can follow you',
+        connected: 'Connected',
+        
+        // Social Platform placeholders
+        instagram: {
+          placeholder: 'Your Instagram username'
+        },
+        tiktok: {
+          placeholder: 'Your TikTok username'
+        },
+        whatsapp: {
+          placeholder: 'Your WhatsApp number'
+        },
+        youtube: {
+          placeholder: 'Your YouTube channel URL'
+        },
+        twitter: {
+          placeholder: 'Your X username'
+        },
+        facebook: {
+          placeholder: 'Your Facebook profile URL'
+        },
+        
+        // Custom Links
+        customTitle: 'Custom Links',
+        customDesc: 'Add links to your website, online store, blog or any other important site',
         addLink: 'Add Link',
-        linkTitle: 'Link Title',
-        linkUrl: 'Link URL',
-        socialMedia: 'Social Media'
+        addFirstLink: 'Add my first link',
+        noCustomLinks: 'No custom links',
+        noCustomLinksDesc: 'Add links to your website, portfolio, online store or any important site',
+        titlePlaceholder: 'Link title',
+        urlPlaceholder: 'https://example.com',
+        
+        // Tips
+        tipsTitle: 'Tips for effective links',
+        tip1Title: 'Prioritize important ones',
+        tip1Desc: 'Place the most important links first for better visibility',
+        tip2Title: 'Clear titles',
+        tip2Desc: 'Use descriptive titles that clearly explain where each link leads',
+        tip3Title: 'Keep updated',
+        tip3Desc: 'Regularly check that all your links work correctly'
       },
       publish: {
         title: 'All set!',
-        subtitle: 'Your profile is configured and ready to share',
-        yourUrl: 'Your URL',
-        share: 'Share',
-        copyLink: 'Copy Link',
-        viewProfile: 'View Profile'
+        subtitle: 'Your page is now published and ready to be shared with the world',
+        back: 'Back',
+        completed: 'Completed!',
+        progress: 'Progress',
+        finalPreview: 'Final preview',
+        
+        // Loading state
+        publishing: 'Publishing your page...',
+        publishingDesc: 'We are preparing everything for you, just one more moment',
+        
+        // URL section
+        yourUrl: 'Your Public URL',
+        copy: 'Copy',
+        copied: 'Copied!',
+        view: 'View',
+        urlHint: 'This is the address you can share with your followers',
+        
+        // Share section
+        shareTitle: 'Share your page',
+        shareButton: 'Share now',
+        shareText: 'Check out my new link page',
+        dashboard: 'Go to Dashboard',
+        
+        // What's next
+        whatsNext: 'What\'s next?',
+        feature1: 'Analytics',
+        feature2: 'Engagement',
+        feature3: 'Customization',
+        feature4: 'Mobile Ready',
+        
+        // Congratulations
+        congratulations: 'Congratulations! 🎉',
+        congratulationsDesc: 'You have successfully created your professional link page. Now you can start sharing it and growing your audience.',
+        achievement1: '✅ Page created',
+        achievement2: '🎨 Custom design',
+        achievement3: '🔗 Links configured'
       }
     },
     
