@@ -989,6 +989,140 @@ export const translations: Record<Language, Translations> = {
       }
     },
 
+    // Login page
+    login: {
+      hero: {
+        title: 'Accede a tu dashboard',
+        subtitle: 'Gestiona tus enlaces, analiza tu audiencia y haz crecer tu negocio con herramientas profesionales'
+      },
+      features: {
+        analytics: 'Analytics detallados en tiempo real',
+        customization: 'Personalización completa de diseño',
+        security: 'Seguridad y privacidad garantizada'
+      },
+      testimonial: {
+        quote: 'Esta plataforma transformó completamente mi estrategia digital. Los analytics me ayudan a entender mejor a mi audiencia.'
+      },
+      form: {
+        title: 'Iniciar Sesión',
+        subtitle: 'Bienvenido de vuelta, inicia sesión en tu cuenta',
+        orContinueWith: 'O continúa con email',
+        email: 'Correo electrónico',
+        emailPlaceholder: 'tu@email.com',
+        password: 'Contraseña',
+        passwordPlaceholder: 'Tu contraseña',
+        rememberMe: 'Recordarme',
+        forgotPassword: '¿Olvidaste tu contraseña?',
+        signIn: 'Iniciar Sesión',
+        signingIn: 'Iniciando sesión...',
+        noAccount: '¿No tienes cuenta?',
+        signUp: 'Crear cuenta gratis'
+      },
+      social: {
+        google: 'Continuar con Google',
+        facebook: 'Continuar con Facebook',
+        github: 'Continuar con GitHub'
+      },
+      validation: {
+        emailRequired: 'El correo electrónico es obligatorio',
+        emailInvalid: 'Por favor ingresa un correo electrónico válido',
+        passwordRequired: 'La contraseña es obligatoria',
+        passwordTooShort: 'La contraseña debe tener al menos 6 caracteres'
+      },
+      errors: {
+        invalidCredentials: 'Correo electrónico o contraseña incorrectos',
+        tooManyAttempts: 'Demasiados intentos. Intenta de nuevo en unos minutos',
+        generic: 'Ocurrió un error durante el inicio de sesión',
+        network: 'Error de conexión. Verifica tu internet e intenta de nuevo'
+      },
+      success: {
+        title: '¡Bienvenido de vuelta!',
+        message: 'Redirigiendo a tu dashboard...'
+      }
+    },
+
+    // Register page
+    register: {
+      hero: {
+        badge: 'Oferta de lanzamiento',
+        title: 'Crea tu página profesional gratis',
+        subtitle: 'Únete a miles de creadores que ya están generando más ingresos con una página que convierte'
+      },
+      benefits: {
+        noCard: 'Sin tarjeta de crédito requerida',
+        quickSetup: 'Configuración en 2 minutos',
+        customization: 'Personalización completa'
+      },
+      stats: {
+        users: 'Usuarios activos',
+        satisfaction: 'Satisfacción',
+        setup: 'Tiempo de configuración'
+      },
+      testimonial: {
+        quote: 'Desde que creé mi página, he triplicado mis conversiones. Es increíblemente fácil de usar y mis seguidores encuentran todo en un solo lugar.'
+      },
+      form: {
+        title: 'Crear Cuenta',
+        subtitle: 'Comienza tu viaje hacia el éxito digital',
+        orSignUpWith: 'O regístrate con email',
+        firstName: 'Nombre',
+        firstNamePlaceholder: 'Tu nombre',
+        lastName: 'Apellido',
+        lastNamePlaceholder: 'Tu apellido',
+        email: 'Correo electrónico',
+        emailPlaceholder: 'tu@email.com',
+        password: 'Contraseña',
+        passwordPlaceholder: 'Mínimo 8 caracteres',
+        confirmPassword: 'Confirmar Contraseña',
+        confirmPasswordPlaceholder: 'Confirma tu contraseña',
+        passwordStrength: 'Seguridad de la contraseña',
+        agreeTerms: 'Acepto los',
+        terms: 'términos de servicio',
+        and: 'y la',
+        privacy: 'política de privacidad',
+        newsletter: 'Quiero recibir novedades y ofertas especiales',
+        createAccount: 'Crear mi cuenta',
+        creating: 'Creando cuenta...',
+        haveAccount: '¿Ya tienes cuenta?',
+        signIn: 'Iniciar sesión'
+      },
+      social: {
+        google: 'Continuar con Google',
+        facebook: 'Continuar con Facebook'
+      },
+      password: {
+        weak: 'Débil',
+        fair: 'Regular',
+        good: 'Buena',
+        strong: 'Fuerte',
+        veryStrong: 'Muy fuerte'
+      },
+      validation: {
+        firstNameRequired: 'El nombre es obligatorio',
+        firstNameTooShort: 'El nombre debe tener al menos 2 caracteres',
+        lastNameRequired: 'El apellido es obligatorio',
+        lastNameTooShort: 'El apellido debe tener al menos 2 caracteres',
+        emailRequired: 'El correo electrónico es obligatorio',
+        emailInvalid: 'Por favor ingresa un correo electrónico válido',
+        passwordRequired: 'La contraseña es obligatoria',
+        passwordTooShort: 'La contraseña debe tener al menos 8 caracteres',
+        confirmPasswordRequired: 'Confirma tu contraseña',
+        passwordsDoNotMatch: 'Las contraseñas no coinciden',
+        agreeToTermsRequired: 'Debes aceptar los términos de servicio'
+      },
+      errors: {
+        emailExists: 'Este correo electrónico ya está registrado',
+        invalidData: 'Los datos ingresados no son válidos',
+        tooManyAttempts: 'Demasiados intentos. Intenta de nuevo en unos minutos',
+        generic: 'Ocurrió un error durante el registro',
+        network: 'Error de conexión. Verifica tu internet e intenta de nuevo'
+      },
+      success: {
+        title: '¡Cuenta creada exitosamente!',
+        message: 'Configurando tu dashboard...'
+      }
+    },
+
     // Metadata
     metadata: {
       title: 'EnlacePro - Crea tu página de enlaces profesional | Link in Bio',
@@ -2001,6 +2135,140 @@ export const translations: Record<Language, Translations> = {
         title: 'Need personalized help?',
         subtitle: 'Our support team is ready to help you with any questions',
         contact: 'Contact support'
+      }
+    },
+
+    // Login page
+    login: {
+      hero: {
+        title: 'Access your dashboard',
+        subtitle: 'Manage your links, analyze your audience and grow your business with professional tools'
+      },
+      features: {
+        analytics: 'Detailed real-time analytics',
+        customization: 'Complete design customization',
+        security: 'Security and privacy guaranteed'
+      },
+      testimonial: {
+        quote: 'This platform completely transformed my digital strategy. The analytics help me better understand my audience.'
+      },
+      form: {
+        title: 'Sign In',
+        subtitle: 'Welcome back, sign in to your account',
+        orContinueWith: 'Or continue with email',
+        email: 'Email address',
+        emailPlaceholder: 'your@email.com',
+        password: 'Password',
+        passwordPlaceholder: 'Your password',
+        rememberMe: 'Remember me',
+        forgotPassword: 'Forgot your password?',
+        signIn: 'Sign In',
+        signingIn: 'Signing in...',
+        noAccount: 'Don\'t have an account?',
+        signUp: 'Create free account'
+      },
+      social: {
+        google: 'Continue with Google',
+        facebook: 'Continue with Facebook',
+        github: 'Continue with GitHub'
+      },
+      validation: {
+        emailRequired: 'Email address is required',
+        emailInvalid: 'Please enter a valid email address',
+        passwordRequired: 'Password is required',
+        passwordTooShort: 'Password must be at least 6 characters'
+      },
+      errors: {
+        invalidCredentials: 'Invalid email or password',
+        tooManyAttempts: 'Too many attempts. Try again in a few minutes',
+        generic: 'An error occurred during sign in',
+        network: 'Connection error. Check your internet and try again'
+      },
+      success: {
+        title: 'Welcome back!',
+        message: 'Redirecting to your dashboard...'
+      }
+    },
+
+    // Register page
+    register: {
+      hero: {
+        badge: 'Launch offer',
+        title: 'Create your professional page for free',
+        subtitle: 'Join thousands of creators who are already generating more income with a page that converts'
+      },
+      benefits: {
+        noCard: 'No credit card required',
+        quickSetup: 'Setup in 2 minutes',
+        customization: 'Complete customization'
+      },
+      stats: {
+        users: 'Active users',
+        satisfaction: 'Satisfaction',
+        setup: 'Setup time'
+      },
+      testimonial: {
+        quote: 'Since I created my page, I\'ve tripled my conversions. It\'s incredibly easy to use and my followers find everything in one place.'
+      },
+      form: {
+        title: 'Create Account',
+        subtitle: 'Start your journey to digital success',
+        orSignUpWith: 'Or sign up with email',
+        firstName: 'First Name',
+        firstNamePlaceholder: 'Your first name',
+        lastName: 'Last Name',
+        lastNamePlaceholder: 'Your last name',
+        email: 'Email address',
+        emailPlaceholder: 'your@email.com',
+        password: 'Password',
+        passwordPlaceholder: 'Minimum 8 characters',
+        confirmPassword: 'Confirm Password',
+        confirmPasswordPlaceholder: 'Confirm your password',
+        passwordStrength: 'Password strength',
+        agreeTerms: 'I agree to the',
+        terms: 'terms of service',
+        and: 'and',
+        privacy: 'privacy policy',
+        newsletter: 'I want to receive updates and special offers',
+        createAccount: 'Create my account',
+        creating: 'Creating account...',
+        haveAccount: 'Already have an account?',
+        signIn: 'Sign in'
+      },
+      social: {
+        google: 'Continue with Google',
+        facebook: 'Continue with Facebook'
+      },
+      password: {
+        weak: 'Weak',
+        fair: 'Fair',
+        good: 'Good',
+        strong: 'Strong',
+        veryStrong: 'Very strong'
+      },
+      validation: {
+        firstNameRequired: 'First name is required',
+        firstNameTooShort: 'First name must be at least 2 characters',
+        lastNameRequired: 'Last name is required',
+        lastNameTooShort: 'Last name must be at least 2 characters',
+        emailRequired: 'Email address is required',
+        emailInvalid: 'Please enter a valid email address',
+        passwordRequired: 'Password is required',
+        passwordTooShort: 'Password must be at least 8 characters',
+        confirmPasswordRequired: 'Please confirm your password',
+        passwordsDoNotMatch: 'Passwords do not match',
+        agreeToTermsRequired: 'You must agree to the terms of service'
+      },
+      errors: {
+        emailExists: 'This email address is already registered',
+        invalidData: 'The entered data is not valid',
+        tooManyAttempts: 'Too many attempts. Try again in a few minutes',
+        generic: 'An error occurred during registration',
+        network: 'Connection error. Check your internet and try again'
+      },
+      success: {
+        title: 'Account created successfully!',
+        message: 'Setting up your dashboard...'
       }
     },
 
