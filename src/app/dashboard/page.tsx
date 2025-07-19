@@ -33,7 +33,10 @@ import {
   Users as UsersIcon,
   Link as LinkIcon,
   Smartphone,
-  Globe
+  Globe,
+  Check,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 
 import LivePreview from '../components/LivePreview';
@@ -146,6 +149,10 @@ export default function DashboardPage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCoverModalOpen, setIsCoverModalOpen] = useState(false);
   const [isSocialIconModalOpen, setIsSocialIconModalOpen] = useState(false);
+  
+  // Estados para feedback de guardado
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [lastSaved, setLastSaved] = useState<Date | null>(null);
 
   const saveDesignChanges = useCallback(async (currentDesignStates: any) => {
     if (!profile) return;
@@ -567,6 +574,8 @@ export default function DashboardPage() {
 
   const handleSaveProfileName = async (newValue: string) => {
     console.log('handleSaveProfileName called with:', newValue);
+    setSaveStatus('saving');
+    
     // Si el nombre está vacío, usar un valor por defecto
     const finalName = newValue.trim() || 'Mi Perfil';
     console.log('Final name to save:', finalName);
@@ -576,15 +585,26 @@ export default function DashboardPage() {
     
     try {
       await handleSaveChanges(finalName, undefined);
+      setSaveStatus('saved');
+      setLastSaved(new Date());
+      
+      // Reset status after 2 seconds
+      setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
       console.error('Error saving name:', error);
+      setSaveStatus('error');
       // En caso de error, revertir al valor original
       setProfileName(profile?.name || 'Mi Perfil');
+      
+      // Reset error status after 3 seconds
+      setTimeout(() => setSaveStatus('idle'), 3000);
     }
   };
 
   const handleSaveProfileBio = async (newValue: string) => {
     console.log('handleSaveProfileBio called with:', newValue);
+    setSaveStatus('saving');
+    
     // Si la bio está vacía, usar un valor por defecto
     const finalBio = newValue.trim() || 'Mi biografía';
     console.log('Final bio to save:', finalBio);
@@ -594,10 +614,19 @@ export default function DashboardPage() {
     
     try {
       await handleSaveChanges(undefined, finalBio);
+      setSaveStatus('saved');
+      setLastSaved(new Date());
+      
+      // Reset status after 2 seconds
+      setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (error) {
       console.error('Error saving bio:', error);
+      setSaveStatus('error');
       // En caso de error, revertir al valor original
       setProfileBio(profile?.bio || 'Mi biografía');
+      
+      // Reset error status after 3 seconds
+      setTimeout(() => setSaveStatus('idle'), 3000);
     }
   };
 
@@ -945,6 +974,17 @@ export default function DashboardPage() {
                         onSave={handleSaveProfileName}
                         placeholder="Tu Nombre"
                         className="text-2xl font-bold text-center text-gray-900"
+                        maxLength={50}
+                        showCharacterCount={true}
+                        validation={{
+                          required: true,
+                          minLength: 2,
+                          customValidator: (value) => {
+                            if (value.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres';
+                            if (!/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value.trim())) return 'Solo se permiten letras y espacios';
+                            return null;
+                          }
+                        }}
                       />
                       
                       {/* Badges de estado */}
@@ -989,6 +1029,17 @@ export default function DashboardPage() {
                       placeholder="Tu biografía increíble aquí."
                       isTextarea
                       className="text-center text-gray-600"
+                      maxLength={160}
+                      showCharacterCount={true}
+                      validation={{
+                        minLength: 10,
+                        customValidator: (value) => {
+                          if (value.trim().length > 0 && value.trim().length < 10) {
+                            return 'La biografía debe tener al menos 10 caracteres';
+                          }
+                          return null;
+                        }
+                      }}
                     />
                   </div>
 
@@ -1263,6 +1314,31 @@ export default function DashboardPage() {
               
               {/* Actions */}
               <div className="flex items-center space-x-2">
+                {/* Save Status Indicator */}
+                {saveStatus !== 'idle' && (
+                  <div className={`inline-flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                    saveStatus === 'saving' 
+                      ? 'bg-blue-100 text-blue-700' 
+                      : saveStatus === 'saved'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                  }`}>
+                    {saveStatus === 'saving' && <Loader2 className="w-4 h-4 mr-1 animate-spin" />}
+                    {saveStatus === 'saved' && <Check className="w-4 h-4 mr-1" />}
+                    {saveStatus === 'error' && <AlertCircle className="w-4 h-4 mr-1" />}
+                    <span className="hidden sm:inline">
+                      {saveStatus === 'saving' && 'Guardando...'}
+                      {saveStatus === 'saved' && 'Guardado'}
+                      {saveStatus === 'error' && 'Error al guardar'}
+                    </span>
+                    <span className="sm:hidden">
+                      {saveStatus === 'saving' && '...'}
+                      {saveStatus === 'saved' && '✓'}
+                      {saveStatus === 'error' && '!'}
+                    </span>
+                  </div>
+                )}
+                
                 <LanguageSelector compact />
                 
                 <button
@@ -1351,7 +1427,21 @@ export default function DashboardPage() {
                   <div className="p-4 border-t border-gray-200">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-600">{t('dashboard.lastUpdated')}</span>
-                      <span className="text-gray-900 font-medium">{t('dashboard.justNow')}</span>
+                      <div className="flex items-center gap-2">
+                        {saveStatus === 'saving' && <Loader2 className="w-3 h-3 animate-spin text-blue-500" />}
+                        {saveStatus === 'saved' && <Check className="w-3 h-3 text-green-500" />}
+                        {saveStatus === 'error' && <AlertCircle className="w-3 h-3 text-red-500" />}
+                        <span className="text-gray-900 font-medium">
+                          {lastSaved 
+                            ? lastSaved.toLocaleTimeString('es-ES', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                second: '2-digit'
+                              })
+                            : t('dashboard.justNow')
+                          }
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
