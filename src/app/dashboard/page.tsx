@@ -761,9 +761,33 @@ export default function DashboardPage() {
     }
   };
 
+  // Validate social icon data
+  const validateSocialIcon = (icon: SocialIconData): boolean => {
+    if (!icon.social_type || !icon.username || !icon.url) {
+      console.error('Invalid social icon data:', icon);
+      return false;
+    }
+    
+    // Validate URL format
+    try {
+      new URL(icon.url);
+    } catch (e) {
+      console.error('Invalid URL in social icon:', icon.url);
+      return false;
+    }
+    
+    return true;
+  };
+
   const saveWithSocialIcons = async (socialIconsToSave: SocialIconData[]) => {
     if (!profile) return;
     const accessToken = localStorage.getItem('accessToken');
+
+    // Validate all social icons before sending
+    const validIcons = socialIconsToSave.filter(validateSocialIcon);
+    if (validIcons.length !== socialIconsToSave.length) {
+      console.warn('Some social icons were invalid and filtered out');
+    }
 
     const formData = new FormData();
     
@@ -776,7 +800,10 @@ export default function DashboardPage() {
 
     const linksToSave = links.filter(link => link.title && link.title.trim() !== '');
     formData.append('links', JSON.stringify(linksToSave));
-    formData.append('social_icons', JSON.stringify(socialIconsToSave));
+    
+    // Debug logging for social icons
+    console.log('Social icons to save:', validIcons);
+    formData.append('social_icons', JSON.stringify(validIcons));
 
     const response = await fetch(`${API_URL}/api/linkinbio/profiles/me/`, {
       method: 'PATCH',
@@ -785,9 +812,17 @@ export default function DashboardPage() {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Save social icons error:', errorData);
-      throw new Error(errorData.detail || 'Failed to save social icons.');
+      let errorMessage = 'Failed to save social icons.';
+      try {
+        const errorData = await response.json();
+        console.error('Save social icons error:', errorData);
+        errorMessage = errorData.detail || errorData.message || errorMessage;
+      } catch (parseError) {
+        // If response is not JSON (e.g., HTML error page), get the status text
+        console.error('Server returned non-JSON response:', response.status, response.statusText);
+        errorMessage = `Server error (${response.status}): ${response.statusText}`;
+      }
+      throw new Error(errorMessage);
     }
 
     const updatedProfile = await response.json();
@@ -797,14 +832,38 @@ export default function DashboardPage() {
   };
 
   const handleAddSocialIcon = async (socialType: string, username: string, url: string) => {
+    console.log('Adding social icon:', { socialType, username, url });
+    
     const newSocialIcon: SocialIconData = {
       social_type: socialType,
       username: username,
       url: url,
-      order: socialIcons.length,
+      order: socialIcons.length, // This will be overridden if replacing
     };
     
-    const updatedSocialIcons = [...socialIcons, newSocialIcon];
+    console.log('New social icon data:', newSocialIcon);
+    
+    // Check if an icon of this type already exists
+    const existingIconIndex = socialIcons.findIndex(icon => icon.social_type === socialType);
+    
+    let updatedSocialIcons: SocialIconData[];
+    if (existingIconIndex !== -1) {
+      console.log('Replacing existing icon at index:', existingIconIndex);
+      // Replace existing icon
+      updatedSocialIcons = [...socialIcons];
+      updatedSocialIcons[existingIconIndex] = {
+        ...newSocialIcon,
+        id: socialIcons[existingIconIndex].id, // Keep the original id
+        order: socialIcons[existingIconIndex].order // Keep the original order
+      };
+    } else {
+      console.log('Adding new icon');
+      // Add new icon
+      updatedSocialIcons = [...socialIcons, newSocialIcon];
+    }
+    
+    console.log('Updated social icons array:', updatedSocialIcons);
+    
     setSocialIcons(updatedSocialIcons);
     
     // Save immediately to backend with updated social icons
@@ -814,6 +873,12 @@ export default function DashboardPage() {
       console.error('Error saving social icon:', error);
       // Revert on error
       setSocialIcons(socialIcons);
+      
+      // Show user-friendly error message
+      setError(`Error al guardar ${socialType}: ${error instanceof Error ? error.message : 'Error desconocido'}`);
+      
+      // Clear error after 5 seconds
+      setTimeout(() => setError(''), 5000);
     }
   };
 
@@ -1048,7 +1113,7 @@ export default function DashboardPage() {
                     {socialIcons.length > 0 && (
                       <div className="flex flex-wrap justify-center gap-3 mb-4">
                         {socialIcons.map((icon, index) => (
-                          <div key={icon.social_type} className="relative group" style={{ animationDelay: `${index * 100}ms` }}>
+                          <div key={`${icon.social_type}-${index}`} className="relative group" style={{ animationDelay: `${index * 100}ms` }}>
                             <a
                               href={icon.url}
                               target="_blank"

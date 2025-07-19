@@ -86,9 +86,9 @@ const LivePreview: React.FC<{ profileData: ProfileData | null }> = ({ profileDat
           {/* Social Icons */}
           {profileData.social_icons && profileData.social_icons.length > 0 && (
             <div className="flex flex-wrap justify-center gap-2 mb-4">
-              {profileData.social_icons.map((icon) => (
+              {profileData.social_icons.map((icon, index) => (
                 <a
-                  key={icon.social_type}
+                  key={`${icon.social_type}-${index}`}
                   href={icon.url}
                   target="_blank"
                   rel="noopener noreferrer"
