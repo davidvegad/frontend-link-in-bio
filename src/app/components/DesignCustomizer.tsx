@@ -163,11 +163,11 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
 
   return (
     <section id="design-section" className="space-y-8">
-      <h2 className="text-2xl font-semibold">Diseño de tu Página</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Diseño de tu Página</h2>
 
       {/* Background Section */}
       <div>
-        <h3 className="text-xl font-semibold mb-4">Fondo</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Fondo</h3>
         <div className="grid grid-cols-3 gap-2 p-1 bg-gray-200 rounded-lg mb-4">
           {[
             { id: 'upload', label: 'Subir', icon: Upload },
@@ -179,10 +179,10 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
               <button
                 key={tab.id}
                 onClick={() => handleBackgroundTabChange(tab.id as any)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2 ${
+                className={`px-4 py-2 rounded-md text-sm font-bold transition-colors duration-200 flex items-center justify-center gap-2 ${
                   activeBackgroundTab === tab.id
                     ? 'text-white shadow-sm'
-                    : 'bg-transparent text-gray-600 hover:bg-white/50'
+                    : 'bg-transparent text-gray-800 hover:bg-white/50'
                 }`}
                 style={{
                   backgroundColor: activeBackgroundTab === tab.id ? '#750A97' : 'transparent'
@@ -257,7 +257,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
             <div className="space-y-4">
               {/* Color inicial */}
               <div className="w-full">
-                <h3 className="text-xl font-semibold mb-4">Color inicial</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Color inicial</h3>
                   <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white">
                     <input
                       type="color"
@@ -284,7 +284,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                 
               {/* Color final */}
               <div className="w-full">
-                <h3 className="text-xl font-semibold mb-4">Color final</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Color final</h3>
                   <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white">
                     <input
                       type="color"
@@ -314,7 +314,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
 
         {activeBackgroundTab === 'upload' && (
           <div className="space-y-4">
-            <h4 className="text-lg font-semibold">Subir Imagen de Fondo</h4>
+            <h4 className="text-lg font-bold text-gray-900">Subir Imagen de Fondo</h4>
             <input
               type="file"
               accept="image/*"
@@ -335,7 +335,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                 </div>
                 {/* Image Overlay Section */}
                 <div>
-                  <h5 className="text-md font-semibold mb-2">Superposición de color</h5>
+                  <h5 className="text-md font-bold text-gray-900 mb-2">Superposición de color</h5>
                   <div className="flex space-x-2">
                     {[
                       { id: 'none', label: 'Ninguno' },
@@ -364,7 +364,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
         {activeBackgroundTab === 'gallery' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-lg font-semibold">Galería de Imágenes</h4>
+              <h4 className="text-lg font-bold text-gray-900">Galería de Imágenes</h4>
               <button
                 onClick={() => setIsGalleryModalOpen(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
@@ -394,7 +394,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                 
                 {/* Opciones de superposición para galería */}
                 <div>
-                  <h5 className="text-md font-semibold mb-2">Superposición de color</h5>
+                  <h5 className="text-md font-bold text-gray-900 mb-2">Superposición de color</h5>
                   <div className="flex space-x-2">
                     {[
                       { id: 'none', label: 'Ninguno' },
@@ -437,7 +437,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
 
       {/* Estilo de Botones */}
       <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-6">Estilo de Botones</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-6">Estilo de Botones</h3>
         
         {/* Button Preview */}
         <div className="mb-8 p-6 bg-gray-100 rounded-lg flex justify-center items-center">
@@ -457,9 +457,9 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
         </div>
 
         <div className="space-y-6">
-          <h4 className="text-lg font-medium">Colores y Apariencia</h4>
+          <h4 className="text-lg font-bold text-gray-900">Colores y Apariencia</h4>
             <div className="w-full">
-              <h3 className="text-xl font-semibold mb-4">Fondo</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Fondo</h3>
                 <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white mb-4">
                   <input
                     type="color"
@@ -483,7 +483,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   </button>
                 </div>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_background_opacity" className="text-sm font-medium text-gray-600 w-20">Opacidad</label>
+                <label htmlFor="button_background_opacity" className="text-sm font-bold text-gray-900 w-20">Opacidad</label>
                 <input
                   type="range"
                   id="button_background_opacity"
@@ -492,11 +492,11 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   onChange={e => updateProfileData({ button_background_opacity: parseFloat(e.target.value) / 100 })}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 />
-                <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_background_opacity ?? 1) * 100).toFixed(0)}%</span>
+                <span className="text-sm font-bold text-gray-900 w-12 text-right">{((profileData.button_background_opacity ?? 1) * 100).toFixed(0)}%</span>
               </div>
             </div>
             <div className="w-full">
-              <h3 className="text-xl font-semibold mb-4">Texto</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Texto</h3>
                 <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white mb-4">
                   <input
                     type="color"
@@ -520,7 +520,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   </button>
                 </div>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_text_opacity" className="text-sm font-medium text-gray-600 w-20">Opacidad</label>
+                <label htmlFor="button_text_opacity" className="text-sm font-bold text-gray-900 w-20">Opacidad</label>
                 <input
                   type="range"
                   id="button_text_opacity"
@@ -529,11 +529,11 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   onChange={e => updateProfileData({ button_text_opacity: parseFloat(e.target.value) / 100 })}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 />
-                <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_text_opacity ?? 1) * 100).toFixed(0)}%</span>
+                <span className="text-sm font-bold text-gray-900 w-12 text-right">{((profileData.button_text_opacity ?? 1) * 100).toFixed(0)}%</span>
               </div>
             </div>
             <div className="w-full">
-              <h3 className="text-xl font-semibold mb-4">Borde</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Borde</h3>
                 <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white mb-4">
                   <input
                     type="color"
@@ -557,7 +557,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   </button>
                 </div>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_border_opacity" className="text-sm font-medium text-gray-600 w-20">Opacidad</label>
+                <label htmlFor="button_border_opacity" className="text-sm font-bold text-gray-900 w-20">Opacidad</label>
                 <input
                   type="range"
                   id="button_border_opacity"
@@ -566,11 +566,11 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   onChange={e => updateProfileData({ button_border_opacity: parseFloat(e.target.value) / 100 })}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 />
-                <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_border_opacity ?? 1) * 100).toFixed(0)}%</span>
+                <span className="text-sm font-bold text-gray-900 w-12 text-right">{((profileData.button_border_opacity ?? 1) * 100).toFixed(0)}%</span>
               </div>
             </div>
             <div className="w-full">
-              <h3 className="text-xl font-semibold mb-4">Sombra</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Sombra</h3>
                 <div className="flex items-center w-full p-3 border border-gray-300 rounded-md bg-white mb-4">
                   <input
                     type="color"
@@ -594,7 +594,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   </button>
                 </div>
               <div className="flex items-center space-x-3">
-                <label htmlFor="button_shadow_opacity" className="text-sm font-medium text-gray-600 w-20">Opacidad</label>
+                <label htmlFor="button_shadow_opacity" className="text-sm font-bold text-gray-900 w-20">Opacidad</label>
                 <input
                   type="range"
                   id="button_shadow_opacity"
@@ -603,13 +603,13 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   onChange={e => updateProfileData({ button_shadow_opacity: parseFloat(e.target.value) / 100 })}
                   className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 />
-                <span className="text-sm text-gray-600 w-12 text-right">{((profileData.button_shadow_opacity ?? 1) * 100).toFixed(0)}%</span>
+                <span className="text-sm font-bold text-gray-900 w-12 text-right">{((profileData.button_shadow_opacity ?? 1) * 100).toFixed(0)}%</span>
               </div>
             </div>
 
           {/* Forma y Estilo */}
           <div className="mt-8">
-            <h4 className="text-lg font-medium mb-4">Forma y Estilo</h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-4">Forma y Estilo</h4>
             <div className="flex flex-col space-y-3">
               {buttonStylesOptions.map(bs => (
                 <div
@@ -617,8 +617,8 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   onClick={() => updateProfileData({ button_style: bs.id })}
                   className={`p-3 border rounded-md cursor-pointer text-center transition-all ${
                     profileData.button_style === bs.id 
-                      ? 'bg-indigo-100 border-indigo-500 ring-2 ring-indigo-500' 
-                      : 'border-gray-300 hover:bg-gray-50'
+                      ? 'bg-indigo-100 border-indigo-500 ring-2 ring-indigo-500 text-indigo-900 font-bold' 
+                      : 'border-gray-300 hover:bg-gray-50 text-gray-900 font-semibold'
                   }`}
                 >
                   {bs.name}
@@ -631,7 +631,7 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
 
       {/* Sección de Fuentes */}
       <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-3">Fuente</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-3">Fuente</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
           {fontOptions.map(font => (
             <div
@@ -643,7 +643,11 @@ const DesignCustomizer: React.FC<DesignCustomizerProps> = ({
                   : 'border-gray-300 hover:bg-gray-50'
               }`}
             >
-              <span className={`${font.class} text-sm sm:text-base truncate block`}>{font.name}</span>
+              <span className={`${font.class} text-sm sm:text-base truncate block font-semibold ${
+                profileData.font_family === font.class
+                  ? 'text-indigo-900'
+                  : 'text-gray-900'
+              }`}>{font.name}</span>
             </div>
           ))}
         </div>

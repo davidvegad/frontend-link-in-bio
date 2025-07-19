@@ -840,79 +840,147 @@ export default function DashboardPage() {
         return (
           <>
             <section id="profile-section" className="mb-8">
-              <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div className="bg-gradient-to-br from-white via-gray-50 to-blue-50/30 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-sm"  style={{ 
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(249,250,251,0.95) 50%, rgba(239,246,255,0.95) 100%)'
+              }}>
                 <div className="flex flex-col items-center text-center">
                   {/* Cover Image */}
                   <div className="relative w-full mb-6">
                     {profile?.cover_image ? (
-                      <div className="relative w-full h-32 rounded-lg overflow-hidden">
+                      <div className="relative w-full h-40 rounded-xl overflow-hidden shadow-lg group">
                         <Image
                           src={profile.cover_image}
                           alt="Cover"
                           fill
-                          className="object-cover"
+                          className="object-cover transition-transform duration-300 group-hover:scale-105"
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
                     ) : (
-                      <div className="w-full h-32 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg flex items-center justify-center">
-                        <span className="text-gray-500 text-sm">Añade una imagen de portada</span>
+                      <div className="w-full h-40 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300 hover:border-blue-400 transition-all duration-300 group cursor-pointer">
+                        <div className="text-center">
+                          <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-200">
+                            <Camera className="w-6 h-6 text-white" />
+                          </div>
+                          <span className="text-gray-600 text-sm font-medium">Añade una imagen de portada</span>
+                          <p className="text-gray-400 text-xs mt-1">Haz clic para personalizar tu perfil</p>
+                        </div>
                       </div>
                     )}
                     
                     {/* Botón de compartir - Esquina superior derecha */}
                     <button
                       onClick={() => setIsShareModalOpen(true)}
-                      className="absolute top-3 right-3 bg-[#ffce2f] hover:bg-[#e6b829] text-gray-800 px-3 py-2 rounded-full transition-all duration-200 hover:scale-105 shadow-lg font-medium text-sm flex items-center gap-2"
+                      className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-white px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg font-medium text-sm flex items-center gap-2 backdrop-blur-sm"
                     >
-                      <Flame size={16} className="text-orange-600" />
-                      <span className="hidden sm:inline">Compartir mi enlace</span>
-                      <span className="sm:hidden">Compartir</span>
+                      <Flame size={16} className="text-white drop-shadow-sm" />
+                      <span className="hidden sm:inline drop-shadow-sm">Compartir mi enlace</span>
+                      <span className="sm:hidden drop-shadow-sm">Compartir</span>
                     </button>
                     
                     {/* Botón de editar portada */}
                     <button
                       onClick={() => setIsCoverModalOpen(true)}
-                      className="absolute -bottom-2 -right-2 bg-indigo-600 hover:bg-indigo-700 text-white p-2 rounded-full transition-transform duration-200 hover:scale-110"
+                      className="absolute -bottom-3 -right-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 hover:shadow-xl shadow-lg group"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
+                      <Camera className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" />
                     </button>
                   </div>
 
                   {/* Avatar */}
-                  <div className="relative mb-6 -mt-20">
-                    <Image
-                      src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
-                      alt={profileName || 'Avatar'}
-                      width={128}
-                      height={128}
-                      className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-                    />
-                    <label htmlFor="profileAvatar" className={`absolute -bottom-2 -right-2 ${avatarUploading ? 'bg-gray-400' : 'bg-indigo-600 hover:bg-indigo-700'} text-white p-2 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 ${avatarUploading ? 'animate-pulse' : ''}`}>
-                      {avatarUploading ? (
-                        <div className="w-[18px] h-[18px] border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      ) : (
-                        <User size={18} />
-                      )}
-                      <input
-                        type="file"
-                        id="profileAvatar"
-                        accept="image/*"
-                        className="hidden"
-                        disabled={avatarUploading}
-                        onChange={handleAvatarChange}
-                      />
-                    </label>
+                  <div className="relative mb-6 -mt-20 group">
+                    <div className="relative">
+                      {/* Avatar container with enhanced effects */}
+                      <div className="relative w-36 h-36 rounded-full p-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 shadow-2xl group-hover:shadow-3xl transition-all duration-300">
+                        <div className="w-full h-full rounded-full bg-white p-1">
+                          <Image
+                            src={profileAvatar ? URL.createObjectURL(profileAvatar) : profile?.avatar || '/default-avatar.png'}
+                            alt={profileName || 'Avatar'}
+                            width={140}
+                            height={140}
+                            className="w-full h-full rounded-full object-cover transition-all duration-300 group-hover:scale-105"
+                          />
+                        </div>
+                        
+                        {/* Hover overlay */}
+                        <div className="absolute inset-0 rounded-full bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                          <Camera className="w-8 h-8 text-white drop-shadow-lg" />
+                        </div>
+                      </div>
+                      
+                      {/* Enhanced upload button */}
+                      <label htmlFor="profileAvatar" className={`absolute -bottom-1 -right-1 ${
+                        avatarUploading 
+                          ? 'bg-gradient-to-r from-gray-400 to-gray-500' 
+                          : 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700'
+                      } text-white p-3 rounded-full cursor-pointer transition-all duration-300 hover:scale-110 hover:shadow-xl shadow-lg group/btn ${
+                        avatarUploading ? 'animate-pulse scale-110' : ''
+                      }`}>
+                        {avatarUploading ? (
+                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : (
+                          <Upload className="w-5 h-5 group-hover/btn:scale-110 transition-transform duration-200" />
+                        )}
+                        <input
+                          type="file"
+                          id="profileAvatar"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={avatarUploading}
+                          onChange={handleAvatarChange}
+                        />
+                      </label>
+                      
+                      {/* Status indicator (online) */}
+                      <div className="absolute bottom-2 right-8 w-6 h-6 bg-green-500 rounded-full border-3 border-white shadow-lg flex items-center justify-center">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="mb-4 w-full max-w-sm">
-                    <InlineEditableField
-                      value={profileName}
-                      onSave={handleSaveProfileName}
-                      placeholder="Tu Nombre"
-                      className="text-2xl font-bold text-center text-gray-900"
-                    />
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <InlineEditableField
+                        value={profileName}
+                        onSave={handleSaveProfileName}
+                        placeholder="Tu Nombre"
+                        className="text-2xl font-bold text-center text-gray-900"
+                      />
+                      
+                      {/* Badges de estado */}
+                      <div className="flex gap-1">
+                        {/* Badge verificado (simulado - puedes conectar con datos reales) */}
+                        <div className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                          <Star className="w-3 h-3 mr-1" />
+                          Verificado
+                        </div>
+                        
+                        {/* Badge premium (simulado) */}
+                        <div className="inline-flex items-center px-2 py-1 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-medium rounded-full shadow-sm">
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                          Pro
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Estadísticas rápidas */}
+                    <div className="flex justify-center gap-4 text-sm text-gray-600 mb-2">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span className="font-medium">1.2k</span>
+                        <span>vistas</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <UsersIcon className="w-4 h-4" />
+                        <span className="font-medium">{socialIcons.length}</span>
+                        <span>redes</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <LinkIcon className="w-4 h-4" />
+                        <span className="font-medium">{links.length}</span>
+                        <span>enlaces</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="w-full max-w-md">
                     <InlineEditableField
@@ -928,23 +996,23 @@ export default function DashboardPage() {
                   <div className="mt-6 w-full max-w-md">
                     {socialIcons.length > 0 && (
                       <div className="flex flex-wrap justify-center gap-3 mb-4">
-                        {socialIcons.map((icon) => (
-                          <div key={icon.social_type} className="relative group">
+                        {socialIcons.map((icon, index) => (
+                          <div key={icon.social_type} className="relative group" style={{ animationDelay: `${index * 100}ms` }}>
                             <a
                               href={icon.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="block w-12 h-12 rounded-full bg-gray-100 hover:bg-gray-200 border border-gray-300 flex items-center justify-center transition-colors"
+                              className="block w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 border border-gray-200 hover:border-blue-300 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:shadow-lg group-hover:rotate-3"
                             >
-                              <div className="w-6 h-6 flex items-center justify-center">
-                                {getSocialIcon(icon.social_type, 20, 'text-gray-700')}
+                              <div className="w-7 h-7 flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
+                                {getSocialIcon(icon.social_type, 24, 'text-gray-700 group-hover:text-blue-600')}
                               </div>
                             </a>
                             <button
                               onClick={() => handleDeleteSocialIcon(icon.social_type)}
-                              className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 shadow-lg"
                             >
-                              <X size={12} />
+                              <X size={14} />
                             </button>
                           </div>
                         ))}
@@ -953,9 +1021,11 @@ export default function DashboardPage() {
                     
                     <button
                       onClick={() => setIsSocialIconModalOpen(true)}
-                      className="w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-lg text-gray-700 transition-colors flex items-center justify-center gap-2"
+                      className="w-full py-3 px-4 bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 border-2 border-dashed border-gray-300 hover:border-blue-400 rounded-xl text-gray-700 hover:text-blue-600 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 font-medium"
                     >
-                      <span className="text-lg">+</span>
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <Plus className="w-4 h-4 text-white" />
+                      </div>
                       <span>Añadir icono social</span>
                     </button>
                   </div>
